@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - 28 States Bilingual Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Noto+Sans+Telugu:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b1120; --primary: #f59e0b; --secondary: #38bdf8;
+            --text-light: #f8fafc; --card-bg: #1e293b; --yellow: #fde047;
+            --green: #10b981; --blue: #3b82f6; --red: #ef4444; --purple: #a855f7;
+        }
+
+        * { 
+            box-sizing: border-box; margin: 0; padding: 0; 
+            -webkit-user-select: none; -ms-user-select: none; user-select: none;
+        }
+
+        body { 
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            background: var(--bg-color); color: var(--text-light); 
+            line-height: 1.6; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+            position: relative;
+        }
+
+        .watermark-1 {
+            position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg);
+            font-size: 8rem; font-weight: 900; color: rgba(255, 255, 255, 0.02);
+            pointer-events: none; z-index: 0; white-space: nowrap; letter-spacing: 5px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .watermark-2 {
+            position: fixed; top: 60%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg);
+            font-size: 5rem; font-weight: 900; color: rgba(245, 158, 11, 0.02);
+            pointer-events: none; z-index: 0; white-space: nowrap; letter-spacing: 5px;
+        }
+
+        header { 
+            text-align: center; padding: 15px; background: linear-gradient(90deg, #1e293b, #0b1120); 
+            border-bottom: 3px solid var(--primary); z-index: 10; flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 30px;
+        }
+        .header-titles { text-align: center; flex-grow: 1; }
+        h1 { color: var(--primary); font-size: 2.2rem; font-weight: 900; letter-spacing: 2px;}
+        .subtitle { font-size: 1.2rem; color: var(--yellow); font-weight: 700; margin-top: 5px;}
+
+        .fullscreen-btn {
+            background: var(--yellow); color: #000; border: none; padding: 10px 20px; 
+            border-radius: 8px; font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .main-container {
+            display: flex; gap: 20px; flex-grow: 1; padding: 20px; z-index: 2; height: calc(100vh - 90px);
+        }
+
+        .sidebar {
+            width: 28%; background: var(--card-bg); border-radius: 15px; border: 2px solid #334155;
+            padding: 20px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .sidebar-title {
+            font-size: 1.3rem; font-weight: 800; color: var(--primary); text-align: center;
+            border-bottom: 2px solid #334155; padding-bottom: 15px; margin-bottom: 10px; flex-shrink: 0;
+        }
+
+        .state-btn {
+            background: #0f172a; color: #fff; border: 2px solid #334155; padding: 12px 15px;
+            border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+            transition: 0.3s; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        .state-btn:hover { background: #1e293b; border-color: var(--secondary); transform: translateX(5px); }
+        .state-btn.active { 
+            background: linear-gradient(90deg, var(--secondary), #0284c7); border-color: var(--secondary); 
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4); transform: translateX(5px);
+        }
+        
+        .map-icon { font-size: 1.5rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); opacity: 0.8; }
+        .state-btn.active .map-icon { opacity: 1; transform: scale(1.2); }
+
+        .content-area {
+            width: 72%; background: var(--card-bg); border-radius: 15px; border: 2px solid #334155;
+            padding: 25px; display: flex; flex-direction: column; overflow-y: auto; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .state-header {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #0f172a; padding: 15px 30px; border-radius: 12px; margin-bottom: 25px;
+            border-left: 6px solid var(--primary); flex-shrink: 0; min-height: 100px;
+        }
+        .state-name { 
+            font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+            display: flex; flex-direction: column; line-height: 1.5; padding-top: 5px;
+        }
+        .state-name-en { font-size: 1.2rem; color: var(--secondary); font-weight: 700; line-height: 1.2;}
+        .state-tag { background: rgba(245, 158, 11, 0.2); color: var(--primary); padding: 8px 20px; border-radius: 30px; font-weight: 800; border: 1px solid var(--primary);}
+
+        .points-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;
+        }
+
+        .point-card {
+            background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 15px;
+            display: flex; flex-direction: column; justify-content: center; transition: 0.2s;
+            position: relative; overflow: hidden; min-height: 110px;
+        }
+        .point-card:hover { border-color: var(--secondary); background: #1e293b; transform: translateY(-3px);}
+        
+        .p-num { position: absolute; top: 5px; right: 10px; font-size: 2rem; font-weight: 900; color: rgba(255,255,255,0.05); }
+        .p-title { font-size: 0.85rem; color: #94a3b8; font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; line-height: 1.2;}
+        .p-val { font-size: 1.1rem; font-weight: 800; color: var(--yellow); line-height: 1.4; padding-top: 2px;}
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 10px; }
+
+        .c-1 .p-val { color: #38bdf8; } .c-2 .p-val { color: #10b981; } .c-3 .p-val { color: #f43f5e; } .c-4 .p-val { color: #a855f7; }
+
+    </style>
+</head>
+<body ondblclick="toggleFullScreen()" oncopy="return false;" oncut="return false;" onpaste="return false;" oncontextmenu="return false;">
+
+    <div class="watermark-1">RAHUL ACADEMY</div>
+    <div class="watermark-2">GURU DEVA</div>
+
+    <header>
+        <div style="width: 100px;"></div>
+        <div class="header-titles">
+            <h1>RAHUL ACADEMY</h1>
+            <div class="subtitle">🌺 GURU DEVA - State Information Dashboard (All 28 States) 🌺</div>
+        </div>
+        <button class="fullscreen-btn" onclick="toggleFullScreen()">🔲 Full Screen</button>
+    </header>
+
+    <div class="main-container">
+        
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-title">28 రాష్ట్రాలు (States)</div>
+            <!-- Buttons injected via JS -->
+        </div>
+
+        <div class="content-area" id="content-area" style="display: none;">
+            <div class="state-header">
+                <div class="state-name">
+                    <span id="disp-state-te" style="padding-bottom: 5px;">తెలంగాణ</span>
+                    <span class="state-name-en" id="disp-state-en">Telangana</span>
+                </div>
+                <div class="state-tag">20 Key Points (Bilingual)</div>
+            </div>
+
+            <div class="points-grid" id="points-grid">
+                <!-- 20 Cards injected via JS -->
+            </div>
+        </div>
+        
+        <div class="content-area" id="welcome-area" style="justify-content: center; align-items: center; text-align: center;">
+            <h2 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 20px;">GURU DEVA Dashboard</h2>
+            <p style="font-size: 1.3rem; color: #cbd5e1; line-height: 1.8;">ఎడమ వైపు ఉన్న బటన్స్ లో ఏదైనా ఒక రాష్ట్రాన్ని ఎంచుకోండి.<br>ఆ రాష్ట్రానికి సంబంధించిన 20 ముఖ్యమైన పాయింట్స్ (తెలుగు & English) ఇక్కడ కనిపిస్తాయి.</p>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleFullScreen() {
+            var doc = window.document;
+            var docEl = doc.documentElement;
+            var requestFullScreen = docEl.requestFullscreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            var cancelFullScreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            if(!doc.fullscreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                requestFullScreen.call(docEl).catch(err => console.log(err));
+            } else { cancelFullScreen.call(doc); }
+        }
+
+        const rawData = [
+            "ap|ఆంధ్రప్రదేశ్|Andhra Pradesh|అమరావతి (Amaravati)|1 Nov 1956|26|తెలుగు (Telugu)|25|11|175|కృష్ణ జింక (Blackbuck)|రామచిలుక (Parrot)|వేప (Neem)|మల్లె (Jasmine)|గోదావరి, కృష్ణా (Godavari, Krishna)|సంక్రాంతి (Sankranti)|వరి, పొగాకు (Rice, Tobacco)|కూచిపూడి (Kuchipudi)|TS, OD, TN, KA|తిరుమల, శ్రీశైలం (Tirumala)|974 కి.మీ (974 km)|పోలవరం (Polavaram)",
+            "ts|తెలంగాణ|Telangana|హైదరాబాద్ (Hyderabad)|2 Jun 2014|33|తెలుగు, ఉర్దూ (Telugu, Urdu)|17|7|119|మచ్చల జింక (Spotted Deer)|పాలపిట్ట (Indian Roller)|జమ్మి (Jammi)|తంగేడు (Tangedu)|గోదావరి, కృష్ణా (Godavari, Krishna)|బతుకమ్మ, బోనాలు (Bathukamma)|వరి, పత్తి (Rice, Cotton)|పేరిణి (Perini)|MH, KA, AP, CG|చార్మినార్ (Charminar)|ల్యాండ్‌లాక్డ్ (Landlocked)|కాళేశ్వరం (Kaleshwaram)",
+            "ka|కర్ణాటక|Karnataka|బెంగళూరు (Bengaluru)|1 Nov 1956|31|కన్నడ (Kannada)|28|12|224|ఏనుగు (Elephant)|ఇండియన్ రోలర్ (Indian Roller)|గంధపు చెట్టు (Sandalwood)|కమలం (Lotus)|కావేరి, కృష్ణా (Kaveri, Krishna)|మైసూర్ దసరా (Mysuru Dasara)|కాఫీ, పట్టు (Coffee, Silk)|యక్షగానం (Yakshagana)|MH, GOA, AP, TS, KL, TN|హంపి (Hampi)|సిలికాన్ వ్యాలీ (Silicon Valley)|కృష్ణరాజ సాగర్ (KRS)",
+            "tn|తమిళనాడు|Tamil Nadu|చెన్నై (Chennai)|26 Jan 1950|38|తమిళం (Tamil)|39|18|234|నీలగిరి తార్ (Nilgiri Tahr)|ఎమరాల్డ్ డవ్ (Emerald Dove)|తాటి (Palm Tree)|గ్లోరియోసా లిల్లీ (Gloriosa Lily)|కావేరి (Kaveri)|పొంగల్ (Pongal)|వరి, చెరకు (Rice, Sugarcane)|భారతనాట్యం (Bharatanatyam)|KL, KA, AP|మీనాక్షి ఆలయం (Meenakshi Temple)|1076 కి.మీ (1076 km)|మెట్టూర్ డ్యామ్ (Mettur)",
+            "kl|కేరళ|Kerala|తిరువనంతపురం (Thiruvananthapuram)|1 Nov 1956|14|మలయాళం (Malayalam)|20|9|140|ఏనుగు (Elephant)|గ్రేట్ హార్న్ బిల్ (Great Hornbill)|కొబ్బరి (Coconut Tree)|కనికొన్న (Kanikonna)|పెరియార్ (Periyar)|ఓనం (Onam)|రబ్బరు, సుగంధ ద్రవ్యాలు (Rubber, Spices)|కథకళి (Kathakali)|KA, TN|పద్మనాభస్వామి (Padmanabhaswamy)|గాడ్స్ ఓన్ కంట్రీ (God's Own Country)|ఇడుక్కి డ్యామ్ (Idukki)",
+            "mh|మహారాష్ట్ర|Maharashtra|ముంబై (Mumbai)|1 May 1960|36|మరాఠీ (Marathi)|48|19|288|జెయింట్ స్క్విరెల్ (Giant Squirrel)|గ్రీన్ పావురం (Green Pigeon)|మామిడి (Mango)|జరుల్ (Jarul)|గోదావరి, కృష్ణా (Godavari, Krishna)|గణేష్ చతుర్థి (Ganesh Chaturthi)|పత్తి, ఉల్లి (Cotton, Onion)|లావణి (Lavani)|GJ, MP, CG, TS, KA, GOA|అజంతా, ఎల్లోరా (Ajanta, Ellora)|ఆర్థిక రాజధాని (Financial Capital)|కోయినా (Koyna)",
+            "gj|గుజరాత్|Gujarat|గాంధీనగర్ (Gandhinagar)|1 May 1960|33|గుజరాతీ (Gujarati)|26|11|182|ఆసియాటిక్ సింహం (Asiatic Lion)|గ్రేటర్ ఫ్లెమింగో (Greater Flamingo)|మర్రి (Banyan Tree)|బంతి పువ్వు (Marigold)|నర్మద, తపతి (Narmada, Tapti)|నవరాత్రి (Navaratri)|పత్తి, వేరుశెనగ (Cotton, Groundnut)|గర్బా (Garba)|RJ, MP, MH|స్టాచ్యూ ఆఫ్ యూనిటీ (Statue of Unity)|1600 కి.మీ (Longest Coastline)|సర్దార్ సరోవర్ (Sardar Sarovar)",
+            "od|ఒడిశా|Odisha|భువనేశ్వర్ (Bhubaneswar)|1 Apr 1936|30|ఒడియా (Odia)|21|10|147|సాంబార్ జింక (Sambar Deer)|ఇండియన్ రోలర్ (Indian Roller)|రావి (Ashwatha)|అశోక (Ashoka)|మహానది (Mahanadi)|రథ యాత్ర (Ratha Yatra)|వరి, జనపనార (Rice, Jute)|ఒడిస్సీ (Odissi)|WB, JH, CG, AP|కోణార్క్ సూర్య దేవాలయం (Konark)|చిల్కా సరస్సు (Chilika Lake)|హిరాకుడ్ డ్యామ్ (Hirakud)",
+            "wb|పశ్చిమ బెంగాల్|West Bengal|కోల్‌కతా (Kolkata)|26 Jan 1950|23|బెంగాలీ (Bengali)|42|16|294|ఫిషింగ్ క్యాట్ (Fishing Cat)|కింగ్‌ఫిషర్ (Kingfisher)|చాతిమ్ (Chatim)|నైట్ జాస్మిన్ (Night Jasmine)|గంగా, హుగ్లీ (Ganga, Hooghly)|దుర్గా పూజ (Durga Puja)|వరి, జనపనార (Rice, Jute)|చౌ (Chhau)|OD, JH, BR, SK, AS|విక్టోరియా మెమోరియల్ (Victoria)|సుందర్బన్స్ (Sundarbans)|ఫరక్కా బ్యారేజ్ (Farakka)",
+            "br|బీహార్|Bihar|పాట్నా (Patna)|22 Mar 1912|38|హిందీ (Hindi)|40|16|243|గౌర్ (Gaur)|పిచ్చుక (Sparrow)|రావి (Peepal)|కాచనార్ (Kachnar)|గంగా, కోసి (Ganga, Kosi)|ఛత్ పూజ (Chhath Puja)|వరి, గోధుమ (Rice, Wheat)|జాతా-జతిన్ (Jata-Jatin)|UP, JH, WB|మహాబోధి ఆలయం (Mahabodhi Temple)|అత్యధిక జనసాంద్రత (Highest Density)|కోసి ప్రాజెక్ట్ (Kosi Project)",
+            "up|ఉత్తరప్రదేశ్|Uttar Pradesh|లక్నో (Lucknow)|24 Jan 1950|75|హిందీ, ఉర్దూ (Hindi, Urdu)|80|31|403|స్వాంప్ జింక (Swamp Deer)|సారస్ క్రేన్ (Sarus Crane)|అశోక (Ashoka)|పలాష్ (Palash)|గంగా, యమున (Ganga, Yamuna)|కుంభమేళా (Kumbh Mela)|గోధుమ, చెరకు (Wheat, Sugarcane)|కథక్ (Kathak)|UK, HP, HR, RJ, MP, CG, JH, BR|తాజ్ మహల్ (Taj Mahal)|అత్యధిక జనాభా (Highest Population)|రిహాండ్ డ్యామ్ (Rihand)",
+            "mp|మధ్యప్రదేశ్|Madhya Pradesh|భోపాల్ (Bhopal)|1 Nov 1956|55|హిందీ (Hindi)|29|11|230|బారసింగ (Barasingha)|ఫ్లైక్యాచర్ (Flycatcher)|మర్రి (Banyan)|వైట్ లిల్లీ (White Lily)|నర్మద, తపతి (Narmada, Tapti)|లోక్రంగ్ (Lokrang)|సోయాబీన్, గోధుమ (Soybean, Wheat)|మట్కి (Matki)|UP, CG, MH, GJ, RJ|ఖజురహో (Khajuraho)|టైగర్ స్టేట్ (Tiger State)|ఇందిరా సాగర్ (Indira Sagar)",
+            "rj|రాజస్థాన్|Rajasthan|జైపూర్ (Jaipur)|30 Mar 1949|50|హిందీ (Hindi)|25|10|200|ఒంటె, చింకారా (Camel, Chinkara)|బస్టర్డ్ (Great Indian Bustard)|ఖేజ్రీ (Khejri)|రోహిడా (Rohida)|లుని, చంబల్ (Luni, Chambal)|పుష్కర్ మేళా (Pushkar Mela)|ఆవాలు, బజ్రా (Mustard, Bajra)|ఘూమర్ (Ghoomar)|PB, HR, UP, MP, GJ|హవా మహల్ (Hawa Mahal)|అతిపెద్ద రాష్ట్రం (Largest State)|రాణా ప్రతాప్ సాగర్ (Rana Pratap Sagar)",
+            "pb|పంజాబ్|Punjab|చండీగఢ్ (Chandigarh)|1 Nov 1966|23|పంజాబీ (Punjabi)|13|7|117|కృష్ణ జింక (Blackbuck)|గోషాక్ (Goshawk)|షిషమ్ (Shisham)|గ్లాడియోలస్ (Gladiolus)|సట్లెజ్, బియాస్ (Sutlej, Beas)|బైశాఖి (Baisakhi)|గోధుమ, వరి (Wheat, Rice)|భంగ్రా (Bhangra)|J&K, HP, HR, RJ|స్వర్ణ దేవాలయం (Golden Temple)|పంచ నదుల భూమి (Land of 5 Rivers)|రంజిత్ సాగర్ (Ranjit Sagar)",
+            "hr|హర్యానా|Haryana|చండీగఢ్ (Chandigarh)|1 Nov 1966|22|హిందీ (Hindi)|10|5|90|కృష్ణ జింక (Blackbuck)|బ్లాక్ ఫ్రాంకోలిన్ (Black Francolin)|రావి (Peepal)|కమలం (Lotus)|యమున, ఘగ్గర్ (Yamuna, Ghaggar)|సూరజ్‌కుండ్ (Surajkund)|గోధుమ (Wheat)|లూర్‌ (Loor)|PB, HP, UK, UP, RJ|కురుక్షేత్ర (Kurukshetra)|అతి తక్కువ అటవీ శాతం (Lowest Forest %)|కౌశల్య డ్యామ్ (Kaushalya)",
+            "hp|హిమాచల్ ప్రదేశ్|Himachal Pradesh|సిమ్లా (Shimla)|25 Jan 1971|12|హిందీ (Hindi)|4|3|68|మంచు చిరుత (Snow Leopard)|ట్రాగోపాన్ (Tragopan)|దేవదార్ (Deodar)|రోడోడెండ్రాన్ (Rhododendron)|సట్లెజ్, బియాస్ (Sutlej, Beas)|కులూ దసరా (Kullu Dussehra)|యాపిల్స్ (Apples)|నాటి (Nati)|J&K, PB, HR, UK, UP|మనాలి (Manali)|దేవభూమి (Dev Bhoomi)|భాక్రా డ్యామ్ (Bhakra Dam)",
+            "uk|ఉత్తరాఖండ్|Uttarakhand|డెహ్రాడూన్ (Dehradun)|9 Nov 2000|13|హిందీ (Hindi)|5|3|70|కస్తూరి మృగం (Musk Deer)|మోనాల్ (Monal)|బురాన్స్ (Burans)|బ్రహ్మ కమల్ (Brahma Kamal)|గంగా, యమున (Ganga, Yamuna)|కుంభమేళా (Kumbh Mela)|గోధుమ, వరి (Wheat, Rice)|చోలియా (Chholiya)|HP, UP|కేదార్‌నాథ్, బద్రీనాథ్ (Kedarnath, Badrinath)|యోగా రాజధాని (Yoga Capital)|తెహ్రీ డ్యామ్ (Tehri Dam)",
+            "cg|ఛత్తీస్‌గఢ్|Chhattisgarh|రాయ్‌పూర్ (Raipur)|1 Nov 2000|33|హిందీ (Hindi)|11|5|90|అడవి గేదె (Wild Water Buffalo)|హిల్ మైనా (Hill Myna)|సాల్ (Sal)|ఆర్కిడ్ (Orchid)|మహానది (Mahanadi)|హరేలీ (Hareli)|వరి (Rice)|పంథి (Panthi)|UP, JH, OD, AP, TS, MH, MP|చిత్రకూట్ జలపాతం (Chitrakote Falls)|రైస్ బౌల్ ఆఫ్ ఇండియా (Rice Bowl)|గంగ్రెల్ డ్యామ్ (Gangrel)",
+            "jh|జార్ఖండ్|Jharkhand|రాంచీ (Ranchi)|15 Nov 2000|24|హిందీ (Hindi)|14|6|81|ఏనుగు (Elephant)|కోయిల్ (Koel)|సాల్ (Sal)|పలాష్ (Palash)|దామోదర్ (Damodar)|కర్మా, ఛత్ (Karma, Chhath)|వరి (Rice)|జుమైర్ (Jhumair)|BR, UP, CG, OD, WB|బైద్యనాథ్ ఆలయం (Baidyanath)|ఖనిజాల నిలయం (Land of Minerals)|మైథాన్ డ్యామ్ (Maithon)",
+            "as|అస్సాం|Assam|దిస్పూర్ (Dispur)|26 Jan 1950|35|అస్సామీ (Assamese)|14|7|126|ఒంటికొమ్ము ఖడ్గమృగం (One-horned Rhino)|వుడ్ డక్ (Wood Duck)|హోలాంగ్ (Hollong)|ఆర్కిడ్ (Foxtail Orchid)|బ్రహ్మపుత్ర (Brahmaputra)|బిహు (Bihu)|తేయాకు, వరి (Tea, Rice)|బిహు (Bihu)|WB, AR, NL, MN, MZ, TR, ML|కామాఖ్య ఆలయం (Kamakhya)|టీ గార్డెన్స్ (Tea Gardens)|సుబన్సిరి (Subansiri)",
+            "ar|అరుణాచల్ ప్రదేశ్|Arunachal Pradesh|ఇటానగర్ (Itanagar)|20 Feb 1987|26|ఇంగ్లీష్ (English)|2|1|60|మిథున్ (Mithun)|హార్న్ బిల్ (Hornbill)|హోలాంగ్ (Hollong)|ఆర్కిడ్ (Orchid)|బ్రహ్మపుత్ర (Brahmaputra)|లోసార్ (Losar)|వరి, మొక్కజొన్న (Rice, Maize)|సింహం నృత్యం (Lion Dance)|AS, NL|తవాంగ్ మాస్టరీ (Tawang Monastery)|సూర్యోదయ భూమి (Land of Rising Sun)|రంగనది (Ranganadi)",
+            "sk|సిక్కిం|Sikkim|గాంగ్‌టక్ (Gangtok)|16 May 1975|6|ఇంగ్లీష్, నేపాలీ (English, Nepali)|1|1|32|రెడ్ పాండా (Red Panda)|బ్లడ్ ఫెసెంట్ (Blood Pheasant)|రోడోడెండ్రాన్ (Rhododendron)|ఆర్కిడ్ (Noble Orchid)|తీస్తా (Teesta)|లోసార్ (Losar)|యాలకులు (Cardamom)|సింఘి ఛామ్ (Singhi Chham)|WB|నాథులా పాస్ (Nathu La Pass)|అతి తక్కువ జనాభా (Least Populated)|తీస్తా ప్రాజెక్ట్ (Teesta-V)",
+            "ml|మేఘాలయ|Meghalaya|షిల్లాంగ్ (Shillong)|21 Jan 1972|12|ఇంగ్లీష్ (English)|2|1|60|క్లౌడెడ్ లియోపార్డ్ (Clouded Leopard)|హిల్ మైనా (Hill Myna)|గమారి (Gamari)|ఆర్కిడ్ (Lady's Slipper Orchid)|ఉమియం (Umiam)|వాంగ్లా (Wangala)|వరి, బంగాళదుంప (Rice, Potato)|నోంగ్క్రెమ్ (Nongkrem)|AS|చిరపుంజి (Cherrapunji)|మేఘాల నిలయం (Abode of Clouds)|ఉమియం డ్యామ్ (Umiam)",
+            "mn|మణిపూర్|Manipur|ఇంఫాల్ (Imphal)|21 Jan 1972|16|మణిపురి (Manipuri)|2|1|60|సంగై (Sangai)|ఫెసెంట్ (Hume's Pheasant)|ఉనింగ్థౌ (Uningthou)|షిరుయ్ లిల్లీ (Shirui Lily)|బరాక్ (Barak)|యావోషాంగ్ (Yaoshang)|వరి (Rice)|మణిపురి (Manipuri)|NL, MZ, AS|లోక్తాక్ సరస్సు (Loktak Lake)|జ్యువెల్ ఆఫ్ ఇండియా (Jewel of India)|ఖుగా డ్యామ్ (Khuga)",
+            "mz|మిజోరాం|Mizoram|ఐజ్వాల్ (Aizawl)|20 Feb 1987|11|మిజో, ఇంగ్లీష్ (Mizo, English)|1|1|40|సెరో (Serow)|ఫెసెంట్ (Hume's Pheasant)|ఐరన్ వుడ్ (Iron Wood)|రెడ్ వండా (Red Vanda)|ట్లావాంగ్ (Tlawng)|చప్చార్ కుట్ (Chapchar Kut)|వరి (Rice)|చెరవ్/బొంగు నృత్యం (Cheraw)|TR, AS, MN|సోలమన్ టెంపుల్ (Solomon's Temple)|అత్యధిక అటవీ శాతం (Highest Forest %)|సెర్లుయి బి (Serlui B)",
+            "nl|నాగాలాండ్|Nagaland|కోహిమా (Kohima)|1 Dec 1963|16|ఇంగ్లీష్ (English)|1|1|60|మిథున్ (Mithun)|ట్రాగోపాన్ (Blyth's Tragopan)|ఆల్డర్ (Alder)|రోడోడెండ్రాన్ (Rhododendron)|దోయాంగ్ (Doyang)|హార్న్ బిల్ పండుగ (Hornbill Fest)|వరి (Rice)|చాంగ్ లో (Chang Lo)|AR, AS, MN|జపుఫు పీక్ (Japfu Peak)|ఫెస్టివల్స్ ల్యాండ్ (Land of Festivals)|దోయాంగ్ డ్యామ్ (Doyang)",
+            "tr|త్రిపుర|Tripura|అగర్తలా (Agartala)|21 Jan 1972|8|బెంగాలీ (Bengali)|2|1|60|లీఫ్ మంకీ (Phayre's Leaf Monkey)|ఇంపీరియల్ పావురం (Imperial Pigeon)|అగర్ (Agar)|నాగేశ్వర్ (Nageshwar)|గోమతి (Gomati)|ఖార్చి పూజ (Kharchi Puja)|వరి (Rice)|హోజాగిరి (Hojagiri)|AS, MZ|ఉజ్జయంత్ ప్యాలెస్ (Ujjayanta Palace)|మూడు వైపులా బంగ్లాదేశ్ (Surrounded by BD)|గుమ్తి డ్యామ్ (Gumti)",
+            "ga|గోవా|Goa|పనాజీ (Panaji)|30 May 1987|2|కొంకణి (Konkani)|2|1|40|గౌర్ (Gaur)|బుల్బుల్ (Flame-throated Bulbul)|మట్టి (Matti)|రెడ్ జాస్మిన్ (Red Jasmine)|మాండోవి, జువారీ (Mandovi, Zuari)|షిగ్మో (Shigmo)|జీడిమామిడి (Cashew)|ఫుగ్డి (Fugdi)|MH, KA|బాసిలికా ఆఫ్ బోమ్ జీసస్ (Bom Jesus)|అతి చిన్న రాష్ట్రం (Smallest State)|సలౌలిమ్ (Salaulim)"
+        ];
+
+        const titles = [
+            { t: "రాజధాని (Capital)", icon: "🏛️" }, { t: "ఏర్పాటు (Formation)", icon: "📅" },
+            { t: "జిల్లాలు (Districts)", icon: "🗺️" }, { t: "అధికార భాష (Language)", icon: "🗣️" },
+            { t: "లోక్‌సభ (LS Seats)", icon: "🗳️" }, { t: "రాజ్యసభ (RS Seats)", icon: "🏛️" },
+            { t: "అసెంబ్లీ (MLA Seats)", icon: "👥" }, { t: "రాష్ట్ర జంతువు (Animal)", icon: "🦌" },
+            { t: "రాష్ట్ర పక్షి (Bird)", icon: "🦚" }, { t: "రాష్ట్ర చెట్టు (Tree)", icon: "🌳" },
+            { t: "రాష్ట్ర పువ్వు (Flower)", icon: "🌼" }, { t: "ప్రధాన నదులు (Rivers)", icon: "🌊" },
+            { t: "పండుగలు (Festivals)", icon: "🎪" }, { t: "ప్రధాన పంటలు (Crops)", icon: "🌾" },
+            { t: "ప్రముఖ నృత్యం (Dance)", icon: "💃" }, { t: "సరిహద్దులు (Borders)", icon: "🧭" },
+            { t: "ప్రసిద్ధ ప్రదేశాలు (Famous Places)", icon: "🏰" }, { t: "ప్రత్యేకత (Speciality)", icon: "✨" },
+            { t: "ప్రాజెక్టులు/డ్యామ్‌లు (Projects/Dams)", icon: "💧" }
+        ];
+
+        let parsedStates = [];
+
+        function initApp() {
+            const sidebar = document.getElementById('sidebar');
+            let btnsHTML = sidebar.innerHTML; 
+            
+            rawData.forEach(item => {
+                let parts = item.split('|');
+                let stateObj = {
+                    id: parts[0],
+                    nameTe: parts[1],
+                    nameEn: parts[2],
+                    vals: parts.slice(3)
+                };
+                parsedStates.push(stateObj);
+                
+                btnsHTML += `<div class="state-btn" id="btn-${stateObj.id}" onclick="loadState('${stateObj.id}')">
+                                <span>${stateObj.nameTe} <span style="font-size:0.8rem; color:#94a3b8;">(${stateObj.nameEn})</span></span>
+                                <span class="map-icon">🗺️</span>
+                             </div>`;
+            });
+            
+            sidebar.innerHTML = btnsHTML;
+        }
+
+        function loadState(id) {
+            document.querySelectorAll('.state-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${id}`).classList.add('active');
+
+            document.getElementById('welcome-area').style.display = 'none';
+            document.getElementById('content-area').style.display = 'flex';
+
+            const state = parsedStates.find(s => s.id === id);
+            
+            document.getElementById('disp-state-te').innerText = state.nameTe;
+            document.getElementById('disp-state-en').innerText = state.nameEn;
+
+            let gridHTML = '';
+            const colorClasses = ['c-1', 'c-2', 'c-3', 'c-4']; 
+
+            state.vals.forEach((val, index) => {
+                let titleObj = titles[index];
+                if(titleObj) { 
+                    let cClass = colorClasses[index % 4];
+                    gridHTML += `
+                        <div class="point-card ${cClass}">
+                            <div class="p-num">${index + 1}</div>
+                            <div class="p-title">${titleObj.icon} ${titleObj.t}</div>
+                            <div class="p-val">${val}</div>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('points-grid').innerHTML = gridHTML;
+        }
+
+        window.onload = initApp;
+
+    </script>
+</body>
+</html>

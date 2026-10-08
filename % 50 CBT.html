@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - 50 MCQs CBT Exam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b1120; --primary: #38bdf8; --secondary: #818cf8;
+            --text-light: #f8fafc; --card-bg: #1e293b; --yellow: #fde047;
+            --pink: #ec4899; --correct: #10b981; --wrong: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            background: var(--bg-color); color: var(--text-light); 
+            line-height: 1.6; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        /* WATERMARK */
+        .watermark {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 7rem; font-weight: 900; color: rgba(255, 255, 255, 0.03);
+            pointer-events: none; z-index: 0; white-space: nowrap; letter-spacing: 5px;
+        }
+
+        /* HEADER */
+        header { 
+            text-align: center; padding: 10px; background: linear-gradient(90deg, #1e293b, #0b1120); 
+            border-bottom: 3px solid var(--primary); z-index: 10; flex-shrink: 0; position: relative;
+        }
+        h1 { color: var(--primary); font-size: 1.8rem; font-weight: 800;}
+        .subtitle { font-size: 1rem; color: var(--yellow); font-weight: 600;}
+
+        /* APP SCREENS */
+        .screen { display: none; height: calc(100vh - 70px); z-index: 10; padding: 15px; overflow-y: auto;}
+        .screen.active { display: flex; }
+
+        /* START SCREEN */
+        #start-screen { align-items: center; justify-content: center; }
+        .start-box { background: var(--card-bg); padding: 40px; border-radius: 20px; text-align: center; border: 2px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 600px;}
+        .start-box h2 { font-size: 2.5rem; color: #fff; margin-bottom: 20px;}
+        .start-details { font-size: 1.3rem; color: #cbd5e1; margin-bottom: 30px;}
+        .btn-start { background: linear-gradient(90deg, #ec4899, #be185d); color: #fff; border: none; padding: 15px 40px; border-radius: 10px; font-size: 1.5rem; font-weight: 800; cursor: pointer; transition: 0.3s;}
+        .btn-start:hover { transform: scale(1.05); }
+
+        /* EXAM LAYOUT */
+        .exam-layout { display: flex; gap: 20px; width: 100%; max-width: 1500px; margin: 0 auto; height: 100%;}
+        
+        /* LEFT PANEL (50 BOXES) */
+        .left-panel {
+            width: 30%; background: var(--card-bg); border-radius: 15px; border: 1px solid #334155;
+            padding: 20px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .palette-title { font-size: 1.2rem; font-weight: 700; color: #fff; text-align: center; margin-bottom: 10px; border-bottom: 2px solid #334155; padding-bottom: 10px;}
+        
+        .palette-grid { 
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; 
+            overflow-y: auto; padding-right: 5px; margin-bottom: 15px; flex-grow: 1;
+        }
+        
+        .q-box {
+            background: #334155; color: #fff; font-weight: 700; font-size: 1.1rem; 
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: 0.2s;
+        }
+        .q-box:hover { transform: scale(1.05); }
+        .q-box.answered { background: var(--correct); color: #fff;}
+        .q-box.skipped { background: var(--wrong); color: #fff;}
+        .q-box.current { border-color: var(--yellow); transform: scale(1.1); box-shadow: 0 0 10px rgba(253, 224, 71, 0.5); z-index: 2;}
+
+        .palette-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; justify-content: center;}
+        .legend-item { display: flex; align-items: center; gap: 5px;}
+        .legend-color { width: 15px; height: 15px; border-radius: 3px; }
+
+        .btn-submit-anytime { 
+            background: linear-gradient(90deg, #10b981, #059669); color: #fff; border: none; 
+            padding: 15px; border-radius: 10px; font-size: 1.2rem; font-weight: 800; 
+            cursor: pointer; width: 100%; transition: 0.3s;
+        }
+        .btn-submit-anytime:hover { box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); transform: translateY(-2px);}
+
+        /* RIGHT PANEL */
+        .right-panel {
+            width: 70%; background: var(--card-bg); border-radius: 15px; border: 1px solid #334155;
+            padding: 30px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative; overflow-y: auto;
+        }
+        
+        .exam-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #334155; padding-bottom: 15px; margin-bottom: 20px;}
+        .q-tracker { font-size: 1.3rem; font-weight: 800; color: var(--yellow); background: rgba(253, 224, 71, 0.1); padding: 5px 15px; border-radius: 8px;}
+        .concept-tag { font-size: 1rem; color: var(--primary); font-weight: 600; border: 1px solid var(--primary); padding: 3px 10px; border-radius: 5px;}
+        
+        .q-text { font-size: 1.5rem; font-weight: 600; margin-bottom: 25px; line-height: 1.5; color: #fff;}
+        
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px;}
+        .opt-row { background: #0f172a; border: 2px solid #334155; padding: 15px 20px; border-radius: 10px; font-size: 1.2rem; font-weight: 600; cursor: pointer; transition: 0.2s;}
+        .opt-row:hover { border-color: var(--primary); background: #1e293b;}
+        .opt-row.selected { border-color: var(--yellow); background: rgba(253, 224, 71, 0.1); color: var(--yellow);}
+
+        .exam-footer { display: flex; justify-content: space-between; margin-top: auto;}
+        .btn { padding: 12px 30px; border-radius: 8px; font-size: 1.2rem; font-weight: 700; cursor: pointer; border: none; color: #fff;}
+        .btn-nav { background: #475569; }
+        .btn-nav:hover { background: #64748b; }
+        .btn-next { background: linear-gradient(90deg, #f59e0b, #d97706); }
+
+        /* RESULT SCREEN */
+        #result-screen { align-items: center; justify-content: center; }
+        .result-container { background: var(--card-bg); width: 100%; max-width: 1000px; border-radius: 15px; padding: 40px; border: 1px solid #334155; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;}
+        
+        .score-box { text-align: center; padding: 30px; background: #0f172a; border-radius: 15px; border: 2px dashed #475569;}
+        .circle-chart { width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 800; background: conic-gradient(var(--correct) 0%, var(--correct) 0%, #334155 0%, #334155 100%); }
+        .circle-inner { width: 120px; height: 120px; background: #0f172a; border-radius: 50%; display: flex; align-items: center; justify-content: center;}
+        
+        .analysis-box { background: #0f172a; padding: 25px; border-radius: 15px; border: 1px solid #334155; overflow-y: auto; max-height: 400px;}
+        .analysis-title { font-size: 1.4rem; color: var(--primary); font-weight: 800; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px;}
+        
+        .missed-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px;}
+        .tag-miss { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid #ef4444; padding: 5px 12px; border-radius: 5px; font-weight: 600; font-size: 0.9rem;}
+        .tag-good { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid #10b981; padding: 5px 12px; border-radius: 5px; font-weight: 600; font-size: 0.9rem;}
+
+        .bar-wrap { margin-bottom: 15px;}
+        .bar-label { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; margin-bottom: 5px; color: #cbd5e1;}
+        .bar-bg { width: 100%; height: 10px; background: #334155; border-radius: 5px; overflow: hidden;}
+        .bar-fill { height: 100%; background: var(--correct); border-radius: 5px; transition: width 1s;}
+
+        .btn-restart { background: var(--primary); color: #000; width: 100%; margin-top: 20px; grid-column: span 2; padding: 15px; border-radius: 10px; font-size: 1.3rem; font-weight: 800; cursor: pointer; border:none;}
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="watermark">RAHUL ACADEMY</div>
+
+    <header>
+        <h1>RAHUL ACADEMY</h1>
+        <div class="subtitle">🏆 50 MCQs Grand Mock Test (CBT Mode)</div>
+    </header>
+
+    <!-- START SCREEN -->
+    <div class="screen active" id="start-screen">
+        <div class="start-box">
+            <h2>Percentages CBT Exam</h2>
+            <div class="start-details">
+                <p><strong>Total Questions:</strong> 50</p>
+                <p><strong>Topics:</strong> Reduction & Increase, Exams, Consumption, Elections, Numbers, Mixtures</p>
+                <p style="margin-top: 15px; color: var(--yellow);">Test your accuracy & get instant concept analysis!</p>
+            </div>
+            <button class="btn-start" onclick="startTest()">Start CBT Exam 🚀</button>
+        </div>
+    </div>
+
+    <!-- EXAM SCREEN (SPLIT LAYOUT) -->
+    <div class="screen" id="exam-screen">
+        <div class="exam-layout">
+            
+            <!-- LEFT PANEL: QUESTION PALETTE -->
+            <div class="left-panel">
+                <div class="palette-title">📋 50 Questions Palette</div>
+                
+                <div class="palette-legend">
+                    <div class="legend-item"><div class="legend-color" style="background: var(--correct);"></div> Answered</div>
+                    <div class="legend-item"><div class="legend-color" style="background: var(--wrong);"></div> Skipped</div>
+                </div>
+
+                <div class="palette-grid" id="palette-grid">
+                    <!-- Boxes injected via JS -->
+                </div>
+                
+                <button class="btn-submit-anytime" onclick="submitTest()">Submit Test 📊</button>
+            </div>
+
+            <!-- RIGHT PANEL: QUESTION AREA -->
+            <div class="right-panel">
+                <div class="exam-header">
+                    <div class="q-tracker" id="q-tracker">Q 1 / 50</div>
+                    <div class="concept-tag" id="c-tag">Concept</div>
+                </div>
+                
+                <div class="q-text" id="q-text">Loading question...</div>
+                
+                <div class="options-list" id="options-list">
+                    <!-- Options injected via JS -->
+                </div>
+                
+                <div class="exam-footer">
+                    <button class="btn btn-nav" id="btn-prev" onclick="changeQ(-1)">⏮ Prev</button>
+                    <button class="btn btn-next" id="btn-next" onclick="changeQ(1)">Next / Skip ⏭</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="screen" id="result-screen">
+        <div class="result-container">
+            <div class="score-box">
+                <h2 style="color:#fff; margin-bottom: 20px; font-size:1.8rem;">Your Score</h2>
+                <div class="circle-chart" id="score-chart">
+                    <div class="circle-inner" id="score-text">0/50</div>
+                </div>
+                <h3 id="grade-text" style="color:var(--yellow); font-size:1.5rem; margin-top: 10px;">Grade</h3>
+            </div>
+            
+            <div class="analysis-box">
+                <div class="analysis-title">⚠️ Concepts to Revise (Missed/Skipped)</div>
+                <div class="missed-tags" id="missed-tags"></div>
+
+                <div class="analysis-title">📊 Concept-wise Performance</div>
+                <div id="chart-container"></div>
+            </div>
+            
+            <button class="btn-restart" onclick="location.reload()">🔄 Re-Take Exam</button>
+        </div>
+    </div>
+
+    <script>
+        // 50 Questions covering all PDF concepts
+        const quizData = [
+            // Concept 1: Reduction & Increase (10 Qs)
+            { concept: "Reduction & Increase", q: "చక్కెర ధర 20% తగ్గడం వల్ల ఒక వ్యక్తి 240 రూపాయలకు రెండు కేజీలు ఎక్కువ కొన్నాడు. తగ్గిన ధర (Reduced price per kg) ఎంత?[cite: 10]", opts: ["Rs. 20", "Rs. 24", "Rs. 25", "Rs. 30"], ans: 1 },
+            { concept: "Reduction & Increase", q: "పై ప్రశ్నలో (20% తగ్గింపు, 240 రూ॥ కు 2 కేజీలు అదనం), అసలు ధర (Original price per kg) ఎంత?[cite: 10]", opts: ["Rs. 25", "Rs. 28", "Rs. 30", "Rs. 32"], ans: 2 },
+            { concept: "Reduction & Increase", q: "పై ప్రశ్నలో (20% తగ్గింపు), అసలు మరియు తగ్గిన ధరల మధ్య వ్యత్యాసం ఎంత?[cite: 10]", opts: ["Rs. 4", "Rs. 5", "Rs. 6", "Rs. 8"], ans: 2 },
+            { concept: "Reduction & Increase", q: "మామిడి పళ్ళ ధర 20% తగ్గడం వల్ల ఒక వ్యక్తి 150 రూపాయలకు 12 పండ్లు అదనంగా పొందాడు. తగ్గక ముందు 16 మామిడి పండ్ల ధర ఎంత?[cite: 10]", opts: ["Rs. 40", "Rs. 50", "Rs. 60", "Rs. 80"], ans: 1 },
+            { concept: "Reduction & Increase", q: "గోధుమ ధర 21% తగ్గడం వల్ల ఒక వ్యక్తి 100 రూ॥ కు 10.5 కేజీలు ఎక్కువ పొందాడు. తగ్గిన ధర కేజీ ఎంత?[cite: 10]", opts: ["Rs. 1.5", "Rs. 2", "Rs. 2.5", "Rs. 3"], ans: 1 },
+            { concept: "Reduction & Increase", q: "చక్కెర ధర 10% తగ్గడం వల్ల ఒక వ్యక్తి 360 రూ॥ కు 6 కేజీలు అదనంగా పొందాడు. తగ్గిన, అసలు ధరల మధ్య వ్యత్యాసం ఎంత?[cite: 10]", opts: ["Rs. 0.50", "Rs. 0.60", "Rs. 0.66", "Rs. 0.75"], ans: 2 },
+            { concept: "Reduction & Increase", q: "ఒక వస్తువు ధర 33 1/3% తగ్గడం వలన ఒక వ్యక్తి 4 వస్తువులను 100 రూ॥ కు ఎక్కువగా పొందాడు. తగ్గక ముందు ఎన్ని వస్తువులు పొందేవాడు?[cite: 10]", opts: ["6", "8", "10", "12"], ans: 1 },
+            { concept: "Reduction & Increase", q: "ధర 20% పెరగడం వలన 400 రూ॥ కు ఒక వ్యక్తి 4 పండ్లను తక్కువగా పొందాడు. పెరిగిన ధర ఎంత?[cite: 10]", opts: ["Rs. 15", "Rs. 20", "Rs. 25", "Rs. 30"], ans: 1 },
+            { concept: "Reduction & Increase", q: "పుస్తకం ధర 5 రూపాయలు తగ్గడం వలన 600 రూ॥ కు 4 ఎక్కువ పుస్తకాలు కొన్నాడు. అసలు ధర ఎంత?[cite: 11]", opts: ["Rs. 25", "Rs. 30", "Rs. 35", "Rs. 40"], ans: 1 },
+            { concept: "Reduction & Increase", q: "పుస్తకం ధర 10 రూపాయలు తగ్గడం వలన 1200 రూ॥ కు 10 ఎక్కువ పుస్తకాలు కొన్నాడు. అసలు ధర ఎంత?[cite: 11]", opts: ["Rs. 30", "Rs. 40", "Rs. 50", "Rs. 60"], ans: 1 },
+            
+            // Concept 2: Examination Marks (8 Qs)
+            { concept: "Examination Marks", q: "మోహిత్ సుశాంత్ కన్నా 20% ఎక్కువ, రాజేష్ కన్నా 10% తక్కువ పొందాడు. సుశాంత్ కి 1080 వస్తే, రాజేష్ కి 2000 లో ఎంత శాతం వచ్చింది?[cite: 11]", opts: ["64%", "68%", "72%", "75%"], ans: 2 },
+            { concept: "Examination Marks", q: "హాఫ్ ఇయర్లీ లో 70% పాసయ్యారు. వారిలో 60% ఫైనల్ పాస్. హాఫ్ ఇయర్లీ ఫెయిల్ అయిన వారిలో 80% ఫైనల్ పాస్. ఫైనల్ పరీక్ష ఎంత శాతం పాస్?[cite: 11]", opts: ["58%", "62%", "66%", "72%"], ans: 2 },
+            { concept: "Examination Marks", q: "ఒక అభ్యర్థికి 25% మార్కులు వచ్చి 30 మార్కులతో ఫెయిల్. మరో అభ్యర్థికి 50% వచ్చి పాస్ కన్నా 20 మార్కులు ఎక్కువ. మొత్తం మార్కులు ఎన్ని?[cite: 12]", opts: ["150", "200", "250", "300"], ans: 1 },
+            { concept: "Examination Marks", q: "80% మంది ఫిలాసఫీలో, 70% గణితంలో పాస్. 15% రెండింటిలో ఫెయిల్. 2 సబ్జెక్టుల్లో పాసైన వారు 390 మంది ఉంటే మొత్తం ఎంత మంది?[cite: 12]", opts: ["500", "550", "600", "650"], ans: 2 },
+            { concept: "Examination Marks", q: "ఫిజిక్స్ లో 60%, గణితంలో 70% పాస్. ఎంత గరిష్ట శాతం విద్యార్థులు 2 సబ్జెక్టుల్లో ఫెయిల్ అయినారు?[cite: 12]", opts: ["10%", "20%", "30%", "40%"], ans: 2 },
+            { concept: "Examination Marks", q: "A కి 273 మార్కులు వచ్చి పాస్ పర్సెంట్ కన్నా 5% ఎక్కువ. B కి 312 వస్తే పాస్ పర్సెంట్ కన్నా ఎంత శాతం ఎక్కువ?[cite: 12]", opts: ["15%", "20%", "25%", "30%"], ans: 1 },
+            { concept: "Examination Marks", q: "ఒక పరీక్షలో పాస్ అవ్వడానికి 40% కావాలి. 220 మార్కులు వచ్చి 20 మార్కులతో ఫెయిల్ అయ్యాడు. గరిష్ట మార్కులు ఎంత?[cite: 12]", opts: ["500", "600", "700", "800"], ans: 1 },
+            { concept: "Examination Marks", q: "ఒక పరీక్షలో ఒక అభ్యర్థి 30% పొంది 6 మార్కులతో ఫెయిల్, ఇంకొకరు 40% పొంది పాస్ కన్నా 6 ఎక్కువ. పాస్ మార్కులు ఎన్ని?[cite: 12]", opts: ["36", "42", "48", "54"], ans: 1 },
+
+            // Concept 3: Commodity & Consumption (12 Qs)
+            { concept: "Commodity & Consumption", q: "ఒక వస్తువు ధర 20% తగ్గి, వినియోగం 10% పెరిగితే, ఖర్చులో మార్పు ఏమిటి?[cite: 12]", opts: ["12% Increase", "12% Decrease", "8% Increase", "8% Decrease"], ans: 1 },
+            { concept: "Commodity & Consumption", q: "ధర 20% పెరుగుతుంది, ఖర్చు 8% పెరగాలంటే వినియోగం ఎంత శాతం తగ్గించాలి?[cite: 12]", opts: ["8%", "10%", "12%", "15%"], ans: 1 },
+            { concept: "Commodity & Consumption", q: "ధర 20% తగ్గి, వినియోగం 20% పెరిగితే ఖర్చులో మార్పు?[cite: 12]", opts: ["4% Inc", "4% Dec", "No Change", "2% Dec"], ans: 1 },
+            { concept: "Commodity & Consumption", q: "ధర 16.66% తగ్గితే, ఖర్చు తగ్గకుండా ఉండటానికి వినియోగాన్ని ఎంత శాతం పెంచాలి?[cite: 12]", opts: ["16.66%", "20%", "25%", "33.33%"], ans: 1 },
+            { concept: "Commodity & Consumption", q: "ధర 20% పెరిగితే, ఖర్చు పెరగకుండా ఉండటానికి గృహిణి వినియోగాన్ని ఎంత శాతం తగ్గించాలి?[cite: 13]", opts: ["16.66%", "20%", "25%", "33.33%"], ans: 0 },
+            { concept: "Commodity & Consumption", q: "ధర 33.3% పెరిగితే, ఖర్చు పెరగకుండా ఉండటానికి వినియోగాన్ని ఎంత శాతం తగ్గించాలి?[cite: 13]", opts: ["20%", "25%", "30%", "33.3%"], ans: 1 },
+            { concept: "Commodity & Consumption", q: "ధర 20% తగ్గుతుంది. ఖర్చు 10% పెరగాలంటే వినియోగం ఎంత శాతం పెంచాలి?[cite: 13]", opts: ["30%", "35%", "37.5%", "40%"], ans: 2 },
+            { concept: "Commodity & Consumption", q: "ధర మొదట 10%, తర్వాత 20% పెరిగింది. ప్రస్తుత ధర 33 రూ॥ ఉంటే అసలు ధర ఎంత?[cite: 13]", opts: ["Rs. 20", "Rs. 25", "Rs. 30", "Rs. 35"], ans: 1 },
+            { concept: "Commodity & Consumption", q: "ధర 20% పెరుగుతుంది. ఖర్చులు 10% తగ్గాలంటే వినియోగం ఎంత శాతం తగ్గించాలి?[cite: 13]", opts: ["20%", "25%", "30%", "35%"], ans: 1 },
+            { concept: "Commodity & Consumption", q: "పెట్రోల్ ధర 20% పెరిగినప్పుడు ఒక వ్యక్తి వినియోగాన్ని 10% తగ్గిస్తాడు. వ్యయంలో మార్పు శాతం ఎంత?[cite: 13]", opts: ["8% Inc", "8% Dec", "10% Inc", "10% Dec"], ans: 0 },
+            { concept: "Commodity & Consumption", q: "పన్ను 20% పెరుగుతుంది, వినియోగం 25% తగ్గుతుంది. పన్ను ఆదాయంలో మార్పు ఎంత?[cite: 13]", opts: ["5% Inc", "5% Dec", "10% Inc", "10% Dec"], ans: 3 },
+            { concept: "Commodity & Consumption", q: "ఎగ్జిబిషన్ ఫీజు 25% తగ్గింది, ఇది అమ్మకాలను 20% పెంచింది. సందర్శకుల సంఖ్య శాతం పెరుగుదల ఎంత?[cite: 13]", opts: ["40%", "50%", "60%", "70%"], ans: 2 },
+
+            // Concept 4: Election Based (8 Qs)
+            { concept: "Election Based", q: "గెలిచిన వ్యక్తికి 57% ఓట్లు పడ్డాయి, మెజారిటీ 420 ఓట్లు. మొత్తం ఓటర్ల సంఖ్య ఎంత?[cite: 14]", opts: ["2500", "3000", "3500", "4000"], ans: 1 },
+            { concept: "Election Based", q: "ఓడిన వ్యక్తికి 40% ఓట్లు వచ్చాయి మరియు 2412 ఓట్ల తేడాతో ఓడిపోయాడు. మొత్తం ఓటర్లు ఎందరు?[cite: 14]", opts: ["10000", "12060", "14000", "15000"], ans: 1 },
+            { concept: "Election Based", q: "20% ఓటు వేయలేదు. 120 ఓట్లు చెల్లలేదు. గెలిచిన అభ్యర్థి 200 ఓట్లు ఎక్కువ పొంది, మొత్తం ఓట్లలో 41% పొందాడు. ఓడిన అభ్యర్థి పోలైన ఓట్లలో శాతం?[cite: 14]", opts: ["39%", "42%", "45%", "48%"], ans: 2 },
+            { concept: "Election Based", q: "గెలిచిన అభ్యర్థి 56% ఓట్లు పొంది, 144 ఓట్ల మెజారిటీతో గెలిచాడు. 80% మంది ఓటు వేశారు. మొత్తం ఓటర్ల సంఖ్య ఎంత?[cite: 15]", opts: ["1200", "1500", "1800", "2000"], ans: 1 },
+            { concept: "Election Based", q: "4/5 వంతు సోనాకు, మిగతావారు శాన్వికు మాట ఇచ్చారు. 10% సోనా ఓటర్లు, 20% శాన్వి ఓటర్లు మాట తప్పారు. సోనాకు 216 వస్తే మొత్తం ఓటర్లు?[cite: 15]", opts: ["250", "300", "350", "400"], ans: 1 },
+            { concept: "Election Based", q: "2/5 మంది P కి, మిగతావారు Q కి వాగ్దానం చేశారు. P వాగ్దానాల్లో 15%, Q వాగ్దానాల్లో 25% మాట తప్పారు. P 2 ఓట్లతో ఓడిపోతే మొత్తం ఓటర్లు?[cite: 15]", opts: ["100", "200", "300", "400"], ans: 0 },
+            { concept: "Election Based", q: "ఒక ఎన్నికలో 10% ఓట్లు చెల్లనివి. గెలిచిన అభ్యర్థికి చెల్లుబాటైన ఓట్లలో 60% వచ్చి 7200 మెజారిటీ. మొత్తం ఓట్లు?[cite: 14]", opts: ["30,000", "36,000", "40,000", "45,000"], ans: 2 },
+            { concept: "Election Based", q: "ఒక ఎన్నికలో 20% ఓటర్లు ఓటు వేయలేదు. గెలిచిన అభ్యర్థికి వేసిన ఓట్లలో 60% వచ్చి 3200 మెజారిటీ. ఓటరు జాబితాలోని ఓటర్లు?[cite: 14]", opts: ["16,000", "20,000", "24,000", "25,000"], ans: 1 },
+
+            // Concept 5: Based on Numbers (6 Qs)
+            { concept: "Based on Numbers", q: "మూడు సంఖ్యల నిష్పత్తి 5:4:3. ప్రతి సంఖ్యను వరుసగా 10%, 20% మరియు 30% పెంచితే కొత్త నిష్పత్తి ఎంత?[cite: 15]", opts: ["55:48:39", "50:40:30", "60:50:40", "65:55:45"], ans: 0 },
+            { concept: "Based on Numbers", q: "మొదటి సంఖ్య రెండవ సంఖ్యలో 3/5 వంతు. మొత్తం 6424. మొదటి సంఖ్యలో 10% కి రెండవ సంఖ్యలో 20% మధ్య తేడా?[cite: 15]", opts: ["500.5", "562.1", "600", "620.4"], ans: 1 },
+            { concept: "Based on Numbers", q: "మొదటి సంఖ్య రెండవ సంఖ్యలో 2/3 వంతు. తేడా 250. మొదటి సంఖ్యలో 20% కి రెండవ సంఖ్యలో 10% మధ్య తేడా?[cite: 15]", opts: ["25", "30", "35", "40"], ans: 0 },
+            { concept: "Based on Numbers", q: "రెండు సంఖ్యలు 3వ సంఖ్య కన్నా 30%, 37% తక్కువ. రెండవ సంఖ్య మొదటి సంఖ్య కన్నా ఎంత శాతం తక్కువ?[cite: 15]", opts: ["8%", "10%", "12%", "15%"], ans: 1 },
+            { concept: "Based on Numbers", q: "రెండు సంఖ్యలు మూడో సంఖ్య కన్నా 20%, 50% ఎక్కువ. ఈ రెండు సంఖ్యల నిష్పత్తి ఎంత?[cite: 15]", opts: ["2:3", "3:4", "4:5", "5:6"], ans: 2 },
+            { concept: "Based on Numbers", q: "గోపాల్ 50 ఆరెంజ్లు లేదా 40 మామిడి పండ్లు కొనగలడు. 10% టాక్సీకి ఖర్చు చేసి 20 మామిడి పండ్లు కొన్నాడు. మిగిలిన డబ్బుతో ఎన్ని ఆరెంజ్ లు కొనగలడు?[cite: 16]", opts: ["15", "20", "25", "30"], ans: 1 },
+
+            // Concept 6: Mixtures & Solutions (6 Qs)
+            { concept: "Mixtures & Solutions", q: "ద్రావణంలో చక్కెర 15% కలదు. 20 కేజీల నీరు ఆవిరి కావడం వలన చక్కెర 20% అయ్యింది. మొదట ద్రావణం పరిమాణం ఎంత?[cite: 16]", opts: ["60 kg", "70 kg", "80 kg", "90 kg"], ans: 2 },
+            { concept: "Mixtures & Solutions", q: "40 లీటర్ల ద్రావణంలో 25% యాసిడ్. యాసిడ్ 20% కి తగ్గించడానికి ఎంత నీరు కలపాలి?[cite: 16]", opts: ["5 L", "10 L", "15 L", "20 L"], ans: 1 },
+            { concept: "Mixtures & Solutions", q: "16 లీటర్ల ద్రావణంలో 30% యాసిడ్. యాసిడ్ 40% అవ్వడానికి ఎంత నీటిని తొలిగించాలి?[cite: 16]", opts: ["2 L", "4 L", "6 L", "8 L"], ans: 1 },
+            { concept: "Mixtures & Solutions", q: "60 కేజీల ఇసుక, సిమెంట్ మిశ్రమంలో 45% సిమెంట్. సిమెంట్ 10% అవ్వాలంటే ఎంత ఇసుకను కలిపాలి?[cite: 16]", opts: ["150 kg", "180 kg", "210 kg", "240 kg"], ans: 2 },
+            { concept: "Mixtures & Solutions", q: "ఒక ఉప్పు ద్రావణంలో ఉప్పు 10%. 30 కేజీల నీరు ఆవిరి కావడం వల్ల ఉప్పు 25% కి పెరిగింది. మొదట ద్రావణం పరిమాణం ఎంత?[cite: 16]", opts: ["40 kg", "50 kg", "60 kg", "70 kg"], ans: 1 },
+            { concept: "Mixtures & Solutions", q: "80 లీటర్ల పాలు, నీటి మిశ్రమంలో 25% పాలు. పాల శాతం 20% అవ్వాలంటే ఎంత నీటిని కలిపాలి?[cite: 16]", opts: ["10 L", "15 L", "20 L", "25 L"], ans: 2 }
+        ];
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let visited = new Array(quizData.length).fill(false); // Track visited questions
+
+        function startTest() {
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('exam-screen').classList.add('active');
+            initPalette();
+            loadQuestion();
+        }
+
+        function initPalette() {
+            let gridHTML = '';
+            for(let i=0; i<quizData.length; i++) {
+                gridHTML += `<div class="q-box" id="qbox-${i}" onclick="gotoQuestion(${i})">${i+1}</div>`;
+            }
+            document.getElementById('palette-grid').innerHTML = gridHTML;
+        }
+
+        function updatePalette() {
+            for(let i=0; i<quizData.length; i++) {
+                let box = document.getElementById(`qbox-${i}`);
+                box.className = 'q-box'; // reset
+
+                // Mark Answered or Skipped (Red) if visited
+                if (userAnswers[i] !== null) {
+                    box.classList.add('answered');
+                } else if (visited[i]) {
+                    box.classList.add('skipped');
+                }
+
+                // Highlight Current
+                if (i === currentQIndex) {
+                    box.classList.add('current');
+                }
+            }
+        }
+
+        function gotoQuestion(index) {
+            visited[currentQIndex] = true; // Mark current as visited before jumping
+            currentQIndex = index;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            visited[currentQIndex] = true; // Mark newly loaded as visited
+            updatePalette(); 
+
+            const data = quizData[currentQIndex];
+            document.getElementById('q-tracker').innerText = `Q ${currentQIndex + 1} / 50`;
+            document.getElementById('c-tag').innerText = data.concept;
+            document.getElementById('q-text').innerText = data.q;
+            
+            let optsHTML = '';
+            data.opts.forEach((opt, idx) => {
+                const isSelected = userAnswers[currentQIndex] === idx ? 'selected' : '';
+                optsHTML += `<div class="opt-row ${isSelected}" onclick="selectOption(${idx})">${String.fromCharCode(65+idx)}. ${opt}</div>`;
+            });
+            document.getElementById('options-list').innerHTML = optsHTML;
+
+            // Prev/Next buttons logic
+            document.getElementById('btn-prev').style.display = currentQIndex === 0 ? 'none' : 'block';
+            document.getElementById('btn-next').innerText = currentQIndex === quizData.length - 1 ? 'Finish' : 'Next / Skip ⏭';
+        }
+
+        function selectOption(idx) {
+            userAnswers[currentQIndex] = idx;
+            loadQuestion(); // reload to show selection & update palette color
+        }
+
+        function changeQ(step) {
+            visited[currentQIndex] = true;
+            if(currentQIndex + step >= quizData.length) {
+                submitTest();
+            } else {
+                currentQIndex += step;
+                loadQuestion();
+            }
+        }
+
+        function submitTest() {
+            if(confirm("Are you sure you want to submit the exam?")) {
+                document.getElementById('exam-screen').classList.remove('active');
+                document.getElementById('result-screen').classList.add('active');
+                generateAnalysis();
+            }
+        }
+
+        function generateAnalysis() {
+            let score = 0;
+            let conceptStats = {};
+
+            quizData.forEach(q => {
+                if(!conceptStats[q.concept]) {
+                    conceptStats[q.concept] = { total: 0, correct: 0 };
+                }
+                conceptStats[q.concept].total++;
+            });
+
+            userAnswers.forEach((ans, idx) => {
+                const q = quizData[idx];
+                if(ans === q.ans) {
+                    score++;
+                    conceptStats[q.concept].correct++;
+                }
+            });
+
+            // Score UI
+            const perc = (score / 50) * 100;
+            document.getElementById('score-text').innerText = `${score}/50`;
+            document.getElementById('score-chart').style.background = `conic-gradient(var(--correct) 0%, var(--correct) ${perc}%, #334155 ${perc}%, #334155 100%)`;
+            
+            const grade = perc >= 80 ? '🔥 Excellent!' : (perc >= 50 ? '👍 Good Job!' : '📚 Needs Practice');
+            document.getElementById('grade-text').innerText = grade;
+
+            // Analysis Chart
+            let chartHTML = '';
+            let missedHTML = '';
+
+            for (const [concept, stats] of Object.entries(conceptStats)) {
+                const cPerc = (stats.correct / stats.total) * 100;
+                
+                if(stats.correct < stats.total) {
+                    missedHTML += `<span class="tag-miss">${concept} (${stats.total - stats.correct} missed/wrong)</span>`;
+                } else {
+                    missedHTML += `<span class="tag-good">${concept} (Perfect)</span>`;
+                }
+
+                chartHTML += `
+                    <div class="bar-wrap">
+                        <div class="bar-label"><span>${concept}</span> <span>${stats.correct}/${stats.total}</span></div>
+                        <div class="bar-bg">
+                            <div class="bar-fill" style="width: ${cPerc}%; background: ${cPerc === 100 ? 'var(--correct)' : (cPerc > 0 ? 'var(--yellow)' : 'var(--wrong)')};"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('missed-tags').innerHTML = missedHTML || '<span class="tag-good">Outstanding! No concepts missed.</span>';
+            document.getElementById('chart-container').innerHTML = chartHTML;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="te" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>భారతదేశంలో బొగ్గు వనరులు - Rahul Academy</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Sans Telugu & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Telugu"', 'Outfit', 'sans-serif'],
+          },
+          colors: {
+            deepBg: '#030306',
+            cardBg: '#090a12',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #030306;
+      color: #f1f5f9;
+      font-family: 'Noto Sans Telugu', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Rahul Academy Watermark Layer */
+    .watermark-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-rows: repeat(auto-fill, minmax(220px, 1fr));
+      opacity: 0.035;
+      user-select: none;
+    }
+
+    .watermark-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-25deg);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      white-space: nowrap;
+    }
+
+    .glass-card {
+      background: rgba(10, 11, 20, 0.88);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glow-cyan { box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3); }
+    .glow-purple { box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.3); }
+
+    /* Interactive Mindmap Tree Nodes */
+    .mm-node {
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .mm-node:hover {
+      transform: translateX(3px);
+      border-color: rgba(6, 182, 212, 0.6);
+      background: rgba(6, 182, 212, 0.12);
+    }
+    .mm-node.active {
+      background: linear-gradient(90deg, rgba(6, 182, 212, 0.25) 0%, rgba(168, 85, 247, 0.18) 100%);
+      border-color: #06b6d4;
+      box-shadow: 0 0 16px -2px rgba(6, 182, 212, 0.4);
+      transform: translateX(4px);
+    }
+    .mm-node.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 15%;
+      height: 70%;
+      width: 3.5px;
+      background: #06b6d4;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .map-pulse {
+      animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #07080f; }
+    ::-webkit-scrollbar-thumb { background: #222538; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #373b54; }
+  </style>
+</head>
+<body class="selection:bg-cyan-500 selection:text-black">
+
+  <!-- Rahul Academy Watermark Background -->
+  <div class="watermark-grid">
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">COAL ENERGY RESOURCES</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">COAL ENERGY RESOURCES</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">COAL ENERGY RESOURCES</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">COAL ENERGY RESOURCES</span></div>
+  </div>
+
+  <div class="relative z-10 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-[#06070edb] backdrop-blur-md px-4 lg:px-8 py-3">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 shadow-lg shadow-cyan-500/20">
+            <i data-lucide="flame" class="w-5 h-5 text-white animate-pulse"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg md:text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-300 to-pink-400">
+                భారతదేశంలో బొగ్గు వనరులు (Coal Resources of India)
+              </h1>
+              <span class="text-[10px] font-bold text-amber-300 border border-amber-500/40 bg-amber-950/40 px-2 py-0.5 rounded-full tracking-wider">RAHUL ACADEMY</span>
+            </div>
+            <p class="text-[11px] text-slate-400">1 BT ఉత్పత్తి మైలురాయి, నిల్వలు, బిటుమినస్ vs లిగ్నైట్ గనులు & 20 MCQs</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="openQuizModal()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/30 hover:opacity-95 transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="award" class="w-4 h-4"></i>
+            <span>20 ప్రాక్టీస్ MCQs</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6 w-full space-y-6">
+
+      <!-- Compact Banner -->
+      <section class="glass-card rounded-2xl p-4 md:p-5 border border-cyan-500/30 glow-cyan">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[10px] font-semibold mb-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+              ఇంధన వనరులు • బొగ్గు (FY 2024-25 సమగ్ర విశ్లేషణ)
+            </div>
+            <h2 class="text-xl md:text-2xl font-extrabold text-white">
+              భారత బొగ్గు రంగం: ఉత్పత్తి, నిల్వలు & ప్రధాన బొగ్గు గనులు
+            </h2>
+            <p class="text-slate-300 text-xs mt-1 max-w-2xl">
+              ప్రాథమిక ఇంధన వినియోగంలో 57.62% వాటా, చరిత్రలో తొలిసారిగా 1,047.52 MT ఉత్పత్తి, ఒడిశా #1 ఉత్పత్తి, జార్ఖండ్ #1 నిల్వలు మరియు బిటుమినస్, లిగ్నైట్ గనుల సమగ్ర సమాచారం.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] shrink-0">
+            <div class="p-2.5 rounded-xl bg-black/50 border border-cyan-500/30 text-center">
+              <span class="text-slate-400 block text-[10px]">వార్షిక ఉత్పత్తి</span>
+              <strong class="text-cyan-300">1,047.52 MT (FY25)</strong>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/50 border border-purple-500/30 text-center">
+              <span class="text-slate-400 block text-[10px]">ఉత్పత్తిలో #1</span>
+              <strong class="text-purple-300">ఒడిశా (~239 MT)</strong>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/50 border border-emerald-500/30 text-center">
+              <span class="text-slate-400 block text-[10px]">నిల్వలలో #1</span>
+              <strong class="text-emerald-300">జార్ఖండ్ (~26.4%)</strong>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/50 border border-pink-500/30 text-center">
+              <span class="text-slate-400 block text-[10px]">లిగ్నైట్ ప్రధాన గని</span>
+              <strong class="text-pink-300">నెయ్‌వేలి (&gt;70%)</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3-PANE LAYOUT: [MINI MAP (3 COLS)] + [MINDMAP (4 COLS)] + [RICH INFO (5 COLS)] -->
+      <section class="grid lg:grid-cols-12 gap-5 items-start">
+        
+        <!-- PANE 1: COMPACT MINI INDIA MAP (3 COLS) -->
+        <div class="lg:col-span-3 glass-card rounded-2xl p-3 border border-cyan-500/30 bg-[#060712] flex flex-col items-center justify-center">
+          <div class="w-full flex justify-between items-center px-1 mb-2">
+            <span class="text-[10px] text-cyan-300 font-bold tracking-wider uppercase flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3 h-3"></i> మినీ అట్లాస్
+            </span>
+            <span class="text-[9px] text-slate-500 font-mono">లైవ్ పిన్</span>
+          </div>
+
+          <!-- Small Vector Map -->
+          <svg viewBox="0 0 320 370" class="w-full max-w-[210px] h-auto drop-shadow-lg">
+            <!-- India Outline -->
+            <path d="M 110 25 L 130 18 L 155 35 L 160 60 L 180 80 L 200 90 L 210 80 L 230 85 L 245 95 L 270 95 L 285 110 L 285 130 L 270 140 L 245 145 L 235 165 L 210 180 L 200 210 L 190 250 L 175 280 L 160 330 L 155 345 L 150 330 L 130 290 L 120 250 L 110 215 L 95 195 L 75 185 L 70 170 L 85 160 L 80 120 L 100 90 L 95 60 Z" 
+                  fill="#0c1020" stroke="#22d3ee" stroke-width="1.6" stroke-linejoin="round" />
+
+            <!-- Static Regional Belts -->
+            <!-- Gondwana East Belt (Jharkhand, Odisha, Bengal, Chhattisgarh) -->
+            <circle cx="215" cy="180" r="16" fill="#06b6d4" opacity="0.15" />
+            <!-- Singareni South Belt -->
+            <circle cx="160" cy="245" r="12" fill="#a855f7" opacity="0.15" />
+            <!-- Neyveli Lignite Belt -->
+            <circle cx="160" cy="315" r="10" fill="#ec4899" opacity="0.15" />
+
+            <!-- Dynamic Pin (Moved via Mindmap Click) -->
+            <circle id="map-pin-pulse" cx="215" cy="175" r="10" fill="#06b6d4" opacity="0.4" class="map-pulse" />
+            <circle id="map-pin-core" cx="215" cy="175" r="4.5" fill="#06b6d4" stroke="#ffffff" stroke-width="1.8" />
+            <text id="map-pin-label" x="145" y="196" fill="#38bdf8" font-size="8.5" font-weight="bold">ఒడిశా (తాల్చేర్ / ఇబ్)</text>
+          </svg>
+
+          <div class="mt-2 text-center text-[9px] text-slate-400 bg-white/5 px-2 py-1 rounded w-full border border-white/5 font-mono">
+            మైండ్‌మ్యాప్ ఎంపిక ఆధారంగా పిన్ మారుతుంది
+          </div>
+        </div>
+
+        <!-- PANE 2: CLEAR INTERACTIVE MINDMAP TREE (4 COLS) -->
+        <div class="lg:col-span-4 bg-[#080913] border border-cyan-500/30 rounded-2xl p-3.5 space-y-2.5 text-xs max-h-[580px] overflow-y-auto shadow-2xl">
+          <div class="flex items-center justify-between pb-2 border-b border-white/10 sticky top-0 bg-[#080913] z-10">
+            <span class="font-bold text-cyan-300 text-xs flex items-center gap-1.5">
+              <i data-lucide="list-tree" class="w-3.5 h-3.5 text-cyan-400"></i>
+              బొగ్గు మైండ్‌మ్యాప్ నోడ్స్
+            </span>
+            <span class="text-[9px] text-amber-400 font-mono">నోడ్ క్లిక్ చేయండి</span>
+          </div>
+
+          <div class="space-y-1.5">
+            <!-- Node 1: Overview & 1 BT Record -->
+            <div onclick="selectCoalConcept('overview_production')" id="node-overview_production" class="mm-node active p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-200 block text-xs">1. అవలోకనం & 1 BT రికార్డు</strong>
+                <span class="text-[10px] text-slate-400">57.62% ఇంధన వాటా • 1,047.52 MT (FY25)</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+            </div>
+
+            <!-- Node 2: Reserves & Lignite -->
+            <div onclick="selectCoalConcept('reserves_lignite')" id="node-reserves_lignite" class="mm-node p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-200 block text-xs">2. మొత్తం నిల్వలు & లిగ్నైట్</strong>
+                <span class="text-[10px] text-slate-400">~389.42 BT • నెయ్‌వేలి లిగ్నైట్ (&gt;70%)</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+            </div>
+
+            <!-- Node 3: State-wise Production & Imports -->
+            <div onclick="selectCoalConcept('production_imports')" id="node-production_imports" class="mm-node p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-200 block text-xs">3. ఉత్పత్తి ర్యాంకింగ్ & దిగుమతులు</strong>
+                <span class="text-[10px] text-slate-400">ఒడిశా #1, ఛత్తీస్‌గఢ్ #2, జార్ఖండ్ #3 • దిగుమతులు -8.4%</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+            </div>
+
+            <!-- Node 4: Jharkhand Bituminous -->
+            <div onclick="selectCoalConcept('jharkhand_coal')" id="node-jharkhand_coal" class="mm-node p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-200 block text-xs">4. జార్ఖండ్ (~26.4% నిల్వలు)</strong>
+                <span class="text-[10px] text-slate-400">ఝరియా, బొకారో, గిరిదిహ్, కరణ్‌పురా</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+            </div>
+
+            <!-- Node 5: Odisha & Chhattisgarh -->
+            <div onclick="selectCoalConcept('odisha_chhattisgarh')" id="node-odisha_chhattisgarh" class="mm-node p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-200 block text-xs">5. ఒడిశా & ఛత్తీస్‌గఢ్</strong>
+                <span class="text-[10px] text-slate-400">తాల్చేర్, ఇబ్ వ్యాలీ • కోర్బా, హస్‌దేవ్-అరండ్</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+            </div>
+
+            <!-- Node 6: West Bengal, MP & Telangana -->
+            <div onclick="selectCoalConcept('wb_mp_telangana')" id="node-wb_mp_telangana" class="mm-node p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-200 block text-xs">6. పశ్చిమ బెంగాల్, MP & తెలంగాణ</strong>
+                <span class="text-[10px] text-slate-400">రాణిగంజ్, సింగ్రౌలి • సింగరేణి (SCCL)</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+            </div>
+
+            <!-- Node 7: Lignite States (TN, RJ, GJ) -->
+            <div onclick="selectCoalConcept('lignite_states')" id="node-lignite_states" class="mm-node p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-200 block text-xs">7. లిగ్నైట్ నిల్వ రాష్ట్రాలు</strong>
+                <span class="text-[10px] text-slate-400">నెయ్‌వేలి (TN), బార్మర్/బికనీర్ (RJ), కచ్ (GJ)</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+            </div>
+
+            <!-- Node 8: Meghalaya Tertiary Coal -->
+            <div onclick="selectCoalConcept('meghalaya_coal')" id="node-meghalaya_coal" class="mm-node p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-200 block text-xs">8. మేఘాలయ టెర్షియరీ బొగ్గు</strong>
+                <span class="text-[10px] text-slate-400">జైంతియా హిల్స్ • ర్యాట్-హోల్ మైనింగ్ ప్రభావం</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANE 3: DETAILED INFORMATION DISPLAY (5 COLS) -->
+        <div class="lg:col-span-5 glass-card rounded-2xl p-5 border border-cyan-500/30 glow-cyan space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-white/10 flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span id="detail-tag" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono">
+                OVERVIEW & PRODUCTION
+              </span>
+              <h4 id="detail-title" class="text-lg font-bold text-white">బొగ్గు ప్రాధాన్యత & 1 BT చారిత్రాత్మక ఉత్పత్తి</h4>
+            </div>
+            <span class="text-[10px] text-amber-400 font-semibold font-mono">Rahul Academy Master Notes</span>
+          </div>
+
+          <!-- Dynamic Info Content -->
+          <div id="detail-content" class="space-y-3 text-xs leading-relaxed text-slate-300">
+            <!-- Content Injected via JS -->
+          </div>
+
+          <!-- Exam Tip Box -->
+          <div id="detail-tip" class="p-3 rounded-xl bg-black/60 border border-white/10 text-[11px] leading-relaxed text-amber-200">
+            <!-- Exam Tip Injected via JS -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 20 PRACTICE MCQS SECTION -->
+      <section class="glass-card rounded-2xl p-6 md:p-8 border border-white/10 glow-purple text-center relative overflow-hidden">
+        <div class="max-w-2xl mx-auto space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center mx-auto shadow-lg shadow-purple-500/30">
+            <i data-lucide="award" class="w-6 h-6 text-white"></i>
+          </div>
+          <h3 class="text-2xl font-extrabold text-white">బొగ్గు వనరులు - 20 ప్రాక్టీస్ MCQs</h3>
+          <p class="text-xs md:text-sm text-slate-300">
+            FY25 ఉత్పత్తి, 1 BT మైలురాయి, ఝరియా, తాల్చేర్, కోర్బా, సింగరేణి, నెయ్‌వేలి మరియు టెర్షియరీ బొగ్గు గనులపై 20 ప్రామాణిక పరీక్షా ప్రశ్నలు.
+          </p>
+          <div class="pt-2">
+            <button onclick="openQuizModal()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 text-white font-bold text-xs shadow-xl hover:scale-105 transition flex items-center gap-2 mx-auto cursor-pointer">
+              <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+              20 MCQs పరీక్ష ప్రారంభించండి
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="border-t border-white/10 bg-[#040408] py-4 px-4 text-center text-xs text-slate-500">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-cyan-400">RAHUL ACADEMY</span>
+          <span>• భారతదేశంలో బొగ్గు వనరుల సమగ్ర అట్లాస్ (Clear Mindmap & Mini-Map Edition)</span>
+        </div>
+        <span class="text-slate-400 font-mono">Dark Neon Edition • Official Watermark Protected</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- 20 MCQs మోడల్ (Modal) -->
+  <div id="quiz-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-[#0b0c16] border border-cyan-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 glow-cyan relative max-h-[92vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="check-square" class="text-cyan-400 w-5 h-5"></i>
+          <div>
+            <h3 class="text-lg font-bold text-white">బొగ్గు వనరులు - 20 MCQs పరీక్ష</h3>
+            <span class="text-[10px] text-amber-400 font-semibold">Rahul Academy Energy Resources Series</span>
+          </div>
+        </div>
+        <button onclick="closeQuizModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="quiz-content">
+        <div class="flex justify-between items-center text-xs text-slate-400 mb-2">
+          <span id="quiz-step" class="font-bold text-cyan-400">ప్రశ్న 1 / 20</span>
+          <span id="quiz-score" class="font-mono text-emerald-400">స్కోరు: 0</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-white/5 border border-white/5 text-sm md:text-base font-semibold text-white mb-4" id="quiz-question">
+          ప్రశ్న లోడ్ అవుతోంది...
+        </div>
+
+        <div class="space-y-2" id="quiz-options"></div>
+
+        <div id="quiz-feedback" class="hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
+      </div>
+
+      <div class="flex justify-between items-center pt-3 border-t border-white/10">
+        <button onclick="resetQuiz()" class="text-xs text-slate-400 hover:text-slate-200 cursor-pointer">రీస్టార్ట్</button>
+        <button id="quiz-next-btn" onclick="nextQuestion()" class="hidden px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition cursor-pointer">
+          తరువాతి ప్రశ్న →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      selectCoalConcept('overview_production');
+    });
+
+    const coalDatabase = {
+      overview_production: {
+        tag: "OVERVIEW & PRODUCTION",
+        title: "బొగ్గు ప్రాధాన్యత & 1 BT చారిత్రాత్మక ఉత్పత్తి",
+        map: { cx: 215, cy: 175, label: "భారత బొగ్గు ఉత్పత్తి (1,047.52 MT)", color: "#06b6d4" },
+        content: `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+            <strong class="text-cyan-300 block font-semibold">• ప్రాధాన్యత:</strong>
+            <p>భారతదేశంలో అత్యధికంగా లభించే శిలాజ ఇంధనం; ప్రాథమిక ఇంధన వినియోగంలో <strong>సుమారు 57.62% వాటా</strong> (2023 డేటా)[cite: 183].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• 1 BT మైలురాయి (FY 2024-25):</strong>
+            <p>భారతదేశం చరిత్రలో తొలిసారిగా 1 బిలియన్ టన్నుల (1 BT) మైలురాయిని దాటి, 20 మార్చి 2025 నాటికి <strong>1,047.52 మిలియన్ టన్నుల (MT)</strong> ఉత్పత్తిని సాధించింది (4.98% వార్షిక వృద్ధి)[cite: 183].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• ఉత్పత్తి భాగస్వామ్యం:</strong>
+            <p>కోల్ ఇండియా లిమిటెడ్: <strong>781.06 MT</strong>; సింగరేణి (SCCL): <strong>69.01 MT</strong>; క్యాప్టివ్ & కమర్షియల్ మైన్లు: <strong>197.5 MT</strong>[cite: 183].</p>
+          </div>
+        `,
+        tip: `<strong>పరీక్షల కీలక పాయింట్:</strong> భారతదేశం మొదటిసారిగా 1 బిలియన్ టన్నుల (1 BT) బొగ్గు ఉత్పత్తి మైలురాయిని FY 2024-25 లోని 20 మార్చి 2025 నాటికి అధిగమించింది[cite: 183]!`
+      },
+      reserves_lignite: {
+        tag: "RESERVES & LIGNITE",
+        title: "మొత్తం నిల్వలు & నెయ్‌వేలి లిగ్నైట్",
+        map: { cx: 160, cy: 315, label: "నెయ్‌వేలి (తమిళనాడు - లిగ్నైట్ >70%)", color: "#ec4899" },
+        content: `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+            <strong class="text-cyan-300 block font-semibold">• మొత్తం అంచనా నిల్వలు:</strong>
+            <p>1 ఏప్రిల్ 2024 నాటికి <strong>~389.42 బిలియన్ టన్నులు</strong> (ధృవీకరించిన + సూచించిన + ఊహించిన నిల్వలు కలిపి)[cite: 183].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• లిగ్నైట్ నిల్వలు:</strong>
+            <p>1 ఏప్రిల్ 2024 నాటికి <strong>~47,296 మిలియన్ టన్నులు</strong>[cite: 183].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• తమిళనాడు నెయ్‌వేలి ఆధిపత్యం:</strong>
+            <p>తమిళనాడులోని నెయ్‌వేలి ఒక్కటే దేశంలోని మొత్తం లిగ్నైట్ నిల్వలలో <strong>70% కంటే ఎక్కువ వాటాను</strong> కలిగి ఉంది[cite: 183].</p>
+          </div>
+        `,
+        tip: `<strong>ప్రిలిమ్స్ టిప్:</strong> భారతదేశంలో లభించే లిగ్నైట్ (బ్రౌన్ కోల్) నిల్వలలో 70% కంటే ఎక్కువ ఒక్క తమిళనాడులోని నెయ్‌వేలి ప్రాంతంలోనే కేంద్రీకృతమై ఉన్నాయి[cite: 183].`
+      },
+      production_imports: {
+        tag: "PRODUCTION & IMPORTS",
+        title: "రాష్ట్రాల ఉత్పత్తి ర్యాంకింగ్ & దిగుమతుల తగ్గుదల",
+        map: { cx: 215, cy: 180, label: "ఒడిశా #1 ఉత్పత్తి (~239 MT)", color: "#06b6d4" },
+        content: `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+            <strong class="text-cyan-300 block font-semibold">• ఉత్పత్తిలో అగ్ర రాష్ట్రాలు (FY25):</strong>
+            <p>1. <strong>ఒడిశా (#1): ~239 MT</strong>[cite: 183]<br>
+            2. <strong>ఛత్తీస్‌‌గఢ్ (#2): ~207 MT</strong>[cite: 183]<br>
+            3. <strong>జార్ఖండ్ (#3): ~191 MT</strong>[cite: 183].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• నిల్వల పంపిణీ (Reserves):</strong>
+            <p>జార్ఖండ్ (~26.4%), ఒడిశా (~25.1%), ఛత్తీస్‌గఢ్ (~18.2%), పశ్చిమ బెంగాల్ (~11%), మధ్యప్రదేశ్ (~5%)[cite: 184].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• దిగుమతుల తగ్గుదల:</strong>
+            <p>ఏప్రిల్-డిసెంబర్ 2024 కాలంలో బొగ్గు దిగుమతులు <strong>8.4% తగ్గాయి</strong>; దీనివల్ల <strong>~US$ 5.43 బిలియన్ల</strong> విదేశీ మారకద్రవ్యం ఆదా అయింది[cite: 183].</p>
+          </div>
+        `,
+        tip: `<strong>యూపీఎస్సీ కన్ఫ్యూజన్ ట్రాప్:</strong> FY25 ఉత్పత్తిలో ఒడిశా #1 (~239 MT) కాగా, మొత్తం నిల్వల్లో జార్ఖండ్ #1 (~26.4%) స్థానంలో ఉంది[cite: 183, 184]!`
+      },
+      jharkhand_coal: {
+        tag: "JHARKHAND (BITUMINOUS)",
+        title: "జార్ఖండ్ బొగ్గు గనులు (~26.4% నిల్వలు)",
+        map: { cx: 220, cy: 160, label: "ఝరియా / బొకారో (జార్ఖండ్)", color: "#a855f7" },
+        content: `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+            <strong class="text-cyan-300 block font-semibold">• నిల్వల వాటా:</strong>
+            <p>భారతదేశంలో అత్యధిక బొగ్గు నిల్వలు <strong>జార్ఖండ్ (~26.4%)</strong> లోనే ఉన్నాయి[cite: 184].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• బొగ్గు రకం:</strong>
+            <p><strong>బిటుమినస్ (అత్యుత్తమ నాణ్యమైన కోకింగ్ కోల్)</strong>[cite: 184].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• ప్రధాన గనులు:</strong>
+            <p><strong>ఝరియా (Jharia)</strong> - దేశంలోనే ప్రధాన కోకింగ్ కోల్ గని; <strong>బొకారో</strong>, <strong>గిరిదిహ్</strong>, <strong>కరణ్‌పురా</strong>[cite: 184].</p>
+          </div>
+        `,
+        tip: `<strong>పరీక్షల ఫ్యాక్ట్:</strong> ఉక్కు కర్మాగారాలకు అవసరమైన ప్రైమ్ కోకింగ్ కోల్ ను అందించే అత్యంత కీలకమైన గని ఝరియా[cite: 184].`
+      },
+      odisha_chhattisgarh: {
+        tag: "ODISHA & CHHATTISGARH",
+        title: "ఒడిశా & ఛత్తీస్‌గఢ్ బిటుమినస్ గనులు",
+        map: { cx: 200, cy: 195, label: "కోర్బా / తాల్చేర్ బెల్ట్", color: "#10b981" },
+        content: `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+            <strong class="text-cyan-300 block font-semibold">• ఒడిశా (బిటుమినస్):</strong>
+            <p>నిల్వలు: ~25.1%[cite: 184]; FY25 ఉత్పత్తి: ~239 MT (దేశంలోనే #1 ర్యాంక్)[cite: 183].<br>
+            ముఖ్యమైన గనులు: <strong>తాల్చేర్ (Talcher)</strong> మరియు <strong>ఇబ్ వ్యాలీ (Ib Valley)</strong>[cite: 184].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• ఛత్తీస్‌గఢ్ (బిటుమినస్):</strong>
+            <p>నిల్వలు: ~18.2%[cite: 184]; FY25 ఉత్పత్తి: ~207 MT (దేశంలోనే #2 ర్యాంక్)[cite: 183].<br>
+            ముఖ్యమైన గనులు: <strong>కోర్బా (Korba)</strong> మరియు <strong>హస్‌దేవ్-అరండ్ (Hasdeo-Arand)</strong>[cite: 184].</p>
+          </div>
+        `,
+        tip: `<strong>కీలక గనులు:</strong> తాల్చేర్ (ఒడిశా) మరియు కోర్బా (ఛత్తీస్‌గఢ్) భారతదేశంలో భారీ ఓపెన్-కాస్ట్ థర్మల్ బొగ్గు గనులుగా ప్రసిద్ధి చెందాయి[cite: 184].`
+      },
+      wb_mp_telangana: {
+        tag: "WB, MP & TELANGANA",
+        title: "పశ్చిమ బెంగాల్, MP & తెలంగాణ బొగ్గు గనులు",
+        map: { cx: 165, cy: 240, label: "సింగరేణి / సింగ్రౌలి", color: "#f59e0b" },
+        content: `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+            <strong class="text-cyan-300 block font-semibold">• పశ్చిమ బెంగాల్ (బిటుమినస్):</strong>
+            <p>నిల్వలు: ~11%[cite: 184]. ముఖ్యమైన గని: <strong>రాణిగంజ్ (Raniganj)</strong> - భారతదేశంలో మొట్టమొదటి బొగ్గు గని[cite: 184].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• మధ్యప్రదేశ్ (బిటుమినస్):</strong>
+            <p>నిల్వలు: ~5%[cite: 184]. ముఖ్యమైన గనులు: <strong>సింగ్రౌలి (Singrauli)</strong> మరియు <strong>సోహాగ్‌పూర్ (Sohagpur)</strong>[cite: 184].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• తెలంగాణ (బిటుమినస్):</strong>
+            <p>గోదావరి లోయ బొగ్గు బెల్ట్; ప్రసిద్ధ గని: <strong>సింగరేణి (SCCL - FY25 ఉత్పత్తి 69.01 MT)</strong>[cite: 183, 184].</p>
+          </div>
+        `,
+        tip: `<strong>చారిత్రక ప్రాధాన్యత:</strong> రాణిగంజ్ భారతదేశ చరిత్రలోనే బ్రిటిష్ కాలంలో (1774) తవ్వకాలు ప్రారంభమైన మొట్టమొదటి బొగ్గు గని[cite: 184].`
+      },
+      lignite_states: {
+        tag: "LIGNITE (BROWN COAL)",
+        title: "లిగ్నైట్ నిల్వ రాష్ట్రాలు (TN, RJ, GJ)",
+        map: { cx: 110, cy: 155, label: "బార్మర్ / బికనీర్ / కచ్", color: "#ec4899" },
+        content: `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+            <strong class="text-cyan-300 block font-semibold">• తమిళనాడు:</strong>
+            <p>భారత లిగ్నైట్ కేంద్రం; <strong>నెయ్‌వేలి (Neyveli)</strong> (&gt;70% నిల్వలు)[cite: 183, 184].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• రాజస్థాన్:</strong>
+            <p>థార్ ఎడారి ప్రాంతంలోని లిగ్నైట్ గనులు: <strong>బార్మర్ (Barmer)</strong> మరియు <strong>బికనీర్ (Bikaner)</strong>[cite: 184].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• గుజరాత్:</strong>
+            <p>పశ్చిమ తీర లిగ్నైట్ గని: <strong>కచ్ (Kutch)</strong>[cite: 184].</p>
+          </div>
+        `,
+        tip: `<strong>లిగ్నైట్ స్వభావం:</strong> లిగ్నైట్ అనేది 'బ్రౌన్ కోల్'; ఇది బిటుమినస్ కంటే తక్కువ కార్బన్ మరియు అధిక తేమ శాతాన్ని కలిగి ఉంటుంది[cite: 184].`
+      },
+      meghalaya_coal: {
+        tag: "TERTIARY COAL",
+        title: "మేఘాలయ టెర్షియరీ బొగ్గు గనులు",
+        map: { cx: 260, cy: 125, label: "జైంతియా హిల్స్ (టెర్షియరీ బొగ్గు)", color: "#06b6d4" },
+        content: `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+            <strong class="text-cyan-300 block font-semibold">• బొగ్గు రకం:</strong>
+            <p><strong>టెర్షియరీ బొగ్గు (Tertiary coal)</strong> - గోండ్వానా బొగ్గు కంటే వయస్సులో చిన్నది[cite: 185].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• ముఖ్యమైన గని:</strong>
+            <p><strong>జైంతియా హిల్స్ (Jaintia Hills)</strong>[cite: 185].</p>
+            <strong class="text-cyan-300 block font-semibold pt-1">• ప్రత్యేకత & పర్యావరణ సమస్య:</strong>
+            <p>ఈ బొగ్గులో సల్ఫర్ శాతం ఎక్కువగా ఉంటుంది; ఇరుకైన గుహల ద్వారా తవ్వే రాట్-హోల్ మైనింగ్ (Rat-hole mining) విధానం వల్ల తీవ్ర పర్యావరణ వివాదాలకు కారణమైంది.</p>
+          </div>
+        `,
+        tip: `<strong>వర్గీకరణ చిట్కా:</strong> భారతదేశంలో రెండు యుగాల బొగ్గు లభిస్తుంది: 1. ద్వీపకల్ప గోండ్వానా బొగ్గు (~98%), 2. ఈశాన్య భారత టెర్షియరీ బొగ్గు[cite: 184, 185].`
+      }
+    };
+
+    function selectCoalConcept(key) {
+      const data = coalDatabase[key];
+      if (!data) return;
+
+      document.querySelectorAll('.mm-node').forEach(el => el.classList.remove('active'));
+      const activeNode = document.getElementById('node-' + key);
+      if (activeNode) activeNode.classList.add('active');
+
+      const pulse = document.getElementById('map-pin-pulse');
+      const core = document.getElementById('map-pin-core');
+      const label = document.getElementById('map-pin-label');
+
+      pulse.setAttribute('cx', data.map.cx);
+      pulse.setAttribute('cy', data.map.cy);
+      pulse.setAttribute('fill', data.map.color);
+
+      core.setAttribute('cx', data.map.cx);
+      core.setAttribute('cy', data.map.cy);
+      core.setAttribute('fill', data.map.color);
+
+      label.setAttribute('x', data.map.cx - 50);
+      label.setAttribute('y', data.map.cy + 22);
+      label.setAttribute('fill', data.map.color);
+      label.textContent = data.map.label;
+
+      document.getElementById('detail-tag').textContent = data.tag;
+      document.getElementById('detail-title').textContent = data.title;
+      document.getElementById('detail-content').innerHTML = data.content;
+      document.getElementById('detail-tip').innerHTML = data.tip;
+
+      lucide.createIcons();
+    }
+
+    const quiz20Questions = [
+      {
+        q: "1. 2023 నాటి గణాంకాల ప్రకారం భారతదేశ ప్రాథమిక ఇంధన వినియోగంలో బొగ్గు వాటా సుమారు ఎంత శాతం?",
+        options: ["~42.50%", "~50.00%", "~57.62%", "~65.20%"],
+        correct: 2,
+        exp: "భారతదేశ ప్రాథమిక ఇంధన వినియోగంలో బొగ్గు వాటా సుమారు 57.62% గా ఉంది[cite: 183]."
+      },
+      {
+        q: "2. 1 ఏప్రిల్ 2024 నాటికి భారతదేశంలో మొత్తం అంచనా వేసిన బొగ్గు నిల్వలు (Total Estimated Reserves) ఎంత?",
+        options: ["~250.00 BT", "~312.50 BT", "~389.42 బిలియన్ టన్నులు", "~500.00 BT"],
+        correct: 2,
+        exp: "1 ఏప్రిల్ 2024 నాటికి ప్రూవ్డ్, ఇండికేటెడ్, ఇన్‌ఫెర్డ్ కలిపి సుమారు 389.42 బిలియన్ టన్నుల నిల్వలు ఉన్నాయి[cite: 183]."
+      },
+      {
+        q: "3. భారతదేశం చరిత్రలో మొదటిసారిగా 1 బిలియన్ టన్నుల (1 BT) వార్షిక బొగ్గు ఉత్పత్తి మైలురాయిని ఎప్పుడు అధిగమించింది?",
+        options: ["2023 మార్చి 31", "2024 జనవరి 26", "2025 మార్చి 20 (1,047.52 MT)", "2026 ఫిబ్రవరి 15"],
+        correct: 2,
+        exp: "FY 2024-25 లోని 20 మార్చి 2025 నాటికి భారతదేశం 1,047.52 MT తో 1 BT మార్కును దాటింది[cite: 183]."
+      },
+      {
+        q: "4. FY 2024-25 మొత్తం బొగ్గు ఉత్పత్తిలో కోల్ ఇండియా లిమిటెడ్ (CIL) వాటా ఎంత?",
+        options: ["500.00 MT", "650.25 MT", "781.06 MT", "900.50 MT"],
+        correct: 2,
+        exp: "మొత్తం 1,047.52 MT ఉత్పత్తిలో ఒక్క కోల్ ఇండియా లిమిటెడ్ వాటానే 781.06 MT[cite: 183]."
+      },
+      {
+        q: "5. FY 2024-25 లో సుమారు 239 MT వార్షిక ఉత్పత్తితో భారతదేశంలో నంబర్ 1 బొగ్గు ఉత్పత్తిదారుగా నిలిచిన రాష్ట్రం ఏది?",
+        options: ["జార్ఖండ్", "ఛత్తీస్‌గఢ్", "ఒడిశా (~239 MT)", "పశ్చిమ బెంగాల్"],
+        correct: 2,
+        exp: "FY 2024-25 లో ఒడిశా దాదాపు 239 MT లతో దేశంలోనే అత్యధిక బొగ్గును ఉత్పత్తి చేసి ప్రథమ స్థానంలో నిలిచింది[cite: 183]."
+      },
+      {
+        q: "6. భారతదేశంలో అత్యధిక బొగ్గు నిల్వలు (~26.4%) కలిగిన రాష్ట్రం ఏది?",
+        options: ["ఒడిశా", "జార్ఖండ్ (~26.4%)", "ఛత్తీస్‌గఢ్", "మధ్యప్రదేశ్"],
+        correct: 1,
+        exp: "ఉత్పత్తిలో ఒడిశా ముందున్నప్పటికీ, నిల్వల పరంగా జార్ఖండ్ 26.4% తో దేశంలోనే ప్రథమ స్థానంలో ఉంది[cite: 183, 184]."
+      },
+      {
+        q: "7. భారతదేశంలోని మొత్తం లిగ్నైట్ నిల్వలలో 70% కంటే ఎక్కువ వాటాను కలిగి ఉన్న ప్రధాన గని ఏది?",
+        options: ["సింగరేణి", "కోర్బా", "నెయ్‌వేలి (తమిళనాడు)", "రాణిగంజ్"],
+        correct: 2,
+        exp: "తమిళనాడులోని నెయ్‌వేలి గని దేశ లిగ్నైట్ నిల్వలలో 70% కంటే ఎక్కువ వాటాను కలిగి ఉంది[cite: 183, 184]."
+      },
+      {
+        q: "8. 1 ఏప్రిల్ 2024 నాటికి భారతదేశంలో ఉన్న మొత్తం లిగ్నైట్ నిల్వలు సుమారు ఎంత?",
+        options: ["~10,500 MT", "~25,000 MT", "~47,296 మిలియన్ టన్నులు", "~75,000 MT"],
+        correct: 2,
+        exp: "1 ఏప్రిల్ 2024 నాటికి దేశంలో దాదాపు 47,296 మిలియన్ టన్నుల లిగ్నైట్ నిల్వలు నమోదయ్యాయి[cite: 183]."
+      },
+      {
+        q: "9. జార్ఖండ్‌లోని ఏ గని అత్యుత్తమ నాణ్యమైన బిటుమినస్ కోకింగ్ కోల్ కు ప్రసిద్ధి చెందింది?",
+        options: ["తాల్చేర్", "ఝరియా (Jharia)", "సింగ్రౌలి", "నెయ్‌వేలి"],
+        correct: 1,
+        exp: "ఝరియా గని ఉక్కు పరిశ్రమలకు అవసరమైన అత్యుత్తమ బిటుమినస్ కోకింగ్ బొగ్గును అందిస్తుంది[cite: 184]."
+      },
+      {
+        q: "10. ఒడిశాలోని ప్రధాన బిటుమినస్ బొగ్గు గనులు ఏవి?",
+        options: ["కోర్బా మరియు హస్‌దేవ్", "తాల్చేర్ మరియు ఇబ్ వ్యాలీ", "బొకారో మరియు గిరిదిహ్", "సింగ్రౌలి మరియు సోహాగ్‌పూర్"],
+        correct: 1,
+        exp: "తాల్చేర్ మరియు ఇబ్ వ్యాలీ ఒడిశాలోని ప్రసిద్ధ బొగ్గు నిక్షేప క్షేత్రాలు[cite: 184]."
+      },
+      {
+        q: "11. ఛత్తీస్‌గఢ్‌లోని ప్రసిద్ధ బొగ్గు క్షేత్రాలు ఏవి?",
+        options: ["రాణిగంజ్", "కోర్బా మరియు హస్‌దేవ్-అరండ్", "ఝరియా మరియు కరణ్‌‌పురా", "నెయ్‌వేలి"],
+        correct: 1,
+        exp: "కోర్బా మరియు హస్‌దేవ్-అరండ్ లు ఛత్తీస్‌గఢ్‌లోని ప్రధాన బిటుమినస్ గనులు[cite: 184]."
+      },
+      {
+        q: "12. భారతదేశ చరిత్రలోనే మొట్టమొదటి బొగ్గు గనిగా ప్రసిద్ధి చెందిన 'రాణిగంజ్' ఏ రాష్ట్రంలో ఉంది?",
+        options: ["జార్ఖండ్", "ఒడిశా", "పశ్చిమ బెంగాల్ (West Bengal)", "బీహార్"],
+        correct: 2,
+        exp: "పశ్చిమ బెంగాల్‌లోని రాణిగంజ్ భారతదేశంలోనే మొదటి చారిత్రాత్మక బొగ్గు గని[cite: 184]."
+      },
+      {
+        q: "13. మధ్యప్రదేశ్‌లోని ప్రధాన బొగ్గు గనులు ఏవి?",
+        options: ["సింగ్రౌలి మరియు సోహాగ్‌పూర్", "తాల్చేర్ మరియు ఇబ్", "బొకారో మరియు ఝరియా", "బార్మర్ మరియు బికనీర్"],
+        correct: 0,
+        exp: "సింగ్రౌలి మరియు సోహాగ్‌పూర్ లు మధ్యప్రదేశ్‌‌లోని ప్రధాన బొగ్గు క్షేత్రాలు[cite: 184]."
+      },
+      {
+        q: "14. తెలంగాణలోని గోదావరి లోయలో ఉన్న ప్రసిద్ధ సింగరేణి (SCCL) FY25 లో ఎంత ఉత్పత్తిని సాధించింది?",
+        options: ["25.50 MT", "45.00 MT", "69.01 MT", "120.00 MT"],
+        correct: 2,
+        exp: "సింగరేణి సంస్థ FY 2024-25 లో 69.01 MT ల బొగ్గును ఉత్పత్తి చేసింది[cite: 183]."
+      },
+      {
+        q: "15. రాజస్థాన్‌లోని థార్ ఎడారి ప్రాంతంలో లిగ్నైట్ బొగ్గు లభించే ప్రధాన గనులు ఏవి?",
+        options: ["ఖేత్రి మరియు సింఘానా", "బార్మర్ మరియు బికనీర్", "జవార్ మరియు అగుచా", "మక్రానా"],
+        correct: 1,
+        exp: "బార్మర్ మరియు బికనీర్ లు రాజస్థాన్‌లోని ప్రధాన లిగ్నైట్ క్షేత్రాలు[cite: 184]."
+      },
+      {
+        q: "16. గుజరాత్‌లోని ఏ ప్రాంతంలో లిగ్నైట్ బొగ్గు నిల్వలు ఉన్నాయి?",
+        options: ["అంకలేశ్వర్", "కచ్ (Kutch)", "ఖంభాత్", "వడోదర"],
+        correct: 1,
+        exp: "గుజరాత్‌లోని కచ్ తీర ప్రాంతంలో లిగ్నైట్ బొగ్గు నిల్వలు ఉన్నాయి[cite: 184]."
+      },
+      {
+        q: "17. జైంతియా హిల్స్ లోని టెర్షియరీ బొగ్గు గనులు ఏ రాష్ట్రంలో ఉన్నాయి?",
+        options: ["అసోం", "మేఘాలయ (Meghalaya)", "నాగాలాండ్", "అరుణాచల్ ప్రదేశ్"],
+        correct: 1,
+        exp: "మేఘాలయలోని జైంతియా హిల్స్ లో టెర్షియరీ యుగానికి చెందిన బొగ్గు గనులు ఉన్నాయి[cite: 185]."
+      },
+      {
+        q: "18. ఏప్రిల్-డిసెంబర్ 2024 కాలంలో భారత బొగ్గు దిగుమతులు (Imports) ఎంత శాతం తగ్గాయి?",
+        options: ["2.5%", "5.0%", "8.4%", "15.2%"],
+        correct: 2,
+        exp: "స్వదేశీ ఉత్పత్తి పెరగడంతో బొగ్గు దిగుమతులు 8.4% మేర తగ్గాయి[cite: 183]."
+      },
+      {
+        q: "19. భారతదేశపు మొత్తం బొగ్గు నిల్వలలో 18.2% వాటాతో 3వ స్థానంలో ఉన్న రాష్ట్రం ఏది?",
+        options: ["పశ్చిమ బెంగాల్", "మధ్యప్రదేశ్", "ఛత్తీస్‌గఢ్ (~18.2%)", "తెలంగాణ"],
+        correct: 2,
+        exp: "జార్ఖండ్ మరియు ఒడిశాల తర్వాత ఛత్తీస్‌గఢ్ 18.2% నిల్వలతో 3వ స్థానంలో ఉంది[cite: 184]."
+      },
+      {
+        q: "20. బొగ్గు దిగుమతులు తగ్గడం వల్ల ఏప్రిల్-డిసెంబర్ 2024 లో ఎంత విదేశీ మారకద్రవ్యం ఆదా అయింది?",
+        options: ["~US$ 1.5 బిలియన్లు", "~US$ 3.2 బిలియన్లు", "~US$ 5.43 బిలియన్లు", "~US$ 10.0 బిలియన్లు"],
+        correct: 2,
+        exp: "దిగుమతులు తగ్గడం వల్ల సుమారు 5.43 బిలియన్ అమెరికన్ డాలర్ల విదేశీ మారకద్రవ్యం ఆదా అయింది[cite: 183]."
+      }
+    ];
+
+    let currentQIndex = 0;
+    let quizScore = 0;
+
+    function openQuizModal() {
+      document.getElementById('quiz-modal').classList.remove('hidden');
+      loadQuizQuestion();
+    }
+
+    function closeQuizModal() {
+      document.getElementById('quiz-modal').classList.add('hidden');
+    }
+
+    function resetQuiz() {
+      currentQIndex = 0;
+      quizScore = 0;
+      document.getElementById('quiz-score').textContent = `స్కోరు: 0`;
+      loadQuizQuestion();
+    }
+
+    function loadQuizQuestion() {
+      const q = quiz20Questions[currentQIndex];
+      document.getElementById('quiz-step').textContent = `ప్రశ్న ${currentQIndex + 1} / 20`;
+      document.getElementById('quiz-question').textContent = q.q;
+      
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+
+      const feedback = document.getElementById('quiz-feedback');
+      feedback.classList.add('hidden');
+      document.getElementById('quiz-next-btn').classList.add('hidden');
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs md:text-sm text-slate-200 transition flex items-center justify-between cursor-pointer';
+        btn.innerHTML = `<span><strong>${['A', 'B', 'C', 'D'][idx]}.</strong> ${opt}</span>`;
+        btn.onclick = () => selectQuizOption(idx);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectQuizOption(selectedIdx) {
+      const q = quiz20Questions[currentQIndex];
+      const optionsContainer = document.getElementById('quiz-options');
+      const buttons = optionsContainer.querySelectorAll('button');
+      const feedback = document.getElementById('quiz-feedback');
+
+      buttons.forEach(b => b.disabled = true);
+
+      if (selectedIdx === q.correct) {
+        quizScore += 1;
+        document.getElementById('quiz-score').textContent = `స్కోరు: ${quizScore}`;
+        buttons[selectedIdx].classList.add('border-emerald-500', 'bg-emerald-950/40', 'text-emerald-300');
+        feedback.className = 'mt-3 p-3 rounded-xl text-xs bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 block';
+        feedback.innerHTML = `<strong>సరైన సమాధానం!</strong> ${q.exp}`;
+      } else {
+        buttons[selectedIdx].classList.add('border-red-500', 'bg-red-950/40', 'text-red-300');
+        buttons[q.correct].classList.add('border-emerald-500', 'bg-emerald-950/40', 'text-emerald-300');
+        feedback.className = 'mt-3 p-3 rounded-xl text-xs bg-red-950/40 border border-red-500/40 text-red-300 block';
+        feedback.innerHTML = `<strong>తప్పు సమాధానం!</strong> ${q.exp}`;
+      }
+
+      document.getElementById('quiz-next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      if (currentQIndex < quiz20Questions.length - 1) {
+        currentQIndex++;
+        loadQuizQuestion();
+      } else {
+        const optionsContainer = document.getElementById('quiz-options');
+        document.getElementById('quiz-question').innerHTML = `🎉 20 MCQs పరీక్ష పూర్తయింది!<br><span class="text-sm font-normal text-slate-300">మీ తుది స్కోరు: ${quizScore} / 20</span>`;
+        optionsContainer.innerHTML = `
+          <div class="p-4 rounded-xl bg-cyan-950/30 border border-cyan-500/40 text-center text-xs text-cyan-200">
+            ${quizScore >= 16 ? 'అద్భుతం! భారత బొగ్గు వనరులపై సంపూర్ణ పట్టు సాధించారు.' : 'మంచి ప్రయత్నం! మైండ్‌మ్యాప్‌లోని ఉత్పత్తి, నిల్వలు మరియు గనుల వివరాలను మరోసారి రివైజ్ చేయండి.'}
+          </div>
+        `;
+        document.getElementById('quiz-feedback').classList.add('hidden');
+        document.getElementById('quiz-next-btn').classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

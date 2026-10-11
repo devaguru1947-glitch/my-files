@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="te" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>భారతదేశ నదీ వ్యవస్థ & జలవిభాజక క్షేత్రం - Rahul Academy</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Sans Telugu & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Telugu"', 'Outfit', 'sans-serif'],
+          },
+          colors: {
+            deepBg: '#040407',
+            cardBg: '#0d0d16',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #040407;
+      color: #f1f5f9;
+      font-family: 'Noto Sans Telugu', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Rahul Academy Repeated Watermark Layer */
+    .watermark-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-rows: repeat(auto-fill, minmax(220px, 1fr));
+      opacity: 0.04;
+      user-select: none;
+    }
+
+    .watermark-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-25deg);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      white-space: nowrap;
+    }
+
+    .glass-card {
+      background: rgba(13, 13, 22, 0.88);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    .glow-cyan { box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.35); }
+    .glow-purple { box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.35); }
+    .glow-emerald { box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.35); }
+
+    .btn-tab.active {
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+      color: #ffffff;
+      font-weight: 700;
+      border-color: #38bdf8;
+    }
+
+    .map-hotspot {
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .map-hotspot:hover {
+      filter: drop-shadow(0 0 8px currentColor);
+      transform: scale(1.15);
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #09090e; }
+    ::-webkit-scrollbar-thumb { background: #27273a; border-radius: 4px; }
+  </style>
+</head>
+<body class="selection:bg-cyan-500 selection:text-black">
+
+  <!-- Rahul Academy Background Watermark Layer -->
+  <div class="watermark-grid">
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">DRAINAGE SYSTEM OF INDIA</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">DRAINAGE SYSTEM OF INDIA</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">DRAINAGE SYSTEM OF INDIA</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">DRAINAGE SYSTEM OF INDIA</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">DRAINAGE SYSTEM OF INDIA</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">DRAINAGE SYSTEM OF INDIA</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">DRAINAGE SYSTEM OF INDIA</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">DRAINAGE SYSTEM OF INDIA</span></div>
+  </div>
+
+  <!-- Background Ambient Glow -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-cyan-600/20 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/3 -right-32 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 left-1/4 w-80 h-80 bg-pink-600/20 rounded-full blur-3xl"></div>
+  </div>
+
+  <div class="relative z-10 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-[#07070ce6] backdrop-blur-md px-4 lg:px-8 py-3.5">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 shadow-lg shadow-cyan-500/20">
+            <i data-lucide="waves" class="w-6 h-6 text-white animate-pulse"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl md:text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-300 to-pink-400">
+                భారతదేశ నదీ వ్యవస్థ (Drainage Systems of India)
+              </h1>
+              <span class="text-[11px] font-bold text-amber-300 border border-amber-500/40 bg-amber-950/40 px-2 py-0.5 rounded-full tracking-wider">RAHUL ACADEMY</span>
+            </div>
+            <p class="text-xs text-slate-400">జలవిభాజక క్షేత్రం (Drainage Divide) & హిమాలయ vs ద్వీపకల్ప నదుల తులనాత్మక అధ్యయనం</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="#mindmap" class="px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-semibold border border-cyan-500/40 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 transition flex items-center gap-1.5">
+            <i data-lucide="git-fork" class="w-4 h-4"></i>
+            <span>మైండ్‌మ్యాప్</span>
+          </a>
+          <button onclick="openQuizModal()" class="px-4 py-2 rounded-lg text-xs md:text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/30 hover:opacity-95 transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="award" class="w-4 h-4"></i>
+            <span>ప్రాక్టీస్ MCQs</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8 w-full space-y-10">
+
+      <!-- Banner -->
+      <section class="glass-card rounded-2xl p-6 md:p-8 border border-cyan-500/30 glow-cyan">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold mb-4">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            భారతదేశ భౌగోళిక శాస్త్రం • ఇంటరాక్టివ్ గైడ్
+          </div>
+          <h2 class="text-2xl md:text-4xl font-extrabold leading-tight text-white mb-3">
+            భారతదేశ నదీ ప్రవాహ నైసర్గిక స్వరూపం & జలవిభాజక రేఖ
+          </h2>
+          <p class="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
+            హిమాలయ (జీవనదులు) మరియు ద్వీపకల్ప (ఋతుకాలిక నదులు) నదుల జన్మస్థలాలు, ప్రవాహ దిశ, కొత పద్ధతులు, లోయల నిర్మాణాలు మరియు డెల్టా/ఎస్చువరీ తేడాలు. కింద ఇచ్చిన ఇంటరాక్టివ్ మ్యాప్, ట్యాబ్‌‌లు మరియు మైండ్‌మ్యాప్ ద్వారా సమగ్రంగా అభ్యసించండి.
+          </p>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-black/50 border border-cyan-500/30">
+              <span class="text-slate-400 block mb-1">ప్రధాన జలవిభాజకం</span>
+              <strong class="text-cyan-300 text-sm">పశ్చిమ కనుమలు (Western Ghats)</strong>
+            </div>
+            <div class="p-3 rounded-xl bg-black/50 border border-purple-500/30">
+              <span class="text-slate-400 block mb-1">హిమాలయ నదులు</span>
+              <strong class="text-purple-300 text-sm">జీవనదులు (Perennial Flow)</strong>
+            </div>
+            <div class="p-3 rounded-xl bg-black/50 border border-emerald-500/30">
+              <span class="text-slate-400 block mb-1">ద్వీపకల్ప నదులు</span>
+              <strong class="text-emerald-300 text-sm">వర్షాధారిత (Monsoon Dependent)</strong>
+            </div>
+            <div class="p-3 rounded-xl bg-black/50 border border-pink-500/30">
+              <span class="text-slate-400 block mb-1">ఎస్చువరీ నదులు</span>
+              <strong class="text-pink-300 text-sm">నర్మద & తపతి (పగులు లోయలు)</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1. భారతదేశ నదీ జలవిభాజక రేఖ & మ్యాప్ (DRAINAGE DIVIDE & BASINS) -->
+      <section class="glass-card rounded-2xl p-6 border border-cyan-500/30 glow-cyan space-y-6">
+        <div>
+          <span class="text-cyan-400 text-xs tracking-wider uppercase font-semibold">నదీ పరివాహక ప్రాంతాలు</span>
+          <h3 class="text-2xl font-bold text-white flex items-center gap-2 mt-1">
+            <i data-lucide="compass" class="text-cyan-400 w-6 h-6"></i>
+            🌊 ప్రధాన నదీ పరివాహక ప్రాంతాలు (Major Drainage Basins)
+          </h3>
+          <p class="text-xs text-slate-300 mt-1">
+            <strong>పశ్చిమ కనుమలు (Western Ghats)</strong> ప్రధాన జలవిభాజక క్షేత్రంగా (water divide) పనిచేస్తున్నాయి. భారతదేశంలోని అత్యధిక నదులు సంఖ్యాపరంగా మరియు పరిమాణపరంగా తూర్పు వైపునకే ప్రవహిస్తాయి.
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-6 items-center">
+          
+          <!-- SVG మ్యాప్ వ్యూయర్ (7 Cols) -->
+          <div class="lg:col-span-7 flex flex-col items-center justify-center p-3 bg-[#060712] rounded-xl border border-white/10 relative">
+            
+            <div class="w-full flex justify-between items-center px-2 mb-2 text-[11px] text-slate-400">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></span> బంగాళాఖాతం వైపు (తూర్పు)</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-pink-400 inline-block"></span> అరేబియా సముద్రం వైపు (పశ్చిమం)</span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-1 bg-emerald-400 inline-block"></span> జలవిభాజక రేఖ</span>
+            </div>
+
+            <!-- భారతదేశ అవుట్‌లైన్ SVG -->
+            <svg viewBox="0 0 520 580" class="w-full max-w-[440px] h-auto drop-shadow-2xl">
+              <!-- India Outline -->
+              <path d="M 180 35 L 210 25 L 250 50 L 260 90 L 290 120 L 320 135 L 340 120 L 370 125 L 390 145 L 430 145 L 460 170 L 460 200 L 430 215 L 390 220 L 375 250 L 340 270 L 325 320 L 305 380 L 280 430 L 260 500 L 255 530 L 245 500 L 210 440 L 195 380 L 175 320 L 150 290 L 120 280 L 115 255 L 140 240 L 130 180 L 160 140 L 150 90 Z" 
+                    fill="#0e1326" stroke="#22d3ee" stroke-width="2" stroke-linejoin="round" />
+
+              <!-- Western Ghats Water Divide Line -->
+              <path d="M 180 310 Q 200 420 245 495" fill="none" stroke="#10b981" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="4 2" />
+              <text x="90" y="420" fill="#6ee7b7" font-size="10" font-weight="bold">పశ్చిమ కనుమల జలవిభాజకం</text>
+
+              <!-- Ganga Basin Vector (East) -->
+              <path d="M 230 120 Q 280 150 360 180" fill="none" stroke="#06b6d4" stroke-width="3" />
+              <text x="270" y="140" fill="#a5f3fc" font-size="9" font-weight="bold">గంగా నది (బంగాళాఖాతం →)</text>
+
+              <!-- Brahmaputra Vector (East) -->
+              <path d="M 330 110 Q 430 120 420 170 Q 380 190 365 210" fill="none" stroke="#38bdf8" stroke-width="2.5" />
+              <text x="390" y="140" fill="#38bdf8" font-size="8.5" font-weight="bold">బ్రహ్మపుత్ర నది</text>
+
+              <!-- Godavari & Krishna (East) -->
+              <path d="M 195 330 Q 250 350 320 360" fill="none" stroke="#06b6d4" stroke-width="2.5" />
+              <text x="220" y="340" fill="#a5f3fc" font-size="8.5">గోదావరి (డెల్టా →)</text>
+
+              <path d="M 205 380 Q 250 400 300 410" fill="none" stroke="#06b6d4" stroke-width="2.5" />
+              <text x="225" y="390" fill="#a5f3fc" font-size="8.5">కృష్ణా (డెల్టా →)</text>
+
+              <path d="M 215 440 Q 240 450 280 460" fill="none" stroke="#06b6d4" stroke-width="2" />
+              <text x="235" y="445" fill="#a5f3fc" font-size="8">కావేరి</text>
+
+              <!-- West Flowing: Narmada & Tapi (Rift Valley) -->
+              <path d="M 250 280 L 160 285" fill="none" stroke="#ec4899" stroke-width="3" stroke-dasharray="3 2" />
+              <text x="140" y="275" fill="#f472b6" font-size="9" font-weight="bold">← నర్మద (ఎస్చువరీ)</text>
+
+              <path d="M 240 300 L 170 305" fill="none" stroke="#ec4899" stroke-width="2.5" stroke-dasharray="3 2" />
+              <text x="145" y="318" fill="#f472b6" font-size="8">← తపతి (పగులు లోయ)</text>
+
+              <!-- West Coastal Rivers -->
+              <circle cx="210" cy="470" r="4.5" fill="#ec4899" />
+              <text x="145" y="475" fill="#f472b6" font-size="8">పెరియార్, శరావతి ←</text>
+            </svg>
+
+            <span class="text-[10px] text-slate-400 mt-2 font-mono">Rahul Academy Drainage Systems • East vs West Flow</span>
+          </div>
+
+          <!-- డైనమిక్ ట్యాబ్ వివరణ ప్యానెల్ (5 Cols) -->
+          <div class="lg:col-span-5 bg-[#090b17] border border-cyan-500/30 rounded-xl p-5 space-y-4 text-left h-full flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-2 border-b border-white/10 mb-3">
+                <span id="basin-tag" class="text-xs px-2.5 py-0.5 rounded font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                  పరివాహక ప్రాంతం
+                </span>
+                <span class="text-[11px] text-amber-400 font-semibold">Rahul Academy Notes</span>
+              </div>
+
+              <!-- Basins Buttons -->
+              <div class="flex gap-2 mb-4">
+                <button onclick="switchBasin('bengal')" id="btn-bengal" class="btn-tab active flex-1 py-2 px-3 rounded-lg text-xs border border-slate-700 transition cursor-pointer">
+                  బంగాళాఖాతం (తూర్పు)
+                </button>
+                <button onclick="switchBasin('arabian')" id="btn-arabian" class="btn-tab flex-1 py-2 px-3 rounded-lg text-xs border border-slate-700 transition bg-slate-800 text-slate-300 cursor-pointer">
+                  అరేబియా సముద్రం (పశ్చిమం)
+                </button>
+              </div>
+
+              <div id="basin-content" class="space-y-3 text-xs leading-relaxed">
+                <!-- Content injected via JS -->
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-cyan-950/30 border border-cyan-500/30 text-[11px] text-cyan-200">
+              💡 పశ్చిమ కనుమలు సహజ గోడగా మారి నదులను రెండు విభిన్న సముద్ర మార్గాలకు వేరు చేస్తాయి.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 2. హిమాలయ నదులు vs ద్వీపకల్ప నదులు (INTERACTIVE COMPARISON) -->
+      <section class="glass-card rounded-2xl p-6 border border-purple-500/30 glow-purple space-y-4">
+        <div>
+          <span class="text-purple-400 text-xs tracking-wider uppercase font-semibold">తులనాత్మక విశ్లేషణ</span>
+          <h3 class="text-2xl font-bold text-white flex items-center gap-2 mt-1">
+            <i data-lucide="scale" class="text-purple-400 w-6 h-6"></i>
+            ⚖️ హిమాలయ నదులు vs ద్వీపకల్ప నదులు (Himalayan vs Peninsular Rivers)
+          </h3>
+          <p class="text-xs text-slate-400">
+            కింది వర్గాలపై క్లిక్ చేసి వాటి మధ్య గల ఖచ్చితమైన భౌగోళిక వ్యత్యాసాలను చూడండి:
+          </p>
+        </div>
+
+        <!-- Comparison Buttons Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs md:text-sm">
+          <button onclick="switchCompare('origin')" id="cmp-origin" class="p-2.5 rounded-lg bg-cyan-950/60 border border-cyan-500/50 text-cyan-300 font-bold transition cursor-pointer">జన్మస్థానం (Origin)</button>
+          <button onclick="switchCompare('flow')" id="cmp-flow" class="p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition cursor-pointer">ప్రవాహ స్వభావం (Flow)</button>
+          <button onclick="switchCompare('age')" id="cmp-age" class="p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition cursor-pointer">వయస్సు (Age)</button>
+          <button onclick="switchCompare('course')" id="cmp-course" class="p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition cursor-pointer">పొడవు & మార్గం (Course)</button>
+          <button onclick="switchCompare('valley')" id="cmp-valley" class="p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition cursor-pointer">లోయ ఆకారం (Valley)</button>
+          <button onclick="switchCompare('meanders')" id="cmp-meanders" class="p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition cursor-pointer">వంకరలు (Meanders)</button>
+          <button onclick="switchCompare('sediment')" id="cmp-sediment" class="p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition cursor-pointer">సిల్ట్/అవక్షేపాలు (Sediment)</button>
+          <button onclick="switchCompare('delta')" id="cmp-delta" class="p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition cursor-pointer">డెల్టా / ఎస్చువరీ</button>
+        </div>
+
+        <!-- Comparison Display Cards -->
+        <div class="grid md:grid-cols-2 gap-4 pt-2">
+          <div class="p-5 rounded-xl bg-cyan-950/20 border border-cyan-500/40 space-y-2">
+            <div class="flex items-center gap-2 text-cyan-300 font-bold text-base">
+              <i data-lucide="mountain-snow" class="w-5 h-5"></i>
+              <span>హిమాలయ నదులు (Himalayan Rivers)</span>
+            </div>
+            <p id="him-text" class="text-sm text-slate-200 leading-relaxed"></p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-purple-950/20 border border-purple-500/40 space-y-2">
+            <div class="flex items-center gap-2 text-purple-300 font-bold text-base">
+              <i data-lucide="shield" class="w-5 h-5"></i>
+              <span>ద్వీపకల్ప నదులు (Peninsular Rivers)</span>
+            </div>
+            <p id="pen-text" class="text-sm text-slate-200 leading-relaxed"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. ఇంటరాక్టివ్ మైండ్‌మ్యాప్ సెక్షన్ (MASTER MINDMAP) -->
+      <section id="mindmap" class="space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <span class="text-emerald-400 text-xs tracking-wider uppercase font-semibold">టాపిక్ సమ్మరీ</span>
+            <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+              <i data-lucide="git-fork" class="text-emerald-400 w-6 h-6"></i>
+              నదీ వ్యవస్థ - సమగ్ర ఇంటరాక్టివ్ మైండ్‌మ్యాప్
+            </h3>
+            <p class="text-xs text-slate-400">నోడ్స్‌పై క్లిక్ చేసి సమగ్ర కాన్సెప్ట్‌ను తక్షణమే రివిజన్ చేసుకోండి.</p>
+          </div>
+          <span class="text-xs px-2.5 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-300 rounded font-semibold">
+            Interactive Node Tree
+          </span>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4 md:p-6 border border-emerald-500/30 bg-[#080811] relative overflow-x-auto shadow-2xl">
+          <div class="min-w-[760px] flex flex-col items-center">
+            
+            <!-- సెంట్రల్ నోడ్ -->
+            <button onclick="showMindmapDetail('drainage_root')" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 text-white font-bold text-base md:text-lg shadow-xl shadow-cyan-500/20 hover:scale-105 transition cursor-pointer border border-cyan-400/40 flex items-center gap-2">
+              <i data-lucide="droplets" class="w-6 h-6 text-cyan-200"></i>
+              <span>భారత నదీ వ్యవస్థ (INDIAN RIVER SYSTEMS)</span>
+            </button>
+
+            <!-- కనెక్టింగ్ లైన్లు -->
+            <svg class="w-full h-16 pointer-events-none" viewBox="0 0 760 64" fill="none">
+              <path d="M 380 0 L 380 20 L 95 20 L 95 64" stroke="#06b6d4" stroke-width="2.5" stroke-dasharray="4 4" />
+              <path d="M 380 0 L 380 20 L 240 20 L 240 64" stroke="#a855f7" stroke-width="2.5" stroke-dasharray="4 4" />
+              <path d="M 380 0 L 380 64" stroke="#10b981" stroke-width="2.5" stroke-dasharray="4 4" />
+              <path d="M 380 0 L 380 20 L 520 20 L 520 64" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="4 4" />
+              <path d="M 380 0 L 380 20 L 665 20 L 665 64" stroke="#ec4899" stroke-width="2.5" stroke-dasharray="4 4" />
+            </svg>
+
+            <!-- 5 బ్రాంచీలు -->
+            <div class="grid grid-cols-5 gap-3 w-full text-center">
+              
+              <button onclick="showMindmapDetail('divide')" class="p-3 rounded-xl bg-cardBg border border-cyan-500/40 hover:border-cyan-400 hover:bg-cyan-950/30 transition flex flex-col items-center group cursor-pointer">
+                <div class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-1 group-hover:scale-110 transition">
+                  <i data-lucide="split" class="w-4 h-4"></i>
+                </div>
+                <strong class="text-xs md:text-sm text-cyan-300">1. జలవిభాజకం</strong>
+                <span class="text-[11px] text-slate-400">పశ్చిమ కనుమల విభాజక రేఖ</span>
+              </button>
+
+              <button onclick="showMindmapDetail('perennial')" class="p-3 rounded-xl bg-cardBg border border-purple-500/40 hover:border-purple-400 hover:bg-purple-950/30 transition flex flex-col items-center group cursor-pointer">
+                <div class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center mb-1 group-hover:scale-110 transition">
+                  <i data-lucide="cloud-snow" class="w-4 h-4"></i>
+                </div>
+                <strong class="text-xs md:text-sm text-purple-300">2. జీవనదులు</strong>
+                <span class="text-[11px] text-slate-400">హిమానీనదాలు & వర్షాలు</span>
+              </button>
+
+              <button onclick="showMindmapDetail('seasonal')" class="p-3 rounded-xl bg-cardBg border border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-950/30 transition flex flex-col items-center group cursor-pointer">
+                <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-1 group-hover:scale-110 transition">
+                  <i data-lucide="cloud-rain" class="w-4 h-4"></i>
+                </div>
+                <strong class="text-xs md:text-sm text-emerald-300">3. ఋతుకాలిక నదులు</strong>
+                <span class="text-[11px] text-slate-400">రుతుపవనాలపై ఆధారం</span>
+              </button>
+
+              <button onclick="showMindmapDetail('rift')" class="p-3 rounded-xl bg-cardBg border border-amber-500/40 hover:border-amber-400 hover:bg-amber-950/30 transition flex flex-col items-center group cursor-pointer">
+                <div class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mb-1 group-hover:scale-110 transition">
+                  <i data-lucide="flame" class="w-4 h-4"></i>
+                </div>
+                <strong class="text-xs md:text-sm text-amber-300">4. పగులు లోయలు</strong>
+                <span class="text-[11px] text-slate-400">నర్మద, తపతి (ఎస్చువరీలు)</span>
+              </button>
+
+              <button onclick="showMindmapDetail('drainage_patterns')" class="p-3 rounded-xl bg-cardBg border border-pink-500/40 hover:border-pink-400 hover:bg-pink-950/30 transition flex flex-col items-center group cursor-pointer">
+                <div class="w-8 h-8 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center mb-1 group-hover:scale-110 transition">
+                  <i data-lucide="git-merge" class="w-4 h-4"></i>
+                </div>
+                <strong class="text-xs md:text-sm text-pink-300">5. నదీ సరళులు</strong>
+                <span class="text-[11px] text-slate-400">Antecedent & Consequent</span>
+              </button>
+            </div>
+
+            <!-- మైండ్‌మ్యాప్ వివరాల బాక్స్ -->
+            <div id="mindmap-detail-panel" class="mt-6 w-full p-4 md:p-5 rounded-xl border border-emerald-500/30 bg-[#090b14] text-left transition-all duration-300">
+              <div class="flex items-center justify-between pb-2 border-b border-white/10 mb-3">
+                <div class="flex items-center gap-2">
+                  <span id="mm-tag" class="text-xs px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">టాపిక్ అవలోకనం</span>
+                  <h4 id="mm-title" class="text-lg font-bold text-white">నదీ వ్యవస్థ మరియు జలవిభాజక క్షేత్రం</h4>
+                </div>
+                <span class="text-xs text-amber-400 font-semibold">Rahul Academy River Atlas</span>
+              </div>
+              <p id="mm-desc" class="text-sm text-slate-300 leading-relaxed mb-3">
+                భారత నదులు హిమాలయ మరియు ద్వీపకల్ప విభాగాలుగా విభజించబడ్డాయి. పశ్చిమ కనుమలు ప్రధాన వాటర్‌షెడ్‌గా ఉండి 77% పైగా జలాలను బంగాళాఖాతం వైపు మళ్లిస్తాయి.
+              </p>
+              <div id="mm-bullets" class="grid sm:grid-cols-2 gap-2 text-xs text-slate-300">
+                <div class="p-2 rounded bg-white/5 border border-white/5 flex items-start gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                  <span><strong>హిమాలయ నదులు:</strong> హిమానీనదాల కరుగుదల వల్ల నిరంతరం నీటి ప్రవాహం కలిగి ఉండే జీవనదులు.</span>
+                </div>
+                <div class="p-2 rounded bg-white/5 border border-white/5 flex items-start gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                  <span><strong>ద్వీపకల్ప నదులు:</strong> పగులు లోయల గుండా ప్రవహించే నర్మద, తపతి మినహా మిగిలినవన్నీ వర్షాధారిత నదులు.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- 20 ప్రాక్టీస్ MCQs కాల్ టు యాక్షన్ -->
+      <section class="glass-card rounded-2xl p-6 md:p-8 border border-white/10 glow-purple text-center relative overflow-hidden">
+        <div class="max-w-2xl mx-auto space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center mx-auto shadow-lg shadow-purple-500/30">
+            <i data-lucide="award" class="w-6 h-6 text-white"></i>
+          </div>
+          <h3 class="text-2xl font-extrabold text-white">నదీ వ్యవస్థ & జలవిభాజకం - 20 ప్రాక్టీస్ MCQs</h3>
+          <p class="text-xs md:text-sm text-slate-300">
+            బంగాళాఖాతం vs అరేబియా సముద్ర నదులు, జీవనదులు vs ఋతుకాలిక నదులు, లోయల ఆకారాలు, డెల్టా/ఎస్చువరీలు మరియు నదీ సరళులపై పరీక్షల స్థాయి ప్రశ్నలు.
+          </p>
+          <div class="pt-2">
+            <button onclick="openQuizModal()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 text-white font-bold text-sm shadow-xl hover:scale-105 transition flex items-center gap-2 mx-auto cursor-pointer">
+              <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+              20 MCQs పరీక్ష ప్రారంభించండి
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="border-t border-white/10 bg-[#040408] py-6 px-4 text-center text-xs text-slate-500">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-cyan-400">RAHUL ACADEMY</span>
+          <span>• భారత నదీ వ్యవస్థ & జలవిభాజక క్షేత్రం (Interactive Atlas & MCQs)</span>
+        </div>
+        <span class="text-slate-400 font-mono">Dark Neon Edition • Official Watermark Protected</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- 20 MCQs మోడల్ (Modal) -->
+  <div id="quiz-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-[#0b0c16] border border-cyan-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 glow-cyan relative max-h-[92vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="check-square" class="text-cyan-400 w-5 h-5"></i>
+          <div>
+            <h3 class="text-lg font-bold text-white">భారత నదీ వ్యవస్థ - 20 MCQs టెస్ట్</h3>
+            <span class="text-[10px] text-amber-400 font-semibold">Rahul Academy River Geography Bank</span>
+          </div>
+        </div>
+        <button onclick="closeQuizModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="quiz-content">
+        <div class="flex justify-between items-center text-xs text-slate-400 mb-2">
+          <span id="quiz-step" class="font-bold text-cyan-400">ప్రశ్న 1 / 20</span>
+          <span id="quiz-score" class="font-mono text-emerald-400">స్కోరు: 0</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-white/5 border border-white/5 text-sm md:text-base font-semibold text-white mb-4" id="quiz-question">
+          ప్రశ్న లోడ్ అవుతోంది...
+        </div>
+
+        <div class="space-y-2" id="quiz-options"></div>
+
+        <div id="quiz-feedback" class="hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
+      </div>
+
+      <div class="flex justify-between items-center pt-3 border-t border-white/10">
+        <button onclick="resetQuiz()" class="text-xs text-slate-400 hover:text-slate-200 cursor-pointer">రీస్టార్ట్</button>
+        <button id="quiz-next-btn" onclick="nextQuestion()" class="hidden px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition cursor-pointer">
+          తరువాతి ప్రశ్న →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      switchBasin('bengal');
+      switchCompare('origin');
+    });
+
+    // Basins Switcher
+    const basinData = {
+      bengal: {
+        title: "బంగాళాఖాతం పరివాహక ప్రాంతం (Bay of Bengal / East)",
+        desc: "భారతదేశంలో ప్రవహించే అత్యధిక నదులు (సంఖ్య మరియు ఘనపరిమాణంలో) తూర్పు వైపునకే ప్రవహించి బంగాళాఖాతంలో కలుస్తాయి. దేశపు భూభాగ వాలు తూర్పునకు ఉండటమే ఇందుకు కారణం.",
+        rivers: "గంగ, బ్రహ్మపుత్ర, మహానది, గోదావరి, కృష్ణా, కావేరి, సువర్ణరేఖ, దామోదర్.",
+        features: "విశాలమైన ఒండ్రు డెల్టాలను (ఉదా: సుందర్‌బన్స్, గోదావరి-కృష్ణా డెల్టా) ఏర్పరుస్తాయి."
+      },
+      arabian: {
+        title: "అరేబియా సముద్ర పరివాహక ప్రాంతం (Arabian Sea / West)",
+        desc: "పశ్చిమానికి ప్రవహించే నదులు పశ్చిమ కనుమలు లేదా మధ్య భారతదేశ పగులు లోయల గుండా వేగంగా ప్రవహించి అరేబియా సముద్రంలో కలుస్తాయి.",
+        rivers: "సింధు (కొంత భాగం), నర్మద, తపతి, మహి, సబర్మతి, లూని, పెరియార్, శరావతి.",
+        features: "డెల్టాలకు బదులుగా విశాలమైన ఎస్చువరీలు (Estuaries) మరియు ముఖద్వారాలను ఏర్పరుస్తాయి."
+      }
+    };
+
+    function switchBasin(type) {
+      document.getElementById('btn-bengal').classList.remove('active', 'bg-slate-800', 'text-slate-300');
+      document.getElementById('btn-arabian').classList.remove('active', 'bg-slate-800', 'text-slate-300');
+
+      if (type === 'bengal') {
+        document.getElementById('btn-bengal').classList.add('active');
+        document.getElementById('btn-arabian').classList.add('bg-slate-800', 'text-slate-300');
+      } else {
+        document.getElementById('btn-arabian').classList.add('active');
+        document.getElementById('btn-bengal').classList.add('bg-slate-800', 'text-slate-300');
+      }
+
+      const d = basinData[type];
+      document.getElementById('basin-content').innerHTML = `
+        <h4 class="font-bold text-cyan-300 text-sm">${d.title}</h4>
+        <p class="text-slate-300">${d.desc}</p>
+        <div class="p-2.5 rounded bg-white/5 border border-white/5">
+          <strong class="text-amber-300 block mb-1">ప్రధాన నదులు:</strong>
+          <span class="text-slate-300 font-mono text-[11px]">${d.rivers}</span>
+        </div>
+        <p class="text-emerald-300 text-[11px]"><strong>ముఖద్వార లక్షణాలు:</strong> ${d.features}</p>
+      `;
+    }
+
+    // Comparison Switcher
+    const compareData = {
+      origin: {
+        btn: "cmp-origin",
+        him: "హిమాలయాలలోని హిమానీనదాలు (Glaciers) మరియు శాశ్వత మంచు క్షేత్రాల నుండి ఉద్భవిస్తాయి.",
+        pen: "పశ్చిమ కనుమలు, మధ్య ఉన్నత భూములు (Central Highlands) మరియు వర్షాధార పీఠభూముల నుండి ఉద్భవిస్తాయి."
+      },
+      flow: {
+        btn: "cmp-flow",
+        him: "జీవనదులు (Perennial Flow): శీతాకాలం/వేసవిలో హిమానీనదాల కరుగుదల నీరు మరియు వర్షాకాలంలో వర్షపు నీరు రెండింటి ద్వారా ఏడాది పొడవునా ప్రవహిస్తాయి.",
+        pen: "ఎక్కువగా ఋతుకాలిక నదులు (Seasonal): వర్షాకాలం (Monsoon) పై ఆధారపడతాయి. వేసవిలో నీటి ప్రవాహం సన్నబడుతుంది లేదా ఎండిపోతాయి (పగులు లోయల వల్ల ప్రవహించే నర్మద, తపతి మినహా)."
+      },
+      age: {
+        btn: "cmp-age",
+        him: "యువ నదులు (Younger Age): ఇంకా చురుకుగా లోయలను నిలువుగా కోస్తూ లోతైన గార్జ్‌లను ఏర్పాటు చేస్తున్నాయి.",
+        pen: "పురాతన నదులు (Older / Mature Stage): క్రమబద్ధీకరించిన ప్రొఫైల్‌లతో పరిణతి చెందిన పాత దశలో ప్రవహిస్తున్నాయి."
+      },
+      course: {
+        btn: "cmp-course",
+        him: "చాలా పొడవైన ప్రవాహ మార్గం; యువ ముడత పర్వతాలను కోస్తూ లోతైన గార్జ్‌ల ద్వారా ప్రవహిస్తాయి (Antecedent Drainage).",
+        pen: "తక్కువ పొడవు గల ప్రవాహ మార్గం; కఠినమైన పీఠభూమి రాళ్ల గుండా ప్రవహిస్తూ కొండచరియల వద్ద జలపాతాలను ఏర్పరుస్తాయి."
+      },
+      valley: {
+        btn: "cmp-valley",
+        him: "పై మార్గంలో లోతైన 'V' ఆకారపు గార్జ్‌లు (Gorges); దిగువ మైదాన మార్గంలో విశాలమైన ఒండ్రు మైదానాలు.",
+        pen: "తేలికపాటి వాలులతో కూడిన నిస్సారమైన, విశాలమైన లోయలు (Shallow, broad valleys)."
+      },
+      meanders: {
+        btn: "cmp-meanders",
+        him: "మైదానాలలో నదీ వంపులు (Meanders) చాలా ప్రస్ఫుటంగా ఉండి ఆక్స్‌బౌ సరస్సులను (Oxbow Lakes) ఏర్పరుస్తాయి.",
+        pen: "నదీ వంపులు చాలా తక్కువ; కఠిన శిలల కారణంగా నదులు దాదాపుగా సరళ రేఖల్లో ప్రవహిస్తాయి."
+      },
+      sediment: {
+        btn: "cmp-sediment",
+        him: "అవక్షేప భారం (Sediment Load) చాలా ఎక్కువ; భారీ వరద మైదానాలు మరియు డెల్టాలను నిర్మిస్తాయి.",
+        pen: "మితమైన నుండి తక్కువ అవక్షేపం; కఠినమైన పీఠభూమి శిలలు నెమ్మదిగా కోతకు గురవుతాయి."
+      },
+      delta: {
+        btn: "cmp-delta",
+        him: "భారీ నదీ డెల్టాలను నిర్మిస్తాయి (ఉదాహరణకు: ప్రపంచంలోనే అతిపెద్ద సుందర్‌బన్స్ డెల్టా).",
+        pen: "తూర్పు ప్రవాహ నదులు డెల్టాలను (గోదావరి, కృష్ణా, కావేరి) మరియు పశ్చిమ ప్రవాహ నదులు ఎస్చువరీలను (నర్మద, తపతి) ఏర్పరుస్తాయి."
+      }
+    };
+
+    function switchCompare(key) {
+      const allBtns = ['cmp-origin', 'cmp-flow', 'cmp-age', 'cmp-course', 'cmp-valley', 'cmp-meanders', 'cmp-sediment', 'cmp-delta'];
+      allBtns.forEach(b => {
+        const el = document.getElementById(b);
+        el.className = "p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-semibold hover:bg-slate-700 transition cursor-pointer";
+      });
+
+      const selected = compareData[key];
+      const activeEl = document.getElementById(selected.btn);
+      activeEl.className = "p-2.5 rounded-lg bg-cyan-950/60 border border-cyan-500/50 text-cyan-300 font-bold transition cursor-pointer";
+
+      document.getElementById('him-text').textContent = selected.him;
+      document.getElementById('pen-text').textContent = selected.pen;
+    }
+
+    // Mindmap Data & Controller
+    const mindmapData = {
+      drainage_root: {
+        tag: 'టాపిక్ అవలోకనం',
+        title: 'భారతదేశ నదీ వ్యవస్థ సమగ్ర విశ్లేషణ',
+        desc: 'భారతదేశ నదులు వాటి జన్మస్థలం, ప్రవాహ స్వభావం మరియు డ్రైనేజీ సరళుల ఆధారంగా హిమాలయ మరియు ద్వీపకల్ప నదులుగా వర్గీకరించబడ్డాయి.',
+        bullets: [
+          'హిమాలయ నదులు: గంగ, సింధు, బ్రహ్మపుత్ర వ్యవస్థలు ఏడాది పొడవునా ప్రవహించే జీవనదులు.',
+          'ద్వీపకల్ప నదులు: ప్రధానంగా వర్షాధారితమైనవి; పశ్చిమ కనుమలు వీటిని బంగాళాఖాతం మరియు అరేబియా సముద్రాల వైపు విభజిస్తాయి.'
+        ]
+      },
+      divide: {
+        tag: 'జలవిభాజకం',
+        title: 'పశ్చిమ కనుమల జలవిభాజక క్షేత్రం (Water Divide)',
+        desc: 'పశ్చిమ కనుమలు భారతదేశపు ప్రధాన జలవిభాజకంగా పనిచేస్తూ నదులను తూర్పు ప్రవాహ (బంగాళాఖాతం) మరియు పశ్చిమ ప్రవాహ (అరేబియా సముద్రం) నదులుగా వేరుచేస్తాయి.',
+        bullets: [
+          'భారతదేశంలో అత్యధిక నీటి పరిమాణం బంగాళాఖాతం వైపునకే ప్రవహిస్తుంది.',
+          'పశ్చిమ కనుమల నుండి పశ్చిమానికి ప్రవహించే నదులు చిన్నవిగా మరియు తీవ్ర వేగంతో ఉంటాయి.'
+        ]
+      },
+      perennial: {
+        tag: 'జీవనదులు',
+        title: 'హిమాలయ జీవనదులు (Perennial Rivers)',
+        desc: 'శీతాకాలం మరియు వేసవిలో హిమానీనదాల కరుగుదల నీరు, వర్షాకాలంలో రుతుపవనాల వర్షపు నీరు రెండింటినీ పొందుతాయి.',
+        bullets: [
+          'ప్రధాన వ్యవస్థలు: సింధు (Indus), గంగ (Ganga), బ్రహ్మపుత్ర (Brahmaputra).',
+          'యువ దశలో ఉండి లోతైన V-ఆకారపు గార్జ్‌‌లు మరియు ఆక్స్‌బౌ సరస్సులను ఏర్పరుస్తాయి.'
+        ]
+      },
+      seasonal: {
+        tag: 'ఋతుకాలిక నదులు',
+        title: 'ద్వీపకల్ప ఋతుకాలిక నదులు (Seasonal Rivers)',
+        desc: 'ఇవి పూర్తిగా నైరుతి రుతుపవనాల వర్షపాతంపై ఆధారపడతాయి. వర్షాకాలంలో ఉధృతంగా ప్రవహించి వేసవిలో సన్నటి ప్రవాహాలుగా మారుతాయి.',
+        bullets: [
+          'ఉదాహరణలు: గోదావరి, కృష్ణా, కావేరి, మహానది, పెన్నార్.',
+          'పరిణతి చెందిన దశలో ఉండి నిస్సారమైన, విశాలమైన లోయల గుండా ప్రవహిస్తాయి.'
+        ]
+      },
+      rift: {
+        tag: 'పగులు లోయలు',
+        title: 'నర్మద మరియు తపతి (Rift Valley Rivers)',
+        desc: 'ద్వీపకల్ప నదులైనప్పటికీ పగులు లోయల (Rift Valleys) గుండా ప్రవహించడం వల్ల పశ్చిమాన అరేబియా సముద్రంలో కలుస్తాయి.',
+        bullets: [
+          'ఇవి డెల్టాలను ఏర్పరచవు; వేగవంతమైన రాతి ప్రవాహం వల్ల ఎస్చువరీలను (Estuaries) ఏర్పరుస్తాయి.',
+          'వింధ్య మరియు సాత్పురా పర్వత శ్రేణుల మధ్య గల భ్రంశ లోయల గుండా ప్రవహిస్తాయి.'
+        ]
+      },
+      drainage_patterns: {
+        tag: 'నదీ సరళులు',
+        title: 'Antecedent vs Consequent Drainage',
+        desc: 'పర్వతాల కంటే ప్రాచీనమైన నదులు (Antecedent) మరియు పర్వతాల వాలును అనుసరించే నదుల (Consequent) వర్గీకరణ.',
+        bullets: [
+          'Antecedent: హిమాలయాల కంటే ముందే ఉండి పర్వతాలను కోస్తూ ప్రవహించే సింధు, సట్లెజ్, బ్రహ్మపుత్ర.',
+          'Superimposed & Consequent: ద్వీపకల్ప నైసర్గిక వాలును అనుసరించి ప్రవహించే ద్వీపకల్ప నదులు.'
+        ]
+      }
+    };
+
+    function showMindmapDetail(key) {
+      const item = mindmapData[key];
+      if (!item) return;
+
+      document.getElementById('mm-tag').textContent = item.tag;
+      document.getElementById('mm-title').textContent = item.title;
+      document.getElementById('mm-desc').textContent = item.desc;
+
+      const bulletsContainer = document.getElementById('mm-bullets');
+      bulletsContainer.innerHTML = item.bullets.map(b => `
+        <div class="p-2 rounded bg-white/5 border border-white/5 flex items-start gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+          <span>${b}</span>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // 20 Practice MCQs
+    const quiz20Questions = [
+      {
+        q: "1. భారతదేశంలో బంగాళాఖాతం మరియు అరేబియా సముద్ర నదీ పరివాహక ప్రాంతాలను వేరుచేసే ప్రధాన జలవిభాజక క్షేత్రం (Water Divide) ఏది?",
+        options: ["ఆరావళి పర్వతాలు", "పశ్చిమ కనుమలు (Western Ghats)", "వింధ్య పర్వతాలు", "తూర్పు కనుమలు"],
+        correct: 1,
+        exp: "పశ్చిమ కనుమలు భారతదేశపు ప్రధాన జలవిభాజక రేఖగా పనిచేస్తూ నదులను తూర్పు మరియు పశ్చిమ ప్రవాహాలుగా విభజిస్తాయి."
+      },
+      {
+        q: "2. భారతదేశంలోని నదులలో అత్యధిక భాగం (సంఖ్య మరియు పరిమాణంలో) ఏ సముద్రం వైపు ప్రవహిస్తాయి?",
+        options: ["అరేబియా సముద్రం", "బంగాళాఖాతం (తూర్పు వైపు)", "హిందూ మహాసముద్రం (దక్షిణం)", "కచ్ సింధుశాఖ"],
+        correct: 1,
+        exp: "భారత భూభాగ వాలు తూర్పునకు ఉండటం వల్ల మెజారిటీ నదులు బంగాళాఖాతంలో కలుస్తాయి."
+      },
+      {
+        q: "3. హిమాలయ నదులు జీవనదులుగా (Perennial) ఉండటానికి గల ప్రధాన కారణం ఏమిటి?",
+        options: ["అవి భూగర్భ జలాల నుండి పుట్టడం", "హిమానీనదాల కరుగుదల నీరు మరియు వర్షపు నీరు రెండింటి ద్వారా ప్రవహించడం", "అవి సరస్సుల నుండి మాత్రమే పుట్టడం", "నిరంతర తుఫానులు"],
+        correct: 1,
+        exp: "హిమాలయ నదులు శీతాకాలం/వేసవిలో హిమానీనదాల మంచు కరుగుదల మరియు వర్షాకాలంలో వర్షాల వల్ల నిరంతరం ప్రవహిస్తాయి."
+      },
+      {
+        q: "4. ద్వీపకల్ప నదులు సాధారణంగా ఏ వర్గానికి చెందుతాయి?",
+        options: ["జీవనదులు (Perennial)", "ఋతుకాలిక నదులు (Seasonal - వర్షాధారిత)", "అంతర్గత ప్రవాహ నదులు", "హిమానీనద నదులు"],
+        correct: 1,
+        exp: "ద్వీపకల్ప నదులు ప్రధానంగా నైరుతి రుతుపవనాల వర్షపాతంపై ఆధారపడే ఋతుకాలిక నదులు."
+      },
+      {
+        q: "5. కింది వాటిలో ఏ ద్వీపకల్ప నదులు పగులు లోయల (Rift Valleys) గుండా ప్రవహిస్తూ అరేబియా సముద్రంలో కలుస్తాయి?",
+        options: ["గోదావరి మరియు కృష్ణా", "నర్మద మరియు తపతి", "కావేరి మరియు మహానది", "సువర్ణరేఖ మరియు దామోదర్"],
+        correct: 1,
+        exp: "నర్మద మరియు తపతి నదులు వింధ్య-సాత్పురా పగులు లోయల గుండా పశ్చిమానికి ప్రవహిస్తాయి."
+      },
+      {
+        q: "6. హిమాలయ నదులు పర్వత శ్రేణులను నిలువుగా కోస్తూ ఏ రకమైన లోయలను (Gorges) ఏర్పరుస్తాయి?",
+        options: ["U-ఆకారపు లోయలు", "లోతైన V-ఆకారపు గార్జ్‌లు (V-shaped gorges)", "ఫ్లాట్ బేసిన్లు", "నిస్సార లోయలు"],
+        correct: 1,
+        exp: "యువ దశలో ఉన్న హిమాలయ నదులు క్రిందికి నిలువుగా కోత కోస్తూ లోతైన V-ఆకారపు గార్జ్‌లను ఏర్పరుస్తాయి."
+      },
+      {
+        q: "7. నదీ వంపుల (Meanders) వల్ల మైదానాలలో ఏర్పడే సహజసిద్ధమైన సరస్సులు ఏవి?",
+        options: ["ఉప్పునీటి సరస్సులు", "లాగూన్లు", "ఆక్స్‌బౌ సరస్సులు (Oxbow lakes)", "క్రేటర్ సరస్సులు"],
+        correct: 2,
+        exp: "మైదానాలలో నదులు అధిక వంపులు తిరుగుతూ ప్రవహించడం వల్ల ఆక్స్‌బౌ (గుర్రపునాడా) సరస్సులు ఏర్పడతాయి."
+      },
+      {
+        q: "8. ద్వీపకల్ప నదుల లోయల ఆకారం సాధారణంగా ఎలా ఉంటుంది?",
+        options: ["లోతైన V-ఆకారపు గార్జ్‌లు", "నిస్సారమైన, విశాలమైన లోయలు (Shallow and broad)", "నిలువు కొండచరియలు", "అగాధాలు"],
+        correct: 1,
+        exp: "పరిణతి చెందిన దశలో ఉన్న ద్వీపకల్ప నదులు తేలికపాటి వాలుతో నిస్సారమైన, విశాలమైన లోయల గుండా ప్రవహిస్తాయి."
+      },
+      {
+        q: "9. పశ్చిమానికి ప్రవహించే నర్మద మరియు తపతి నదులు డెల్టాలకు బదులుగా వేటిని ఏర్పరుస్తాయి?",
+        options: ["ఆక్స్‌బౌ సరస్సులు", "ఎస్చువరీలు (Estuaries / ముఖద్వారాలు)", "అల్లూవియల్ ఫ్యాన్లు", "లాగూన్లు"],
+        correct: 1,
+        exp: "పగులు లోయల గుండా వేగంగా రాతి నేలలపై ప్రవహించడం వల్ల అవక్షేపాలు నిల్వ ఉండక ఎస్చువరీలను ఏర్పరుస్తాయి."
+      },
+      {
+        q: "10. కింది వాటిలో బంగాళాఖాతంలో కలిసే తూర్పు ప్రవాహ నది ఏది?",
+        options: ["శరావతి", "పెరియార్", "మహానది", "సబర్మతి"],
+        correct: 2,
+        exp: "మహానది ఒడిశా తీరంలో బంగాళాఖాతంలో కలుస్తుంది; మిగిలినవి అరేబియా సముద్రంలో కలుస్తాయి."
+      },
+      {
+        q: "11. హిమాలయాలు ఏర్పడక ముందే ఉండి, పర్వతాలను కోస్తూ ప్రవహించే నదుల సరళిని ఏమంటారు?",
+        options: ["Consequent", "Superimposed", "పూర్వానురూప నదులు (Antecedent Drainage)", "Radial"],
+        correct: 2,
+        exp: "సింధు, సట్లెజ్, బ్రహ్మపుత్ర వంటి నదులు హిమాలయాల ఆవిర్భావం కంటే ప్రాచీనమైనవి (Antecedent)."
+      },
+      {
+        q: "12. కింది వాటిలో రాజస్థాన్‌లోని ఎడారి ప్రాంతంలో ప్రవహించే అంతర్గత నది ఏది?",
+        options: ["మహి", "లూని నది", "తపతి", "పెరియార్"],
+        correct: 1,
+        exp: "లూని నది ఆరావళి కొండల్లో పుట్టి కచ్ తీరపు అరేబియా సముద్రపు చిత్తడి నేలల్లో కలిసిపోతుంది."
+      },
+      {
+        q: "13. హిమాలయ నదులలో అవక్షేప భారం (Sediment Load) ఎందుకు చాలా ఎక్కువగా ఉంటుంది?",
+        options: ["నదులు చిన్నవిగా ఉండటం వల్ల", "నదులు యువ దశలో ఉండి మృదువైన శిలలను వేగంగా కోయడం వల్ల", "నదుల్లో నీరు లేకపోవడం వల్ల", "గాలి ఎక్కువగా ఉండటం వల్ల"],
+        correct: 1,
+        exp: "యువ ముడత పర్వతాల గుండా ప్రవహిస్తూ చురుగ్గా నిలువు కోత కోయడం వల్ల హిమాలయ నదులలో సిల్ట్ భారం విపరీతంగా ఉంటుంది."
+      },
+      {
+        q: "14. గంగా మరియు బ్రహ్మపుత్ర నదులు సముద్రంలో కలిసే ముందు ప్రపంచంలోనే అతిపెద్దదైన ఏ డెల్టాను నిర్మిస్తాయి?",
+        options: ["కృష్ణా-గోదావరి డెల్టా", "మహానది డెల్టా", "సుందర్‌బన్స్ డెల్టా (Sundarbans)", "మిస్సిసిపీ డెల్టా"],
+        correct: 2,
+        exp: "గంగా-బ్రహ్మపుత్ర నదులు బంగాళాఖాతంలో సుందర్‌బన్స్ డెల్టాను ఏర్పరుస్తాయి."
+      },
+      {
+        q: "15. ద్వీపకల్ప నదులలో కింది ఏ నది తూర్పునకు ప్రవహిస్తూ డెల్టాను ఏర్పరుస్తుంది?",
+        options: ["నర్మద", "గోదావరి", "తపతి", "శరావతి"],
+        correct: 1,
+        exp: "గోదావరి నది బంగాళాఖాతంలో విశాలమైన త్రిభుజ మైదానాన్ని (Delta) ఏర్పరుస్తుంది."
+      },
+      {
+        q: "16. కింది వాటిలో కేరళలో పశ్చిమానికి ప్రవహించే అతిపెద్ద నది ఏది?",
+        options: ["కావేరి", "వైగై", "పెరియార్ నది", "తుంగభద్ర"],
+        correct: 2,
+        exp: "పెరియార్ నది పశ్చిమ కనుమల్లో పుట్టి అరేబియా సముద్రంలో కలిసే కేరళ ప్రధాన నది."
+      },
+      {
+        q: "17. హిమాలయ నదుల వయస్సు మరియు ప్రొఫైల్ ద్వీపకల్ప నదులతో పోలిస్తే ఎలా ఉంటుంది?",
+        options: ["హిమాలయ నదులు పాతవి మరియు నిశ్చలమైనవి", "హిమాలయ నదులు చిన్నవి (Younger) మరియు చురుకైనవి", "రెండూ ఒకే వయస్సు గలవి", "ద్వీపకల్ప నదులు యువ దశలో ఉన్నాయి"],
+        correct: 1,
+        exp: "హిమాలయాలు టెర్షియరీ కాలపు యువ పర్వతాలు కావడంతో వాటి నదులు కూడా యువ దశలోనే ఉన్నాయి."
+      },
+      {
+        q: "18. పశ్చిమ కనుమలలో పుట్టి కర్ణాటక గుండా అరేబియా సముద్రంలో కలిసే ప్రసిద్ధ జలపాత నది ఏది?",
+        options: ["దామోదర్", "శరావతి నది (జోగ్ జలపాతం)", "సువర్ణరేఖ", "పెన్నార్"],
+        correct: 1,
+        exp: "శరావతి నది పశ్చిమానికి ప్రవహిస్తూ ప్రసిద్ధ జోగ్ (గేరుసొప్పా) జలపాతాన్ని ఏర్పరుస్తుంది."
+      },
+      {
+        q: "19. అమర్‌కంటక్ పీఠభూమి నుండి భిన్న దిశల్లోకి నదులు ప్రవహించే సరళిని ఏమని పిలుస్తారు?",
+        options: ["వృక్షాకార సరళి (Dendritic)", "కేంద్రాపసార సరళి (Radial Drainage)", "ట్రెల్లిస్ సరళి", "రెక్టాంగ్యులర్ సరళి"],
+        correct: 1,
+        exp: "అమర్‌కంటక్ నుండి నర్మద, సోన్, జోహిల్లా నదులు భిన్న దిశల్లోకి వెళ్లడాన్ని రేడియల్ డ్రైనేజ్ అంటారు."
+      },
+      {
+        q: "20. ద్వీపకల్ప నదులలో ప్రవాహం వేసవిలో బాగా తగ్గిపోవడానికి కారణం ఏమిటి?",
+        options: ["భూగర్భంలో ఇంకిపోవడం", "అవి హిమానీనదాల మంచుపై కాకుండా కేవలం వర్షపాతంపై మాత్రమే ఆధారపడటం", "ఎండ తీవ్రత వల్ల నదులు ఆవిరి కావడం", "నదులు కాలువలుగా మారడం"],
+        correct: 1,
+        exp: "ద్వీపకల్ప నదులకు హిమానీనదాల మంచు కరుగుదల ఉండదు; అవి పూర్తిగా వర్షాధారితమైనవి కాబట్టి వేసవిలో ప్రవాహం తగ్గుతుంది."
+      }
+    ];
+
+    let currentQIndex = 0;
+    let quizScore = 0;
+
+    function openQuizModal() {
+      document.getElementById('quiz-modal').classList.remove('hidden');
+      loadQuizQuestion();
+    }
+
+    function closeQuizModal() {
+      document.getElementById('quiz-modal').classList.add('hidden');
+    }
+
+    function resetQuiz() {
+      currentQIndex = 0;
+      quizScore = 0;
+      document.getElementById('quiz-score').textContent = `స్కోరు: 0`;
+      loadQuizQuestion();
+    }
+
+    function loadQuizQuestion() {
+      const q = quiz20Questions[currentQIndex];
+      document.getElementById('quiz-step').textContent = `ప్రశ్న ${currentQIndex + 1} / 20`;
+      document.getElementById('quiz-question').textContent = q.q;
+      
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+
+      const feedback = document.getElementById('quiz-feedback');
+      feedback.classList.add('hidden');
+      document.getElementById('quiz-next-btn').classList.add('hidden');
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs md:text-sm text-slate-200 transition flex items-center justify-between cursor-pointer';
+        btn.innerHTML = `<span><strong>${['A', 'B', 'C', 'D'][idx]}.</strong> ${opt}</span>`;
+        btn.onclick = () => selectQuizOption(idx);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectQuizOption(selectedIdx) {
+      const q = quiz20Questions[currentQIndex];
+      const optionsContainer = document.getElementById('quiz-options');
+      const buttons = optionsContainer.querySelectorAll('button');
+      const feedback = document.getElementById('quiz-feedback');
+
+      buttons.forEach(b => b.disabled = true);
+
+      if (selectedIdx === q.correct) {
+        quizScore += 1;
+        document.getElementById('quiz-score').textContent = `స్కోరు: ${quizScore}`;
+        buttons[selectedIdx].classList.add('border-emerald-500', 'bg-emerald-950/40', 'text-emerald-300');
+        feedback.className = 'mt-3 p-3 rounded-xl text-xs bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 block';
+        feedback.innerHTML = `<strong>సరైన సమాధానం!</strong> ${q.exp}`;
+      } else {
+        buttons[selectedIdx].classList.add('border-red-500', 'bg-red-950/40', 'text-red-300');
+        buttons[q.correct].classList.add('border-emerald-500', 'bg-emerald-950/40', 'text-emerald-300');
+        feedback.className = 'mt-3 p-3 rounded-xl text-xs bg-red-950/40 border border-red-500/40 text-red-300 block';
+        feedback.innerHTML = `<strong>తప్పు సమాధానం!</strong> ${q.exp}`;
+      }
+
+      document.getElementById('quiz-next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      if (currentQIndex < quiz20Questions.length - 1) {
+        currentQIndex++;
+        loadQuizQuestion();
+      } else {
+        const optionsContainer = document.getElementById('quiz-options');
+        document.getElementById('quiz-question').innerHTML = `🎉 20 MCQs పరీక్ష పూర్తయింది!<br><span class="text-sm font-normal text-slate-300">మీ తుది స్కోరు: ${quizScore} / 20</span>`;
+        optionsContainer.innerHTML = `
+          <div class="p-4 rounded-xl bg-cyan-950/30 border border-cyan-500/40 text-center text-xs text-cyan-200">
+            ${quizScore >= 16 ? 'అద్భుతం! భారతదేశ నదీ వ్యవస్థపై పూర్తి పట్టు సాధించారు.' : 'మంచి ప్రయత్నం! జలవిభాజక రేఖ మరియు నదుల తులనాత్మక పట్టికను మరోసారి పునశ్చరణ చేయండి.'}
+          </div>
+        `;
+        document.getElementById('quiz-feedback').classList.add('hidden');
+        document.getElementById('quiz-next-btn').classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

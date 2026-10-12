@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Quantitative Master Dashboard & CBT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Orbitron:wght@700;900&family=Noto+Sans+Telugu:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b1120; --primary: #38bdf8; --text-light: #f8fafc;
+            --card-bg: #1e293b; --yellow: #fde047; --green: #16a34a; --red: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+        body { 
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            background: var(--bg-color); color: var(--text-light); 
+            min-height: 100vh; display: flex; flex-direction: column;
+        }
+
+        header { 
+            background: #1e293b; border-bottom: 3px solid var(--primary); padding: 15px 30px; 
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        header h1 { color: var(--yellow); font-size: 1.1rem; font-weight: 900; text-transform: uppercase; }
+        
+        .timer-box {
+            background: var(--red); color: #fff; padding: 6px 15px; border-radius: 6px;
+            font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 900; display: none;
+        }
+
+        .main-wrapper { max-width: 1400px; margin: 0 auto; width: 100%; padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+
+        /* DASHBOARD VIEW */
+        #dashboard-view { display: block; width: 100%; }
+        .dash-title { font-size: 1.6rem; font-weight: 900; color: #fff; margin-bottom: 8px; }
+        .dash-sub { font-size: 1rem; color: #94a3b8; margin-bottom: 25px; }
+
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+        }
+        .card {
+            background: var(--card-bg); border: 2px solid #334155; border-radius: 12px; padding: 25px;
+            display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .card-title { font-size: 1.2rem; font-weight: 900; color: var(--yellow); margin-bottom: 10px; }
+        .card-desc { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 20px; line-height: 1.4; }
+        
+        .btn-practice {
+            background: linear-gradient(90deg, #0284c7, #0369a1); color: #fff; border: none;
+            padding: 10px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 900; cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .btn-practice:hover { opacity: 0.9; }
+
+        /* EXAM VIEW (CBT) */
+        #exam-view { display: none; flex-grow: 1; flex-direction: column; width: 100%; }
+        .exam-container { display: flex; flex-direction: column; flex-grow: 1; gap: 15px; width: 100%; }
+        @media (min-width: 900px) { .exam-container { flex-direction: row; } }
+
+        .q-panel {
+            flex-grow: 1; background: var(--card-bg); border: 2px solid #334155;
+            border-radius: 12px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 400px;
+        }
+
+        .q-header-info { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 900; color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px; }
+        .q-text-telugu { font-size: 1.3rem; font-weight: 900; color: #fff; line-height: 1.5; margin-bottom: 10px; }
+        .q-text-english { font-size: 1.05rem; font-weight: 800; color: var(--yellow); line-height: 1.4; margin-bottom: 20px; border-left: 4px solid var(--yellow); padding-left: 12px; }
+
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .option-item {
+            background: #0f172a; border: 2px solid #334155; padding: 14px 20px; border-radius: 8px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: 0.15s; color: #f8fafc;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .option-item:hover { border-color: var(--primary); background: #172554; }
+        .option-item.selected { border-color: var(--yellow); background: #1e3a8a; color: var(--yellow); }
+
+        .nav-buttons { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid #334155; padding-top: 15px; }
+        .btn { background: #0284c7; color: #fff; border: none; padding: 12px 22px; border-radius: 6px; font-size: 0.95rem; font-weight: 900; cursor: pointer; }
+        .btn-submit { background: var(--green); width: 100%; margin-top: 12px; padding: 14px; font-size: 1.1rem; }
+        .btn-home { background: #475569; width: 100%; margin-top: 8px; padding: 12px; font-size: 1rem; display: none; }
+
+        /* PALETTE PANEL */
+        .palette-panel {
+            width: 100%; max-width: 380px; background: var(--card-bg); border: 2px solid #334155; border-radius: 12px;
+            padding: 18px; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0;
+        }
+        .palette-title { font-size: 1rem; font-weight: 900; color: var(--yellow); text-align: center; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        
+        .legend-box { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.8rem; font-weight: 800; background: #0f172a; padding: 10px; border-radius: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+
+        .grid-palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; overflow-y: auto; max-height: 250px; }
+        .palette-btn { background: #475569; border: 2px solid #334155; color: #fff; font-weight: 900; height: 42px; border-radius: 6px; cursor: pointer; }
+        .palette-btn.answered { background: var(--green); border-color: #15803d; }
+        .palette-btn.skipped { background: var(--red); border-color: #991b1b; }
+        .palette-btn.current { border: 2px solid var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+
+        .score-card { background: #0f172a; border: 2px dashed var(--green); border-radius: 10px; padding: 20px; text-align: center; display: none; }
+        .score-card h2 { color: var(--green); font-size: 1.5rem; font-weight: 900; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RAHUL ACADEMY - QUANTITATIVE APTITUDE MASTER</h1>
+        <div class="timer-box" id="timer">15:00</div>
+    </header>
+
+    <div class="main-wrapper">
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view">
+            <div class="dash-title">Select a Topic to Start CBT Exam</div>
+            <div class="dash-sub">Choose any quantitative topic below to start a 10-question practice test.</div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div>
+                        <div class="card-title">Time & Work (కాలము - పని)</div>
+                        <div class="card-desc">Practice efficiency, men-days formula, and alternate day work problems.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('time_work')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Chain Rule (గొలుసు సూత్రం)</div>
+                        <div class="card-desc">Master M1D1H1/W1 = M2D2H2/W2 formula based problems.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('chain_rule')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Pipes & Cisterns (పైపులు - తొట్లు)</div>
+                        <div class="card-desc">Inlet and outlet pipes, leakage time, and alternate opening concepts.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('pipes')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Wages (వేతనాలు)</div>
+                        <div class="card-desc">Distribution of wages based on efficiency ratio and work contribution.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('wages')">Start Exam (10 Qs)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAM VIEW -->
+        <div id="exam-view">
+            <div class="exam-container">
+                <div class="q-panel" id="exam-screen">
+                    <div>
+                        <div class="q-header-info">
+                            <span id="q-num-title">Question No. 1 of 10</span>
+                            <button class="btn" style="padding: 6px 12px; font-size: 0.8rem; background:#475569;" onclick="returnToDashboard()">🏠 Home</button>
+                        </div>
+                        <div class="q-text-telugu" id="q-telugu"></div>
+                        <div class="q-text-english" id="q-english"></div>
+                        
+                        <div class="options-list" id="options-container"></div>
+                    </div>
+
+                    <div>
+                        <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                            <button class="btn" style="background: #475569;" onclick="clearAnswer()">Clear Answer</button>
+                        </div>
+                        <div class="nav-buttons">
+                            <button class="btn" onclick="prevQuestion()">&lt;&lt; Previous</button>
+                            <button class="btn" onclick="nextQuestion()">Save & Next &gt;&gt;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="palette-panel">
+                    <div class="palette-title">Question Palette</div>
+                    
+                    <div class="legend-box">
+                        <div class="legend-item"><span class="dot" style="background:var(--green);"></span> Answered (<span id="count-ans">0</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:var(--red);"></span> Skipped (<span id="count-skip">1</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:#475569;"></span> Unvisited (<span id="count-not">9</span>)</div>
+                    </div>
+
+                    <div class="grid-palette" id="palette-grid"></div>
+                    
+                    <div class="score-card" id="score-card">
+                        <h2>Exam Submitted!</h2>
+                        <p id="score-text" style="font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 10px;"></p>
+                    </div>
+
+                    <button class="btn btn-submit" id="submit-btn" onclick="submitExam()">Submit Exam</button>
+                    <button class="btn btn-home" id="home-btn" onclick="returnToDashboard()">🏠 Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const database = {
+            time_work: [
+                { telugu: "A ఒక పనిని 10 రోజులలో మరియు B అదే పనిని 15 రోజులలో పూర్తి చేయగలరు. ఇద్దరూ కలిసి ఆ పనిని ఎన్ని రోజులలో పూర్తి చేయగలరు?", english: "A can complete a work in 10 days and B in 15 days. In how many days can both complete it together?", options: ["5 Days", "6 Days", "7.5 Days", "8 Days"], correct: 1 },
+                { telugu: "A మరియు B కలిసి ఒక పనిని 12 రోజులలో, A अकेला దానిని 20 రోజులలో చేయగలరు. B ఒక్కడే ఆ పనిని ఎన్ని రోజులలో చేయగలడు?", english: "A and B together can do a work in 12 days, and A alone can do it in 20 days. In how many days can B alone do it?", options: ["25 Days", "30 Days", "35 Days", "40 Days"], correct: 1 },
+                { telugu: "12 మంది పురుషులు ఒక పనిని 8 రోజులలో పూర్తి చేయగలరు. ఆ పనిని ప్రారంభించిన 4 రోజుల తర్వాత మరో 4 మంది పురుషులు చేరారు. మిగిలిన పని పూర్తి కావడానికి ఎంత సమయం పడుతుంది?", english: "12 men can complete a work in 8 days. After 4 days, 4 more men joined them. How many days will they take to complete the remaining work?", options: ["2 Days", "3 Days", "4 Days", "5 Days"], correct: 1 },
+                { telugu: "A మరియు B ఒక పనిని వరుసగా 15 రోజులు మరియు 10 రోజులలో చేయగలరు. వారు ఇద్దరూ కలిసి పని ప్రారంభించారు కానీ 2 రోజుల తర్వాత B పని మానేశాడు. మిగిలిన పనిని A ఎన్ని రోజులలో పూర్తి చేస్తాడు?", english: "A and B can finish a work in 15 days and 10 days respectively. They worked together for 2 days, then B left. In how many days will A finish the remaining work?", options: ["8 Days", "9 Days", "10 Days", "12 Days"], correct: 2 },
+                { telugu: "A యొక్క పని సామర్థ్యం B కన్నా రెట్టింపు. ఇద్దరూ కలిసి ఒక పనిని 14 రోజులలో పూర్తి చేసినచో, A ఒక్కడే ఆ పనిని ఎన్ని రోజులలో పూర్తి చేయగలడు?", english: "A is twice as efficient as B. Working together, they finish a work in 14 days. In how many days can A alone finish the work?", options: ["18 Days", "21 Days", "24 Days", "28 Days"], correct: 1 },
+                { telugu: "A మరియు B కలిసి ఒక పనిని 20 రోజులలో, B మరియు C కలిసి 15 రోజులలో, C మరియు A కలిసి 12 రోజులలో పూర్తి చేయగలరు. ముగ్గురూ కలిసి ఆ పనిని ఎన్ని రోజులలో పూర్తి చేయగలరు?", english: "A and B together can do a work in 20 days, B and C in 15 days, C and A in 12 days. In how many days can all three finish it together?", options: ["8 Days", "10 Days", "12 Days", "15 Days"], correct: 1 },
+                { telugu: "ఒక పనిని పూర్తి చేయడానికి A కు B పట్టిన సమయం కన్నా 4 రోజులు ఎక్కువ పడుతుంది. ఇద్దరూ కలిసి ఆ పనిని 24 రోజులలో పూర్తి చేసినచో, B ఒక్కడే ఆ పనిని ఎన్ని రోజులలో పూర్తి చేయగలడు?", english: "A takes 4 days more than B to finish a work. Working together, they finish it in 24 days. How many days will B alone take?", options: ["36 Days", "40 Days", "48 Days", "56 Days"], correct: 2 },
+                { telugu: "A ఒక పనిలో 1/2 భాగాన్ని 5 రోజులలో మరియు B ఆ పనిలో 3/5 భాగాన్ని 9 రోజులలో చేయగలరు. ఇద్దరూ కలిసి ఆ పనిని ఎంత కాలంలో పూర్తి చేయగలరు?", english: "A can do half of a work in 5 days and B can do 3/5th of the work in 9 days. In how many days can both do the whole work together?", options: ["3.5 Days", "4.5 Days", "5.2 Days", "6.0 Days"], correct: 1 },
+                { telugu: "A మరియు B లు విడివిడిగా ఒక పనిని వరుసగా 18 మరియు 24 రోజులలో చేయగలరు. వారు ఇద్దరూ కలిసి పని ప్రారంభించారు కానీ పని పూర్తి కావడానికి 4 రోజుల ముందు A మానేశాడు. ఆ పని పూర్తి కావడానికి మొత్తం ఎన్ని రోజులు పట్టింది?", english: "A and B can finish a work in 18 and 24 days respectively. They started together, but A left 4 days before completion. How many total days did it take?", options: ["10 Days", "12 Days", "14 Days", "16 Days"], correct: 1 },
+                { telugu: "20 మంది పురుషులు రోజుకు 8 గంటలు పనిచేసి ఒక పనిని 15 రోజులలో పూర్తి చేయగలరు. అయితే 30 మంది పురుషులు రోజుకు 10 గంటలు పనిచేసి ఆ పనిని ఎన్ని రోజులలో పూర్తి చేయగలరు?", english: "20 men working 8 hours a day can complete a work in 15 days. How many days will 30 men working 10 hours a day take?", options: ["6 Days", "8 Days", "10 Days", "12 Days"], correct: 1 },
+                { telugu: "A మరియు B ఒక పనిని విడివిడిగా 20 మరియు 30 రోజులలో చేయగలరు. ఇద్దరూ కలిసి 6 రోజులు పనిచేశారు, ఆ తర్వాత B వెళ్ళిపోయాడు. మిగిలిన పనిని A ఎన్ని రోజులలో పూర్తి చేస్తాడు?", english: "A and B can do work in 20 and 30 days. Worked together for 6 days, then B left. Remaining work completed by A in?", options: ["6 Days", "8 Days", "10 Days", "12 Days"], correct: 1 }
+            ],
+            chain_rule: [
+                { telugu: "15 మంది కార్మికులు 6 రోజులలో రూ. 2100 సంపాదిస్తే, 20 మంది కార్మికులు 10 రోజులలో ఎంత సంపాదిస్తారు?", english: "If 15 workers earn Rs. 2100 in 6 days, how much will 20 workers earn in 10 days?", options: ["Rs. 4200", "Rs. 4500", "Rs. 4667", "Rs. 5000"], correct: 2 },
+                { telugu: "10 కంచెలు వేయడానికి 10 రోజులు పడితే, 20 కంచెలు వేయడానికి ఎంత సమయం పడుతుంది?", english: "If 10 men can build 10 fences in 10 days, how many days will 20 men take to build 20 fences?", options: ["5 Days", "10 Days", "15 Days", "20 Days"], correct: 1 },
+                { telugu: "ఒక సైనిక శిబిరంలో 500 మంది సైనికులకు 27 రోజుల సరిపడా ఆహార పదార్థాలు ఉన్నాయి. 3 రోజుల తరువాత మరో 100 మంది సైనికులు చేరగా, మిగిలిన ఆహారం ఎన్ని రోజులకు సరిపోతుంది?", english: "A camp has food for 500 soldiers for 27 days. After 3 days, 100 more soldiers joined. How many days will the remaining food last?", options: ["18 Days", "20 Days", "22 Days", "24 Days"], correct: 1 },
+                { telugu: "7 గంటలు రోజు చొప్పున 12 రోజులలో ఒక పనిని పూర్తి చేయగల వ్యక్తి, రోజుకు 8 గంటలు పనిచేస్తే ఎన్ని రోజులలో పూర్తి చేస్తాడు?", english: "A person can complete a work in 12 days working 7 hours a day. In how many days will he finish it if he works 8 hours a day?", options: ["10.2 Days", "10.5 Days", "11.0 Days", "11.5 Days"], correct: 1 },
+                { telugu: "8 మంది వ్యక్తులు రోజుకు 9 గంటలు పనిచేసి ఒక పనిని 20 రోజులలో పూర్తి చేయగలరు. అదే పనిని 10 మంది వ్యక్తులు రోజుకు 6 గంటలు పనిచేసి ఎన్ని రోజులలో పూర్తి చేయగలరు?", english: "8 persons working 9 hours a day can complete a work in 20 days. In how many days will 10 persons working 6 hours a day complete it?", options: ["20 Days", "22 Days", "24 Days", "26 Days"], correct: 2 },
+                { telugu: "ఒక హాస్టల్‌లో 120 మంది విద్యార్థులకు 45 రోజుల సరిపడా నిల్వ ఉంది. 15 రోజుల తరువాత 30 మంది విద్యార్థులు వెళ్ళిపోయారు. మిగిలిన ఆహారం ఎన్ని రోజులు వస్తుంది?", english: "A hostel has provisions for 120 students for 45 days. After 15 days, 30 students left. How long will the remaining food last?", options: ["30 Days", "35 Days", "40 Days", "45 Days"], correct: 2 },
+                { telugu: "6 మంది యంత్ర ఆపరేటర్లు 7 గంటలు పనిచేసి 3 రోజులలో ఒక పనిని పూర్తి చేయగలరు. 4 మంది ఆపరేటర్లు రోజుకు 9 గంటలు పనిచేస్తే ఎన్ని రోజులలో పూర్తి చేస్తారు?", english: "6 machine operators working 7 hours can complete a work in 3 days. How many days will 4 operators working 9 hours take?", options: ["3.5 Days", "4.0 Days", "4.5 Days", "5.0 Days"], correct: 0 },
+                { telugu: "ఒక కోటలో 1200 మంది సైనికులకు 28 రోజుల ఆహారం ఉంది. 4 రోజుల తర్వాత కొంతమంది సైనికులు వెళ్ళిపోవడం వల్ల మిగిలిన ఆహారం 32 రోజులు వచ్చింది. ఎంత మంది సైనికులు వెళ్ళిపోయారు?", english: "A fort had provisions for 1200 soldiers for 28 days. After 4 days some soldiers left, so food lasted for 32 more days. How many soldiers left?", options: ["200", "250", "300", "400"], correct: 2 },
+                { telugu: "3 టన్నుల బొగ్గును 8 రోజులలో కాల్చడానికి 5 పొయ్యిలు అవసరం. 4 టన్నుల బొగ్గును 6 రోజులలో కాల్చడానికి ఎన్ని పొయ్యిలు కావాలి?", english: "5 stoves burn 3 tonnes of coal in 8 days. How many stoves are needed to burn 4 tonnes of coal in 6 days?", options: ["6 Stoves", "8 Stoves", "10 Stoves", "12 Stoves"], correct: 2 },
+                { telugu: "12 మంది కార్మికులు రోజుకు 8 గంటలు పనిచేసి 15 మీటర్ల పొడవు గల కాలువను 6 రోజులలో త్రవ్వగలరు. 18 మంది కార్మికులు రోజుకు 6 గంటలు పనిచేసి 20 మీటర్ల కాలువను ఎన్ని రోజులలో త్రవ్వగలరు?", english: "12 workers working 8 hours a day can dig a 15m canal in 6 days. In how many days can 18 workers working 6 hours a day dig a 20m canal?", options: ["6 Days", "7 Days", "8 Days", "9 Days"], correct: 1 },
+                { telugu: "30 మంది వ్యక్తులు రోజుకు 5 గంటలు పనిచేసి ఒక పనిని 24 రోజులలో పూర్తి చేయగలరు. 20 మంది వ్యక్తులు రోజుకు 6 గంటలు పనిచేసి ఆ పనిని ఎన్ని రోజులలో పూర్తి చేస్తారు?", english: "30 persons working 5 hours a day complete work in 24 days. 20 persons working 6 hours a day complete in?", options: ["25 Days", "30 Days", "35 Days", "40 Days"], correct: 1 }
+            ],
+            pipes: [
+                { telugu: "పైపు A ఒక తొట్టిని 12 గంటలలో, పైపు B దానిని 15 గంటలలో నింపగలవు. రెండు పైపులు ఏకకాలంలో తెరిస్తే తొట్టి నిండడానికి పట్టు సమయం ఎంత?", english: "Pipe A can fill a tank in 12 hours and Pipe B in 15 hours. If both are opened together, in how many hours will the tank be filled?", options: ["5.2 Hours", "6.67 Hours", "7.5 Hours", "8.2 Hours"], correct: 1 },
+                { telugu: "ఒక ఇన్లెట్ పైపు ఒక ఖాళీ తొట్టిని 6 గంటలలో నింపగలదు. అవుట్‌లెట్ పైపు నిండిన తొట్టిని 8 గంటలలో ఖాళీ చేయగలదు. రెండు పైపులు ఒకేసారి తెరిస్తే తొట్టి ఎప్పుడు నిండుతుంది?", english: "An inlet pipe can fill an empty tank in 6 hours. An outlet pipe can empty a full tank in 8 hours. If both are opened together, when will the tank be filled?", options: ["18 Hours", "20 Hours", "22 Hours", "24 Hours"], correct: 3 },
+                { telugu: "పైపు A మరియు B కలిసి ఒక తొట్టిని 10 గంటలలో నింపగలరు. పైపు A ఒక్కడే దానిని 15 గంటలలో నింపగలిగితే, పైపు B ఒక్కడే దానిని ఎన్ని గంటలలో ఖాళీ/నింపగలడు?", english: "Pipe A and B together fill a tank in 10 hours. Pipe A alone can fill it in 15 hours. In how many hours can Pipe B alone fill it?", options: ["20 Hours", "25 Hours", "30 Hours", "35 Hours"], correct: 2 },
+                { telugu: "ఒక తొట్టిని నింపడానికి రెండు పైపులు A మరియు B వరుసగా 20 మరియు 30 నిమిషాలు తీసుకుంటాయి. తొట్టి క్రింద ఉన్న ఒక లీకేజ్ దానిని 60 నిమిషాలలో ఖాళీ చేయగలదు. మూడు ఒకేసారి తెరిస్తే తొట్టి ఎంత సమయంలో నిండుతుంది?", english: "Two pipes A and B fill a tank in 20 and 30 minutes respectively. A leakage at the bottom can empty it in 60 minutes. If all three are opened, when is the tank filled?", options: ["12 Minutes", "15 Minutes", "18 Minutes", "20 Minutes"], correct: 1 },
+                { telugu: "పైపు X ఒక తొట్టిని 24 నిమిషాలలో నింపగలదు. తొట్టిలో లీకేజ్ వల్ల అది నిండడానికి 30 నిమిషాలు పట్టింది. తొట్టి నిండి ఉన్నప్పుడు లీకేజ్ వల్ల అది పూర్తిగా ఖాళీ కావడానికి ఎంత సమయం పడుతుంది?", english: "Pipe X fills a tank in 24 minutes. Due to a leak, it took 30 minutes to fill. How much time will the leak take to empty the full tank?", options: ["90 Min", "100 Min", "120 Min", "150 Min"], correct: 2 },
+                { telugu: "మూడు పైపులు A, B, C ఒక తొట్టిని వరుసగా 10, 12 మరియు 15 గంటలలో నింపగలవు. మూడు పైపులు ఒకేసారి తెరిస్తే తొట్టి నిండడానికి ఎంత సమయం పడుతుంది?", english: "Three pipes A, B, C can fill a tank in 10, 12 and 15 hours respectively. If all three are opened together, how much time will they take to fill the tank?", options: ["3 Hours", "4 Hours", "5 Hours", "6 Hours"], correct: 1 },
+                { telugu: "ఒక పైపు రెండవ పైపు కన్నా మూడు రెట్లు వేగంగా ఒక తొట్టిని నింపగలదు. రెండు పైపులు కలిసి తొట్టిని 36 నిమిషాలలో నింపినచో, నెమ్మదైన పైపు దాన్ని ఎన్ని నిమిషాలలో నింపగలదు?", english: "One pipe can fill a tank 3 times as fast as another pipe. Together they fill the tank in 36 minutes. How much time will the slower pipe take?", options: ["90 Min", "120 Min", "144 Min", "160 Min"], correct: 2 },
+                { telugu: "పైపు P ఒక తొట్టిని 15 గంటలలో నింపగలదు. అయితే తొట్టిలో పగులు ఉండటం వల్ల అది నిండడానికి 20 గంటలు పట్టింది. తొట్టి నిండుగా ఉన్నప్పుడు పగులు ద్వారా అది ఖాళీ కావడానికి ఎంత సమయం పడుతుంది?", english: "Pipe P fills a tank in 15 hours. Due to a crack, it took 20 hours to fill. How long will the crack take to empty the full tank?", options: ["40 Hours", "50 Hours", "60 Hours", "80 Hours"], correct: 2 },
+                { telugu: "రెండు పైపులు P మరియు Q ఒక తొట్టిని 12 మరియు 16 నిమిషాలలో నింపగలవు. రెండు పైపులు ఒకేసారి తెరిచారు కానీ తొట్టి నిండడానికి 4 నిమిషాల ముందు Q ని ఆపేశారు. తొట్టి నిండడానికి మొత్తం ఎంత సమయం పట్టింది?", english: "Two pipes P and Q fill a tank in 12 and 16 minutes. Both are opened together, but Q is closed 4 minutes before the tank is filled. Total time taken?", options: ["8 Min", "9.14 Min", "10 Min", "11.2 Min"], correct: 1 },
+                { telugu: "ఒక తొట్టికి అమర్చిన రెండు పైపులు దానిని వరుసగా 20 మరియు 25 నిమిషాలలో నింపగలవు. ఒక అవుట్‌లెట్ పైపు నిమిషానికి 3 గ్యాలన్ల నీటిని బయటకు పంపుతుంది. మూడు పైపులు కలిసి తొట్టిని 10 నిమిషాలలో నింపినచో, తొట్టి సామర్థ్యం ఎంత?", english: "Two pipes fill a tank in 20 and 25 min. An outlet pipe empties 3 gallons per min. If all three together fill it in 10 min, what is the capacity of the tank?", options: ["200 Gallons", "250 Gallons", "300 Gallons", "350 Gallons"], correct: 2 },
+                { telugu: "పైపు A ఒక తొట్టిని 20 గంటలలో మరియు పైపు B 30 గంటలలో నింపగలవు. రెండు పైపులు తెరిచిన తరువాత ఎన్ని గంటలకు పైపు A ని ఆపివేయాలి అంటే తొట్టి మొత్తం 15 గంటలలో నిండుతుంది?", english: "Pipe A and B fill in 20 and 30 hrs. After how many hours should A be closed so tank fills in 15 hrs?", options: ["3 Hours", "4 Hours", "5 Hours", "6 Hours"], correct: 2 }
+            ],
+            wages: [
+                { telugu: "A మరియు B ఒక పనిని పూర్తి చేయడానికి రూ. 1200 కు ఒప్పందం కుదుర్చుకున్నారు. A ఒక్కడే ఆ పనిని 8 రోజులలో, B 12 రోజులలో చేయగలరు. C సహాయంతో వారు ఆ పనిని 4 రోజులలో పూర్తి చేసినచో, C వాటా ఎంత?", english: "A and B undertake a work for Rs. 1200. A alone can do it in 8 days, B in 12 days. With C's help they finish it in 4 days. Find C's share?", options: ["Rs. 100", "Rs. 150", "Rs. 200", "Rs. 250"], correct: 2 },
+                { telugu: "A మరియు B లు ఒక పనిని వరుసగా 6 మరియు 8 రోజులలో చేయగలరు. C సహాయంతో వారు ఆ పనిని 3 రోజులలో పూర్తి చేసి రూ. 3200 సంపాదించారు. C యొక్క వాటా ఎంత?", english: "A and B can do a work in 6 and 8 days respectively. With C's help they finish it in 3 days and earn Rs. 3200. Find C's share?", options: ["Rs. 400", "Rs. 600", "Rs. 800", "Rs. 1000"], correct: 0 },
+                { telugu: "A ఒక పనిని 15 రోజులలో, B 10 రోజులలో చేయగలరు. వారు ఇద్దరూ కలిసి రూ. 225 మొత్తం వేతనానికి ఆ పనిని పూర్తి చేస్తే, A యొక్క వాటా ఎంత?", english: "A can do a work in 15 days, B in 10 days. If they complete it together for a total wage of Rs. 225, find A's share?", options: ["Rs. 75", "Rs. 90", "Rs. 105", "Rs. 120"], correct: 1 },
+                { telugu: "ఒక పనిని పూర్తి చేయడానికి A, B, C లు వరుసగా రూ. 400, రూ. 600 మరియు రూ. 800 అడిగారు. వారి సామర్థ్యాల నిష్పత్తి సమానమైనచో, A కి ఎంత లభిస్తుంది?", english: "A, B, C demand Rs. 400, Rs. 600, Rs. 800 to finish a work. If their efficiencies are equal, how much does A get?", options: ["Rs. 400", "Rs. 500", "Rs. 600", "Rs. 650"], correct: 2 },
+                { telugu: "A మరియు B ల సామర్థ్యాల నిష్పత్తి 3:2. ఒక పనిని పూర్తి చేసినందుకు వారికి మొత్తం రూ. 1500 వేతనం లభించినచో, B యొక్క వాటా ఎంత?", english: "The efficiency ratio of A and B is 3:2. If they receive a total wage of Rs. 1500 for completing a work, find B's share?", options: ["Rs. 500", "Rs. 600", "Rs. 700", "Rs. 900"], correct: 1 },
+                { telugu: "పెద్ద మనుషులు 4 గురు లేదా బాలురు 6 గురు కలిసి ఒక పనిని 20 రోజులలో పూర్తి చేయగలరు. 6 గురు పురుషులు మరియు 9 మంది బాలురు కలిసి ఆ పనిని ఎన్ని రోజులలో పూర్తి చేస్తారు?", english: "4 men or 6 boys can finish a work in 20 days. In how many days will 6 men and 9 boys finish the same work?", options: ["6 Days", "8 Days", "10 Days", "12 Days"], correct: 1 },
+                { telugu: "A ఒక పనిని 12 రోజులలో, B 18 రోజులలో చేయగలరు. వారు ఇద్దరూ కలిసి పని చేసి రూ. 4000 సంపాదించారు. B యొక్క వాటా ఎంత?", english: "A can do a work in 12 days, B in 18 days. They worked together and earned Rs. 4000. Find B's share?", options: ["Rs. 1200", "Rs. 1600", "Rs. 2000", "Rs. 2400"], correct: 1 },
+                { telugu: "ఒక పనిని చేయడానికి A, B మరియు C లకు రూ. 550 కేటాయించబడింది. A మరియు B కలిసి 7/11 పనిని పూర్తి చేస్తే, C యొక్క వాటా ఎంత?", english: "A, B and C are given Rs. 550 for a work. A and B together finish 7/11 of the work. Find C's share?", options: ["Rs. 150", "Rs. 200", "Rs. 250", "Rs. 300"], correct: 1 },
+                { telugu: "A, B లు ఒక పనిని రూ. 450 కి పూర్తి చేయడానికి ఒప్పందం కుదుర్చుకున్నారు. A ఒక్కడే దానిని 10 రోజులలో చేయగలడు, B సహాయంతో 6 రోజులలో పూర్తి చేయగలరు. B యొక్క వాటా ఎంత?", english: "A and B undertake a work for Rs. 450. A alone can do it in 10 days, and with B's help in 6 days. Find B's share?", options: ["Rs. 135", "Rs. 150", "Rs. 180", "Rs. 225"], correct: 2 },
+                { telugu: "ఇద్దరు వ్యక్తులు ఒక పనిని పూర్తి చేసి రూ. 960 అందుకున్నారు. వారి వేతనాల నిష్పత్తి 5:3 అయినచో, మొదటి వ్యక్తికి లభించిన మొత్తం ఎంత?", english: "Two persons completed a work and received Rs. 960. If their wage ratio is 5:3, find the amount received by the first person?", options: ["Rs. 500", "Rs. 550", "Rs. 600", "Rs. 650"], correct: 2 },
+                { telugu: "A, B, C లు ఒక పనిని రూ. 5290 కి పూర్తి చేశారు. A మరియు B కలిసి 19/23 పనిని పూర్తి చేస్తే, C వాటా ఎంత?", english: "A, B, C finished work for Rs. 5290. A and B together finished 19/23 work. Find C's share?", options: ["Rs. 820", "Rs. 920", "Rs. 1020", "Rs. 1120"], correct: 1 }
+            ]
+        };
+
+        let currentExamQuestions = [];
+        let userAnswers = [];
+        let visited = [];
+        let currentIndex = 0;
+        let timeLeft = 15 * 60;
+        let timerInterval;
+
+        function startExam(topicKey) {
+            let topicPool = database[topicKey];
+            currentExamQuestions = [...topicPool].sort(() => 0.5 - Math.random()).slice(0, 10);
+            
+            userAnswers = new Array(currentExamQuestions.length).fill(null);
+            visited = new Array(currentExamQuestions.length).fill(false);
+            visited[0] = true;
+            currentIndex = 0;
+            timeLeft = 15 * 60;
+
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('exam-view').style.display = 'flex';
+            document.querySelector('.timer-box').style.display = 'block';
+            document.getElementById('submit-btn').style.display = 'block';
+            document.getElementById('home-btn').style.display = 'none';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('timer').innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if(timeLeft <= 0) { clearInterval(timerInterval); submitExam(); }
+                timeLeft--;
+            }, 1000);
+
+            loadQuestion();
+        }
+
+        function returnToDashboard() {
+            clearInterval(timerInterval);
+            document.getElementById('exam-view').style.display = 'none';
+            document.querySelector('.timer-box').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+        }
+
+        function updateCounts() {
+            let ansCount = 0, skipCount = 0, notVisitedCount = 0;
+            currentExamQuestions.forEach((_, idx) => {
+                if (userAnswers[idx] !== null) ansCount++;
+                else if (visited[idx]) skipCount++;
+                else notVisitedCount++;
+            });
+            document.getElementById('count-ans').innerText = ansCount;
+            document.getElementById('count-skip').innerText = skipCount;
+            document.getElementById('count-not').innerText = notVisitedCount;
+        }
+
+        function renderPalette() {
+            let grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            currentExamQuestions.forEach((_, idx) => {
+                let btn = document.createElement('button');
+                let statusClass = '';
+                if (userAnswers[idx] !== null) statusClass = 'answered';
+                else if (visited[idx]) statusClass = 'skipped';
+                
+                btn.className = `palette-btn ${statusClass} ${currentIndex === idx ? 'current' : ''}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => { 
+                    currentIndex = idx; 
+                    visited[idx] = true;
+                    loadQuestion(); 
+                };
+                grid.appendChild(btn);
+            });
+            updateCounts();
+        }
+
+        function loadQuestion() {
+            let q = currentExamQuestions[currentIndex];
+            document.getElementById('q-num-title').innerText = `Question No. ${currentIndex + 1} of 10`;
+            document.getElementById('q-telugu').innerText = q.telugu;
+            document.getElementById('q-english').innerText = q.english;
+
+            let optHTML = '';
+            q.options.forEach((opt, idx) => {
+                let isSelected = userAnswers[currentIndex] === idx ? 'selected' : '';
+                optHTML += `<div class="option-item ${isSelected}" onclick="selectOption(${idx})"><b>${String.fromCharCode(65 + idx)})</b> ${opt}</div>`;
+            });
+            document.getElementById('options-container').innerHTML = optHTML;
+
+            renderPalette();
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentIndex] = optIdx;
+            renderPalette();
+        }
+
+        function clearAnswer() {
+            userAnswers[currentIndex] = null;
+            loadQuestion();
+        }
+
+        function nextQuestion() {
+            visited[currentIndex] = true;
+            if(currentIndex < currentExamQuestions.length - 1) { 
+                currentIndex++; 
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function prevQuestion() {
+            if(currentIndex > 0) { 
+                currentIndex--;
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            let score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if(ans === currentExamQuestions[idx].correct) score++;
+            });
+
+            document.getElementById('exam-screen').style.display = 'none';
+            let card = document.getElementById('score-card');
+            card.style.display = 'block';
+            document.getElementById('score-text').innerHTML = `Your Score: <span style="color:var(--yellow);">${score} / 10</span><br>Accuracy: ${(score/10*100).toFixed(1)}%`;
+            
+            // Hide submit button and show Back to Home button
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('home-btn').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Advanced Quant Master Dashboard & CBT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Orbitron:wght@700;900&family=Noto+Sans+Telugu:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b1120; --primary: #38bdf8; --text-light: #f8fafc;
+            --card-bg: #1e293b; --yellow: #fde047; --green: #16a34a; --red: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+        body { 
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            background: var(--bg-color); color: var(--text-light); 
+            min-height: 100vh; display: flex; flex-direction: column;
+        }
+
+        header { 
+            background: #1e293b; border-bottom: 3px solid var(--primary); padding: 15px 30px; 
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        header h1 { color: var(--yellow); font-size: 1.1rem; font-weight: 900; text-transform: uppercase; }
+        
+        .timer-box {
+            background: var(--red); color: #fff; padding: 6px 15px; border-radius: 6px;
+            font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 900; display: none;
+        }
+
+        .main-wrapper { max-width: 1400px; margin: 0 auto; width: 100%; padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+
+        /* DASHBOARD VIEW */
+        #dashboard-view { display: block; width: 100%; }
+        .dash-title { font-size: 1.6rem; font-weight: 900; color: #fff; margin-bottom: 8px; }
+        .dash-sub { font-size: 1rem; color: #94a3b8; margin-bottom: 25px; }
+
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+        }
+        .card {
+            background: var(--card-bg); border: 2px solid #334155; border-radius: 12px; padding: 25px;
+            display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .card-title { font-size: 1.2rem; font-weight: 900; color: var(--yellow); margin-bottom: 10px; }
+        .card-desc { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 20px; line-height: 1.4; }
+        
+        .btn-practice {
+            background: linear-gradient(90deg, #0284c7, #0369a1); color: #fff; border: none;
+            padding: 10px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 900; cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .btn-practice:hover { opacity: 0.9; }
+
+        /* EXAM VIEW (CBT) */
+        #exam-view { display: none; flex-grow: 1; flex-direction: column; width: 100%; }
+        .exam-container { display: flex; flex-direction: column; flex-grow: 1; gap: 15px; width: 100%; }
+        @media (min-width: 900px) { .exam-container { flex-direction: row; } }
+
+        .q-panel {
+            flex-grow: 1; background: var(--card-bg); border: 2px solid #334155;
+            border-radius: 12px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 400px;
+        }
+
+        .q-header-info { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 900; color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px; }
+        .q-text-telugu { font-size: 1.3rem; font-weight: 900; color: #fff; line-height: 1.5; margin-bottom: 10px; }
+        .q-text-english { font-size: 1.05rem; font-weight: 800; color: var(--yellow); line-height: 1.4; margin-bottom: 20px; border-left: 4px solid var(--yellow); padding-left: 12px; }
+
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .option-item {
+            background: #0f172a; border: 2px solid #334155; padding: 14px 20px; border-radius: 8px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: 0.15s; color: #f8fafc;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .option-item:hover { border-color: var(--primary); background: #172554; }
+        .option-item.selected { border-color: var(--yellow); background: #1e3a8a; color: var(--yellow); }
+
+        .nav-buttons { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid #334155; padding-top: 15px; }
+        .btn { background: #0284c7; color: #fff; border: none; padding: 12px 22px; border-radius: 6px; font-size: 0.95rem; font-weight: 900; cursor: pointer; }
+        .btn-submit { background: var(--green); width: 100%; margin-top: 12px; padding: 14px; font-size: 1.1rem; }
+        .btn-home { background: #475569; width: 100%; margin-top: 8px; padding: 12px; font-size: 1rem; display: none; }
+
+        /* PALETTE PANEL */
+        .palette-panel {
+            width: 100%; max-width: 380px; background: var(--card-bg); border: 2px solid #334155; border-radius: 12px;
+            padding: 18px; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0;
+        }
+        .palette-title { font-size: 1rem; font-weight: 900; color: var(--yellow); text-align: center; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        
+        .legend-box { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.8rem; font-weight: 800; background: #0f172a; padding: 10px; border-radius: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+
+        .grid-palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; overflow-y: auto; max-height: 250px; }
+        .palette-btn { background: #475569; border: 2px solid #334155; color: #fff; font-weight: 900; height: 42px; border-radius: 6px; cursor: pointer; }
+        .palette-btn.answered { background: var(--green); border-color: #15803d; }
+        .palette-btn.skipped { background: var(--red); border-color: #991b1b; }
+        .palette-btn.current { border: 2px solid var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+
+        .score-card { background: #0f172a; border: 2px dashed var(--green); border-radius: 10px; padding: 20px; text-align: center; display: none; }
+        .score-card h2 { color: var(--green); font-size: 1.5rem; font-weight: 900; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RAHUL ACADEMY - ADVANCED QUANT MASTER</h1>
+        <div class="timer-box" id="timer">15:00</div>
+    </header>
+
+    <div class="main-wrapper">
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view">
+            <div class="dash-title">Select Advanced Topic to Start CBT Exam</div>
+            <div class="dash-sub">Choose any topic below to start a 10-question practice test.</div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div>
+                        <div class="card-title">Time & Distance (కాలము - దూరం)</div>
+                        <div class="card-desc">Practice speed, relative speed, meeting point problems, and average speed.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('time_distance')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Trains (రైళ్లు)</div>
+                        <div class="card-desc">Master pole crossing, platform crossing, and running train overtaking concepts.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('trains')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Boats & Streams (నావలు - ప్రవాహాలు)</div>
+                        <div class="card-desc">Upstream and downstream speed calculations and effective river flow.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('boats')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Races & Games (పరుగు పంద్యాలు)</div>
+                        <div class="card-desc">Linear races, circular tracks, head starts, and game scoring problems.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('races')">Start Exam (10 Qs)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAM VIEW -->
+        <div id="exam-view">
+            <div class="exam-container">
+                <div class="q-panel" id="exam-screen">
+                    <div>
+                        <div class="q-header-info">
+                            <span id="q-num-title">Question No. 1 of 10</span>
+                            <button class="btn" style="padding: 6px 12px; font-size: 0.8rem; background:#475569;" onclick="returnToDashboard()">🏠 Home</button>
+                        </div>
+                        <div class="q-text-telugu" id="q-telugu"></div>
+                        <div class="q-text-english" id="q-english"></div>
+                        
+                        <div class="options-list" id="options-container"></div>
+                    </div>
+
+                    <div>
+                        <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                            <button class="btn" style="background: #475569;" onclick="clearAnswer()">Clear Answer</button>
+                        </div>
+                        <div class="nav-buttons">
+                            <button class="btn" onclick="prevQuestion()">&lt;&lt; Previous</button>
+                            <button class="btn" onclick="nextQuestion()">Save & Next &gt;&gt;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="palette-panel">
+                    <div class="palette-title">Question Palette</div>
+                    
+                    <div class="legend-box">
+                        <div class="legend-item"><span class="dot" style="background:var(--green);"></span> Answered (<span id="count-ans">0</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:var(--red);"></span> Skipped (<span id="count-skip">1</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:#475569;"></span> Unvisited (<span id="count-not">9</span>)</div>
+                    </div>
+
+                    <div class="grid-palette" id="palette-grid"></div>
+                    
+                    <div class="score-card" id="score-card">
+                        <h2>Exam Submitted!</h2>
+                        <p id="score-text" style="font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 10px;"></p>
+                    </div>
+
+                    <button class="btn btn-submit" id="submit-btn" onclick="submitExam()">Submit Exam</button>
+                    <button class="btn btn-home" id="home-btn" onclick="returnToDashboard()">🏠 Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const database = {
+            time_distance: [
+                { telugu: "ఒక వ్యక్తి గంటకు 60 కి.మీ వేగంతో ప్రయాణించి ఒక గమ్యస్థానాన్ని చేరడానికి 4 గంటలు పట్టింది. అదే దూర్యాన్ని 5 గంటలలో చేరాలంటే అతని వేగం ఎంత ఉండాలి?", english: "A person travels at 60 km/h and reaches a destination in 4 hours. What should be his speed to reach it in 5 hours?", options: ["45 km/h", "48 km/h", "50 km/h", "52 km/h"], correct: 1 },
+                { telugu: "రెండు స్థలాల మధ్య దూరం 300 కి.మీ. మొదటి వ్యక్తి గంటకు 50 కి.మీ వేగంతో, రెండవ వ్యక్తి గంటకు 60 కి.మీ వేగంతో బయలుదేరితే, రెండవ వ్యక్తికి ఎంత సమయం తక్కువ పడుతుంది?", english: "Distance between two places is 300 km. First person travels at 50 km/h, second at 60 km/h. How much less time does the second person take?", options: ["0.5 Hours", "1.0 Hour", "1.5 Hours", "2.0 Hours"], correct: 1 },
+                { telugu: "ఒక వ్యక్తి తన ప్రయాణంలో మొదటి అర్ధభాగాన్ని గంటకు 40 కి.మీ వేగంతో, రెండవ అర్ధభాగాన్ని గంటకు 60 కి.మీ వేగంతో వెళితే, అతని సగటు వేగం ఎంత?", english: "A person covers first half of his journey at 40 km/h and second half at 60 km/h. What is his average speed?", options: ["45 km/h", "48 km/h", "50 km/h", "52 km/h"], correct: 1 },
+                { telugu: "ఒక బస్సు గంటకు 45 కి.మీ వేగంతో ప్రయాణిస్తే గమ్యస్థానానికి సమయానికి చేరుతుంది. ఒకవేళ అది గంటకు 30 కి.మీ వేగంతో వెళితే 40 నిమిషాలు ఆలస్యంగా చేరుతుంది. ప్రయాణించిన మొత్తం దూరం ఎంత?", english: "A bus reaches its destination on time at 45 km/h. If it travels at 30 km/h, it is late by 40 minutes. Find total distance?", options: ["50 km", "60 km", "75 km", "90 km"], correct: 1 },
+                { telugu: "ఒక కారు గంటకు 72 కి.మీ వేగంతో వెళుతూ ఒక నిమిషంలో ఎంత దూరం ప్రయాణిస్తుంది?", english: "A car moving at 72 km/h covers how much distance in 1 minute?", options: ["1000 meters", "1200 meters", "1500 meters", "1800 meters"], correct: 1 },
+                { telugu: "రెండు రైళ్లు అభిముఖ దిశలలో గంటకు 40 కి.మీ మరియు గంటకు 50 కి.మీ వేగంతో ప్రయాణిస్తున్నాయి. వాటి సాపేక్ష వేగం ఎంత?", english: "Two trains move in opposite directions at 40 km/h and 50 km/h. Find their relative speed?", options: ["10 km/h", "45 km/h", "90 km/h", "2000 km/h"], correct: 2 },
+                { telugu: "ఒక చారిత్రక ప్రదేశానికి నడుచుకుంటూ వెళ్ళే వ్యక్తి గంటకు 3 కి.మీ వేగంతో వెళ్ళి 15 నిమిషాలు ఆలస్యంగా చేరాడు. గంటకు 4 కి.మీ వేగంతో వెళితే 15 నిమిషాలు ముందుగా చేరుతాడు. దూరం ఎంత?", english: "Walking at 3 km/h a person is late by 15 min. Walking at 4 km/h he is early by 15 min. Find distance?", options: ["5 km", "6 km", "7 km", "8 km"], correct: 1 },
+                { telugu: "ఒక వ్యక్తి ఒక నిర్దిష్ట దూరాన్ని గంటకు 30 కి.మీ వేగంతో వెళ్ళి, గంటకు 20 కి.మీ వేగంతో తిరిగివచ్చాడు. మొత్తం ప్రయాణంలో అతని సగటు వేగం ఎంత?", english: "A person travels a certain distance at 30 km/h and returns at 20 km/h. Find average speed?", options: ["24 km/h", "25 km/h", "26 km/h", "28 km/h"], correct: 0 },
+                { telugu: "ఒక బైక్ రైడర్ రోజువారీ ప్రయాణంలో వేగాన్ని 25% పెంచితే, సమయం ఎంత శాతం తగ్గుతుంది?", english: "If a bike rider increases his speed by 25% in daily commute, by what percentage does his time decrease?", options: ["15%", "20%", "25%", "30%"], correct: 1 },
+                { telugu: "స్థిరమైన వేగంతో ప్రయాణిస్తున్న ఒక రైలు 180 కి.మీ దూరాన్ని 3 గంటలలో దాటితే, అదే రైలు 600 కి.మీ దూరాన్ని ఎంత సమయంలో దాటుతుంది?", english: "A train covers 180 km in 3 hours at a constant speed. How much time will it take to cover 600 km?", options: ["8 Hours", "9 Hours", "10 Hours", "12 Hours"], correct: 2 }
+            ],
+            trains: [
+                { telugu: "120 మీటర్ల పొడవు గల రైలు గంటకు 54 కి.మీ వేగంతో ప్రయాణిస్తూ మార్గమధ్యంలో ఉన్న ఒక టెలిగ్రాఫ్ పోల్ ని దాటడానికి ఎంత సమయం పడుతుంది?", english: "A 120m long train running at 54 km/h takes how much time to cross a telegraph pole?", options: ["6 Seconds", "8 Seconds", "10 Seconds", "12 Seconds"], correct: 1 },
+                { telugu: "200 మీటర్ల పొడవు గల రైలు గంటకు 72 కి.మీ వేగంతో వెళుతూ 300 మీటర్ల పొడవు గల ప్లాట్‌ఫారమ్‌ను దాటడానికి ఎంత సమయం పడుతుంది?", english: "A 200m long train running at 72 km/h crosses a 300m long platform. Time taken?", options: ["20 Seconds", "25 Seconds", "30 Seconds", "35 Seconds"], correct: 1 },
+                { telugu: "రెండు రైళ్లు వరుసగా 150 మీ మరియు 250 మీ పొడవు కలిగి సమాంతర పట్టాలపై ఒకే దిశలో గంటకు 50 కి.మీ మరియు గంటకు 30 కి.మీ వేగంతో వెళుతున్నాయి. ఒకదానినొకటి దాటడానికి పట్టు సమయం ఎంత?", english: "Two trains of length 150m and 250m run in the same direction at 50 km/h and 30 km/h. Time taken to cross each other?", options: ["62 Seconds", "72 Seconds", "80 Seconds", "90 Seconds"], correct: 1 },
+                { telugu: "ఒక రైలు గంటకు 60 కి.మీ వేగంతో వెళుతూ ఎదురుగా గంటకు 6 కి.మీ వేగంతో నడుస్తున్న వ్యక్తిని 9 సెకన్లలో దాటింది. రైలు పొడవు ఎంత?", english: "A train at 60 km/h crosses a man walking in opposite direction at 6 km/h in 9 seconds. Find train length?", options: ["120 meters", "150 meters", "180 meters", "200 meters"], correct: 1 },
+                { telugu: "100 మీటర్ల పొడవు గల రైలు గంటకు 36 కి.మీ వేగంతో వెళుతూ ఒక వంతెనను 20 సెకన్లలో దాటింది. ఆ వంతెన పొడవు ఎంత?", english: "A 100m train at 36 km/h crosses a bridge in 20 seconds. Find bridge length?", options: ["100 meters", "150 meters", "200 meters", "250 meters"], correct: 0 },
+                { telugu: "రెండు రైళ్లు A మరియు B లు ఒకే సమయంలో X మరియు Y నుండి బయలుదేరి పరస్పరం ఎదురుగా వచ్చి ఒకదానినొకటి దాటిన తరువాత వరుసగా 4 గంటలు మరియు 9 గంటలలో తమ గమ్యస్థానాలు చేరాయి. రైలు A వేగం గంటకు 60 కి.మీ అయితే, రైలు B వేగం ఎంత?", english: "Two trains A and B start simultaneously from X and Y and after crossing take 4 hours and 9 hours respectively to reach destinations. If A's speed is 60 km/h, find B's speed?", options: ["30 km/h", "40 km/h", "45 km/h", "50 km/h"], correct: 1 },
+                { telugu: "ఒక రైలు ప్లాట్‌ఫారమ్‌పై నిలబడిన వ్యక్తిని 10 సెకన్లలో, 300 మీటర్ల పొడవు గల ప్లాట్‌ఫారమ్‌ను 25 సెకన్లలో దాటితే, రైలు పొడవు ఎంత?", english: "A train crosses a man on platform in 10s and a 300m platform in 25s. Find train length?", options: ["150 meters", "200 meters", "250 meters", "300 meters"], correct: 1 },
+                { telugu: "సమాంతర పట్టాలపై ఒకే దిశలో గంటకు 40 కి.మీ మరియు గంటకు 22 కి.మీ వేగంతో వెళ్తున్న రెండు రైళ్లు ఒకదానినొకటి 30 సెకన్లలో దాటాయి. రెండు రైళ్ల పొడవుల మొత్తం ఎంత?", english: "Two trains moving in same direction at 40 km/h and 22 km/h cross each other in 30 seconds. Sum of their lengths?", options: ["100 meters", "125 meters", "150 meters", "175 meters"], correct: 2 },
+                { telugu: "ఢిల్లీ నుండి ముంబై బయలుదేరిన రైలు వేగం గంటకు 80 కి.మీ. మరొక రైలు దాని వెనుక 3 గంటల తరువాత బయలుదేరి గంటకు 120 కి.మీ వేగంతో వెళితే, మొదటి రైలును ఎప్పుడు కలుస్తుంది?", english: "A train leaves Delhi at 80 km/h. Another train leaves 3 hours later at 120 km/h in same direction. When will it catch the first?", options: ["After 4 Hours", "After 5 Hours", "After 6 Hours", "After 8 Hours"], correct: 2 },
+                { telugu: "గంటకు 90 కి.మీ వేగంతో వెళ్తున్న రైలు 250 మీటర్ల పొడవు గల ప్లాట్‌ఫారమ్‌ను 20 సెకన్లలో దాటితే రైలు పొడవు ఎంత?", english: "A train at 90 km/h crosses a 250m platform in 20 seconds. Find train length?", options: ["150 meters", "200 meters", "250 meters", "300 meters"], correct: 2 }
+            ],
+            boats: [
+                { telugu: "ఒక నావ ప్రవాహ దిశలో వేగం గంటకు 15 కి.మీ మరియు ప్రవాహ వ్యతిరేక దిశలో వేగం గంటకు 9 కి.మీ అయినచో, నీటిలో నావ వేగం ఎంత?", english: "A boat's downstream speed is 15 km/h and upstream speed is 9 km/h. Find speed of boat in still water?", options: ["10 km/h", "12 km/h", "14 km/h", "15 km/h"], correct: 1 },
+                { telugu: "స్థిర నీటిలో ఒక నావ వేగం గంటకు 10 కి.మీ మరియు ప్రవాహ వేగం గంటకు 2 కి.మీ. ప్రవాహ దిశలో 36 కి.మీ వెళ్ళడానికి పట్టే సమయం ఎంత?", english: "Speed of boat in still water is 10 km/h and current is 2 km/h. Time taken to go 36 km downstream?", options: ["2 Hours", "3 Hours", "4 Hours", "5 Hours"], correct: 1 },
+                { telugu: "ఒక వ్యక్తి ప్రవాహ వ్యతిరేక దిశలో గంటకు 6 కి.మీ మరియు ప్రవాహ దిశలో గంటకు 10 కి.మీ వేగంతో ఈదగలడు. ప్రవాహ వేగం ఎంత?", english: "A man swims upstream at 6 km/h and downstream at 10 km/h. Find speed of current?", options: ["1 km/h", "2 km/h", "3 km/h", "4 km/h"], correct: 1 },
+                { telugu: "ఒక నావ ప్రవాహ వ్యతిరేక దిశలో 24 కి.మీ దూరాన్ని 4 గంటలలో, మరియు ప్రవాహ దిశలో 20 కి.మీ దూరాన్ని 2 గంటలలో వెళితే, ప్రవాహ వేగం ఎంత?", english: "A boat covers 24 km upstream in 4 hours and 20 km downstream in 2 hours. Find current speed?", options: ["1.5 km/h", "2.0 km/h", "2.5 km/h", "3.0 km/h"], correct: 2 },
+                { telugu: "స్థిర నీటిలో ఒక వ్యక్తి వేగం గంటకు 7.5 కి.మీ. ప్రవాహ వేగం గంటకు 1.5 కి.మీ. అయితే ప్రవాహ వ్యతిరేక దిశలో 60 కి.మీ వెళ్ళడానికి పట్టే సమయం ఎంత?", english: "A man's speed in still water is 7.5 km/h, current is 1.5 km/h. Time taken to cover 60 km upstream?", options: ["8 Hours", "10 Hours", "12 Hours", "15 Hours"], correct: 1 },
+                { telugu: "ఒక మోటార్ బోట్ ప్రవాహ దిశలో 3 గంటలలో 45 కి.మీ ప్రయాణించి, అదే దూరాన్ని ప్రవాహ వ్యతిరేక దిశలో 5 గంటలలో తిరిగొచ్చింది. ప్రవాహ వేగం ఎంత?", english: "A motorboat goes 45 km downstream in 3 hours and returns upstream in 5 hours. Find current speed?", options: ["2 km/h", "3 km/h", "4 km/h", "5 km/h"], correct: 1 },
+                { telugu: "ఒక నది ప్రవాహ వేగం గంటకు 3 కి.మీ. ఒక వ్యక్తి ప్రవాహ వ్యతిరేక దిశలో ఈది తిరిగి రావడానికి మొత్తం 3 గంటలు పట్టింది. మొత్తం దూరం 4 కి.మీ అయితే వ్యక్తి స్థిర నీటిలో వేగం ఎంత?", english: "River flow speed is 3 km/h. A man swims upstream and returns in total 3 hours for 4 km each way. Find man's still water speed?", options: ["4 km/h", "5 km/h", "6 km/h", "7 km/h"], correct: 1 },
+                { telugu: "నావ ప్రవాహ దిశలో వేగం మరియు ప్రవాహ వ్యతిరేక దిశలో వేగం నిష్పత్తి 4:2. స్థిర నీటిలో నావ వేగం గంటకు 12 కి.మీ అయితే, ప్రవాహ వేగం ఎంత?", english: "Ratio of downstream to upstream speed of a boat is 4:2. If still water speed is 12 km/h, find current speed?", options: ["2 km/h", "3 km/h", "4 km/h", "6 km/h"], correct: 2 },
+                { telugu: "ఒక చెక్క దిమ్మ ప్రవాహ వేగానికి అనుగుణంగా గంటకు 4 కి.మీ వేగంతో కొట్టుకుపోతుంది. ఒక నావ ప్రవాహ వ్యతిరేక దిశలో గంటకు 10 కి.మీ వెళితే, ప్రవాహ దిశలో దాని వేగం ఎంత?", english: "A piece of wood floats downstream at 4 km/h. A boat goes upstream at 10 km/h. What is its downstream speed?", options: ["14 km/h", "16 km/h", "18 km/h", "20 km/h"], correct: 2 },
+                { telugu: "ఒక నావ ప్రవాహ దిశలో ఒక నిర్దిష్ట దూరాన్ని 8 గంటలలో, ప్రవాహ వ్యతిరేక దిశలో అదే దూరాన్ని 12 గంటలలో చేరుతుంది. ప్రవాహ వేగం గంటకు 2 కి.మీ అయితే, ఆ దూరం ఎంత?", english: "A boat covers a distance downstream in 8 hrs and upstream in 12 hrs. If current speed is 2 km/h, find the distance?", options: ["80 km", "96 km", "100 km", "120 km"], correct: 1 }
+            ],
+            races: [
+                { telugu: "100 మీటర్ల పరుగు పందెంలో A, B ని 10 మీటర్లతో ఓడించాడు. అదే పందెంలో B, C ని 10 మీటర్లతో ఓడిస్తే, A, C ని ఎంత దూరం తేడాతో ఓడిస్తాడు?", english: "In a 100m race, A beats B by 10m. B beats C by 10m. By how many meters does A beat C?", options: ["18 meters", "19 meters", "20 meters", "21 meters"], correct: 1 },
+                { telugu: "200 మీటర్ల రేసులో A గంటకు 5 కి.మీ వేగంతో పరిగెత్తుతాడు. A, B కి 8 మీటర్లు హెడ్-స్టార్ట్ ఇచ్చి కూడా 8 సెకన్ల తేడాతో గెలిస్తే, B వేగం ఎంత?", english: "In a 200m race, A runs at 5 km/h. A gives B an 8m head start and still wins by 8 seconds. Find B's speed?", options: ["1.2 m/s", "1.5 m/s", "1.8 m/s", "2.0 m/s"], correct: 1 },
+                { telugu: "ఒక వృత్తాకార ట్రాక్ పొడవు 400 మీటర్లు. A మరియు B లు ఒకే స్థానం నుండి ఒకే దిశలో గంటకు 18 కి.మీ మరియు గంటకు 12 కి.మీ వేగంతో బయలుదేరితే, వారు మొదటిసారి ఎప్పుడు కలుస్తారు?", english: "Length of circular track is 400m. A and B start from same point in same direction at 18 km/h and 12 km/h. When do they meet for the first time?", options: ["After 2 minutes", "After 2.5 minutes", "After 3 minutes", "After 4 minutes"], correct: 2 },
+                { telugu: "1 కి.మీ పరుగు పందెంలో A, B ని 28 సెకండ్లు మరియు 32 మీటర్లతో ఓడించగలడు. B ఆ రేసును పూర్తి చేయడానికి పట్టే సమయం ఎంత?", english: "In a 1km race, A can beat B by 28 seconds and 32 meters. Find time taken by B to complete the race?", options: ["200 sec", "218 sec", "225 sec", "240 sec"], correct: 1 },
+                { telugu: "500 మీటర్ల రేసులో A మరియు B ల వేగాల నిష్పత్తి 3:4. A కి 140 మీటర్లు హెడ్-స్టార్ట్ ఇస్తే, ఎవరు గెలుస్తారు మరియు ఎంత తేడాతో?", english: "In a 500m race, speed ratio of A and B is 3:4. A is given 140m head start. Who wins and by how much?", options: ["B wins by 20m", "A wins by 10m", "Tie", "B wins by 30m"], correct: 0 },
+                { telugu: "ఒక 1000 మీటర్ల రేసులో A, B ని 100 మీటర్ల తేడాతో ఓడించగలడు మరియు B, C ని 150 మీటర్ల తేడాతో ఓడించగలడు. 500 మీటర్ల రేసులో A, C ని ఎంత తేడాతో ఓడిస్తాడు?", english: "In a 1000m race A beats B by 100m, and B beats C by 150m. In a 500m race A beats C by how much?", options: ["100 meters", "117.5 meters", "125 meters", "135 meters"], correct: 1 },
+                { telugu: "ఒక 400 మీటర్ల ట్రాప్‌లో ఇద్దరు धावकులు A మరియు B లు వ్యతిరేక దిశలలో నిమిషానికి 300 మీటర్లు మరియు నిమిషానికి 200 మీటర్లు వేగంతో పరిగెత్తితే, వారు మొదటిసారి ఎప్పుడు కలుస్తారు?", english: "On a 400m track two runners A and B run in opposite directions at 300 m/min and 200 m/min. When do they meet first?", options: ["36 Seconds", "45 Seconds", "48 Seconds", "60 Seconds"], correct: 2 },
+                { telugu: "ఒక గేమ్ ఆఫ్ బిల్లియర్డ్స్ లేదా 100 పాయింట్ల రేసులో A, B కి 15 పాయింట్లు మరియు C కి 28 పాయింట్లు ఇవ్వగలడు. అదే గేమ్‌లో B, C కి ఎంత పాయింట్ల హెడ్-స్టార్ట్ ఇవ్వాలి?", english: "In a 100 points game, A can give 15 points to B and 28 points to C. How many points can B give to C in the same game?", options: ["12 Points", "13.5 Points", "15 Points", "16 Points"], correct: 1 },
+                { telugu: "3 కి.మీ పరుగు పందెంలో A, B ల సమయాల నిష్పత్తి 4:5. A గంటకు 15 కి.మీ వేగంతో పరుగెత్తితే, B వేగం ఎంత?", english: "In a 3km race, time ratio of A and B is 4:5. If A runs at 15 km/h, find B's speed?", options: ["10 km/h", "12 km/h", "12.5 km/h", "14 km/h"], correct: 1 },
+                { telugu: "రెండు కార్లు ఒకే వృత్తాకార ట్రాక్ పై ఒకే బిందువు నుండి ఒకే దిశలో నిమిషానికి 5 పరిమితులు మరియు నిమిషానికి 4 పరిమితులు చొప్పున పరిగెత్తితే, వారు మొదటిసారి ప్రారంభ బిందువు వద్ద ఎప్పుడు కలుస్తారు?", english: "Two cars on a circular track from same point in same direction run at 5 laps/min and 4 laps/min. When do they meet at the starting point first?", options: ["1 Minute", "2 Minutes", "3 Minutes", "5 Minutes"], correct: 0 }
+            ]
+        };
+
+        let currentExamQuestions = [];
+        let userAnswers = [];
+        let visited = [];
+        let currentIndex = 0;
+        let timeLeft = 15 * 60;
+        let timerInterval;
+
+        function startExam(topicKey) {
+            let topicPool = database[topicKey];
+            currentExamQuestions = [...topicPool].sort(() => 0.5 - Math.random()).slice(0, 10);
+            
+            userAnswers = new Array(currentExamQuestions.length).fill(null);
+            visited = new Array(currentExamQuestions.length).fill(false);
+            visited[0] = true;
+            currentIndex = 0;
+            timeLeft = 15 * 60;
+
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('exam-view').style.display = 'flex';
+            document.querySelector('.timer-box').style.display = 'block';
+            document.getElementById('submit-btn').style.display = 'block';
+            document.getElementById('home-btn').style.display = 'none';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('timer').innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if(timeLeft <= 0) { clearInterval(timerInterval); submitExam(); }
+                timeLeft--;
+            }, 1000);
+
+            loadQuestion();
+        }
+
+        function returnToDashboard() {
+            clearInterval(timerInterval);
+            document.getElementById('exam-view').style.display = 'none';
+            document.querySelector('.timer-box').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+        }
+
+        function updateCounts() {
+            let ansCount = 0, skipCount = 0, notVisitedCount = 0;
+            currentExamQuestions.forEach((_, idx) => {
+                if (userAnswers[idx] !== null) ansCount++;
+                else if (visited[idx]) skipCount++;
+                else notVisitedCount++;
+            });
+            document.getElementById('count-ans').innerText = ansCount;
+            document.getElementById('count-skip').innerText = skipCount;
+            document.getElementById('count-not').innerText = notVisitedCount;
+        }
+
+        function renderPalette() {
+            let grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            currentExamQuestions.forEach((_, idx) => {
+                let btn = document.createElement('button');
+                let statusClass = '';
+                if (userAnswers[idx] !== null) statusClass = 'answered';
+                else if (visited[idx]) statusClass = 'skipped';
+                
+                btn.className = `palette-btn ${statusClass} ${currentIndex === idx ? 'current' : ''}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => { 
+                    currentIndex = idx; 
+                    visited[idx] = true;
+                    loadQuestion(); 
+                };
+                grid.appendChild(btn);
+            });
+            updateCounts();
+        }
+
+        function loadQuestion() {
+            let q = currentExamQuestions[currentIndex];
+            document.getElementById('q-num-title').innerText = `Question No. ${currentIndex + 1} of 10`;
+            document.getElementById('q-telugu').innerText = q.telugu;
+            document.getElementById('q-english').innerText = q.english;
+
+            let optHTML = '';
+            q.options.forEach((opt, idx) => {
+                let isSelected = userAnswers[currentIndex] === idx ? 'selected' : '';
+                optHTML += `<div class="option-item ${isSelected}" onclick="selectOption(${idx})"><b>${String.fromCharCode(65 + idx)})</b> ${opt}</div>`;
+            });
+            document.getElementById('options-container').innerHTML = optHTML;
+
+            renderPalette();
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentIndex] = optIdx;
+            renderPalette();
+        }
+
+        function clearAnswer() {
+            userAnswers[currentIndex] = null;
+            loadQuestion();
+        }
+
+        function nextQuestion() {
+            visited[currentIndex] = true;
+            if(currentIndex < currentExamQuestions.length - 1) { 
+                currentIndex++; 
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function prevQuestion() {
+            if(currentIndex > 0) { 
+                currentIndex--;
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            let score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if(ans === currentExamQuestions[idx].correct) score++;
+            });
+
+            document.getElementById('exam-screen').style.display = 'none';
+            let card = document.getElementById('score-card');
+            card.style.display = 'block';
+            document.getElementById('score-text').innerHTML = `Your Score: <span style="color:var(--yellow);">${score} / 10</span><br>Accuracy: ${(score/10*100).toFixed(1)}%`;
+            
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('home-btn').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

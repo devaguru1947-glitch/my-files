@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Interest & Installments Master Dashboard & CBT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Orbitron:wght@700;900&family=Noto+Sans+Telugu:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b1120; --primary: #38bdf8; --text-light: #f8fafc;
+            --card-bg: #1e293b; --yellow: #fde047; --green: #16a34a; --red: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+        body { 
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            background: var(--bg-color); color: var(--text-light); 
+            min-height: 100vh; display: flex; flex-direction: column;
+        }
+
+        header { 
+            background: #1e293b; border-bottom: 3px solid var(--primary); padding: 15px 30px; 
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        header h1 { color: var(--yellow); font-size: 1.1rem; font-weight: 900; text-transform: uppercase; }
+        
+        .timer-box {
+            background: var(--red); color: #fff; padding: 6px 15px; border-radius: 6px;
+            font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 900; display: none;
+        }
+
+        .main-wrapper { max-width: 1400px; margin: 0 auto; width: 100%; padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+
+        /* DASHBOARD VIEW */
+        #dashboard-view { display: block; width: 100%; }
+        .dash-title { font-size: 1.6rem; font-weight: 900; color: #fff; margin-bottom: 8px; }
+        .dash-sub { font-size: 1rem; color: #94a3b8; margin-bottom: 25px; }
+
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+        }
+        .card {
+            background: var(--card-bg); border: 2px solid #334155; border-radius: 12px; padding: 25px;
+            display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .card-title { font-size: 1.2rem; font-weight: 900; color: var(--yellow); margin-bottom: 10px; }
+        .card-desc { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 20px; line-height: 1.4; }
+        
+        .btn-practice {
+            background: linear-gradient(90deg, #0284c7, #0369a1); color: #fff; border: none;
+            padding: 10px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 900; cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .btn-practice:hover { opacity: 0.9; }
+
+        /* EXAM VIEW (CBT) */
+        #exam-view { display: none; flex-grow: 1; flex-direction: column; width: 100%; }
+        .exam-container { display: flex; flex-direction: column; flex-grow: 1; gap: 15px; width: 100%; }
+        @media (min-width: 900px) { .exam-container { flex-direction: row; } }
+
+        .q-panel {
+            flex-grow: 1; background: var(--card-bg); border: 2px solid #334155;
+            border-radius: 12px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 400px;
+        }
+
+        .q-header-info { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 900; color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px; }
+        .q-text-telugu { font-size: 1.3rem; font-weight: 900; color: #fff; line-height: 1.5; margin-bottom: 10px; }
+        .q-text-english { font-size: 1.05rem; font-weight: 800; color: var(--yellow); line-height: 1.4; margin-bottom: 20px; border-left: 4px solid var(--yellow); padding-left: 12px; }
+
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .option-item {
+            background: #0f172a; border: 2px solid #334155; padding: 14px 20px; border-radius: 8px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: 0.15s; color: #f8fafc;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .option-item:hover { border-color: var(--primary); background: #172554; }
+        .option-item.selected { border-color: var(--yellow); background: #1e3a8a; color: var(--yellow); }
+
+        .nav-buttons { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid #334155; padding-top: 15px; }
+        .btn { background: #0284c7; color: #fff; border: none; padding: 12px 22px; border-radius: 6px; font-size: 0.95rem; font-weight: 900; cursor: pointer; }
+        .btn-submit { background: var(--green); width: 100%; margin-top: 12px; padding: 14px; font-size: 1.1rem; }
+        .btn-home { background: #475569; width: 100%; margin-top: 8px; padding: 12px; font-size: 1rem; display: none; }
+
+        /* PALETTE PANEL */
+        .palette-panel {
+            width: 100%; max-width: 380px; background: var(--card-bg); border: 2px solid #334155; border-radius: 12px;
+            padding: 18px; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0;
+        }
+        .palette-title { font-size: 1rem; font-weight: 900; color: var(--yellow); text-align: center; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        
+        .legend-box { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.8rem; font-weight: 800; background: #0f172a; padding: 10px; border-radius: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+
+        .grid-palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; overflow-y: auto; max-height: 250px; }
+        .palette-btn { background: #475569; border: 2px solid #334155; color: #fff; font-weight: 900; height: 42px; border-radius: 6px; cursor: pointer; }
+        .palette-btn.answered { background: var(--green); border-color: #15803d; }
+        .palette-btn.skipped { background: var(--red); border-color: #991b1b; }
+        .palette-btn.current { border: 2px solid var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+
+        .score-card { background: #0f172a; border: 2px dashed var(--green); border-radius: 10px; padding: 20px; text-align: center; display: none; }
+        .score-card h2 { color: var(--green); font-size: 1.5rem; font-weight: 900; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RAHUL ACADEMY - INTEREST & INSTALLMENTS MASTER</h1>
+        <div class="timer-box" id="timer">15:00</div>
+    </header>
+
+    <div class="main-wrapper">
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view">
+            <div class="dash-title">Select Topic to Start CBT Exam</div>
+            <div class="dash-sub">Choose any topic below to start a 10-question practice test.</div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div>
+                        <div class="card-title">Simple Interest (బారు వడ్డీ)</div>
+                        <div class="card-desc">Practice principal, rate, time, simple interest formulas, and times-of-money problems.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('simple_interest')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Compound Interest (చక్రవడ్డీ)</div>
+                        <div class="card-desc">Master compounded annually, half-yearly, quarterly, and population growth concepts.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('compound_interest')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Installments (వాయిదాలు)</div>
+                        <div class="card-desc">Equal annual installments for both simple interest and compound interest debts.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('installments')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Simple & Compound Mixed (మిశ్రమ వడ్డీ)</div>
+                        <div class="card-desc">Difference between CI and SI for 2 and 3 years, and combined comparison problems.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('mixed_interest')">Start Exam (10 Qs)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAM VIEW -->
+        <div id="exam-view">
+            <div class="exam-container">
+                <div class="q-panel" id="exam-screen">
+                    <div>
+                        <div class="q-header-info">
+                            <span id="q-num-title">Question No. 1 of 10</span>
+                            <button class="btn" style="padding: 6px 12px; font-size: 0.8rem; background:#475569;" onclick="returnToDashboard()">🏠 Home</button>
+                        </div>
+                        <div class="q-text-telugu" id="q-telugu"></div>
+                        <div class="q-text-english" id="q-english"></div>
+                        
+                        <div class="options-list" id="options-container"></div>
+                    </div>
+
+                    <div>
+                        <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                            <button class="btn" style="background: #475569;" onclick="clearAnswer()">Clear Answer</button>
+                        </div>
+                        <div class="nav-buttons">
+                            <button class="btn" onclick="prevQuestion()">&lt;&lt; Previous</button>
+                            <button class="btn" onclick="nextQuestion()">Save & Next &gt;&gt;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="palette-panel">
+                    <div class="palette-title">Question Palette</div>
+                    
+                    <div class="legend-box">
+                        <div class="legend-item"><span class="dot" style="background:var(--green);"></span> Answered (<span id="count-ans">0</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:var(--red);"></span> Skipped (<span id="count-skip">1</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:#475569;"></span> Unvisited (<span id="count-not">9</span>)</div>
+                    </div>
+
+                    <div class="grid-palette" id="palette-grid"></div>
+                    
+                    <div class="score-card" id="score-card">
+                        <h2>Exam Submitted!</h2>
+                        <p id="score-text" style="font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 10px;"></p>
+                    </div>
+
+                    <button class="btn btn-submit" id="submit-btn" onclick="submitExam()">Submit Exam</button>
+                    <button class="btn btn-home" id="home-btn" onclick="returnToDashboard()">🏠 Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const database = {
+            simple_interest: [
+                { telugu: "రూ. 5000 అసలుపై సంవత్సరానికి 8% బారు వడ్డీ చొప్పున 3 సంవత్సరాలకు వడ్డీ ఎంత?", english: "Find simple interest on Rs. 5000 at 8% per annum for 3 years?", options: ["Rs. 1000", "Rs. 1200", "Rs. 1500", "Rs. 1800"], correct: 1 },
+                { telugu: "ఒక నిర్దిష్ట సొమ్ము బారు వడ్డీపై 5 సంవత్సరాలలో రెట్టింపు అయినచో, వడ్డీ రేటు ఎంత?", english: "A sum of money doubles itself in 5 years at simple interest. Find the rate of interest?", options: ["15%", "18%", "20%", "25%"], correct: 2 },
+                { telugu: "రూ. 4000 సొమ్ము 4 సంవత్సరాలలో బారు వడ్డీ ద్వారా రూ. 5200 అయింది. వడ్డీ రేటు ఎంత?", english: "Rs. 4000 amounts to Rs. 5200 in 4 years at simple interest. Find the rate of interest?", options: ["6%", "7.5%", "8%", "10%"], correct: 1 },
+                { telugu: "వడ్డీ రేటు సంవత్సరానికి 5% నుండి 7% కి పెరగడం వల్ల ఒక వ్యక్తి వార్షిక ఆదాయం రూ. 200 పెరిగింది. అతని అసలు ఎంత?", english: "Due to increase of rate from 5% to 7% SI, a person's annual income increases by Rs. 200. Find principal?", options: ["Rs. 5000", "Rs. 8000", "Rs. 10000", "Rs. 12000"], correct: 2 },
+                { telugu: "ఏ అసలు 6% బారు వడ్డీ చొప్పున 4 సంవత్సరాలలో రూ. 2480 మొత్తం ఇస్తుంది?", english: "What principal amounts to Rs. 2480 in 4 years at 6% simple interest?", options: ["Rs. 1800", "Rs. 1900", "Rs. 2000", "Rs. 2100"], correct: 2 },
+                { telugu: "ఒక సొమ్ము బారు వడ్డీపై నిర్దిష్ట కాలంలో 3 రెట్లు అవుతుంది. అదే సొమ్ము 5 రెట్లు కావడానికి ఎంత సమయం పడుతుంది?", english: "A sum becomes 3 times in certain years at SI. In how many times will it become 5 times?", options: ["8 Years", "10 Years", "12 Years", "15 Years"], correct: 1 },
+                { telugu: "రూ. 800 సొమ్ము 3 సంవత్సరాలలో బారు వడ్డీ ప్రకారం రూ. 920 అయింది. వడ్డీ రేటు 3% పెరిగితే కొత్త మొత్తం ఎంత?", english: "Rs. 800 amounts to Rs. 920 in 3 years at SI. If interest rate is increased by 3%, find new amount?", options: ["Rs. 952", "Rs. 972", "Rs. 992", "Rs. 1012"], correct: 1 },
+                { telugu: "ఒక వ్యక్తి రూ. 5000 ని 4 సంవత్సరాలకు, రూ. 3000 ని 5 సంవత్సరాలకు ఒకే బారు వడ్డీ రేటుకు అప్పుగా ఇచ్చి మొత్తం రూ. 2200 వడ్డీ పొందితే, వడ్డీ రేటు ఎంత?", english: "A person lent Rs. 5000 for 4 years and Rs. 3000 for 5 years at same SI rate and got total interest Rs. 2200. Find rate?", options: ["8%", "9%", "10%", "12%"], correct: 2 },
+                { telugu: "బారు వడ్డీ చొప్పున కొన్ని సంవత్సరాలకు రూ. 1200 పై వచ్చే వడ్డీ రూ. 540. వడ్డీ కాలం మరియు రేటు సంఖ్యాపరంగా సమానమైతే, వడ్డీ రేటు ఎంత?", english: "Interest on Rs. 1200 for certain years is Rs. 540 at SI. If rate % and time in years are numerically equal, find rate?", options: ["5%", "6%", "7%", "9%"], correct: 1 },
+                { telugu: "రూ. 2500 సొమ్ముపై 4 సంవత్సరాలలో వచ్చే బారు వడ్డీ, రూ. 1700 సొమ్ముపై 5 సంవత్సరాలలో వచ్చే బారు వడ్డీ కన్నా రూ. 420 ఎక్కువ. వడ్డీ రేటు ఎంత?", english: "SI on Rs. 2500 for 4 years is Rs. 420 more than SI on Rs. 1700 for 5 years. Find rate of interest?", options: ["6%", "7%", "8%", "9%"], correct: 0 },
+                { telugu: "ఏ కాలంలో రూ. 10000 అసలుపై సంవత్సరానికి 10% బారు వడ్డీ చొప్పున వడ్డీ రూ. 3000 అవుతుంది?", english: "In what time will SI on Rs. 10000 at 10% per annum be Rs. 3000?", options: ["2 Years", "3 Years", "4 Years", "5 Years"], correct: 1 }
+            ],
+            compound_interest: [
+                { telugu: "రూ. 10000 అసలుపై సంవత్సరానికి 10% చక్రవడ్డీ చొప్పున 2 సంవత్సరాలకు చక్రవడ్డీ ఎంత?", english: "Find compound interest on Rs. 10000 at 10% per annum for 2 years?", options: ["Rs. 2000", "Rs. 2100", "Rs. 2200", "Rs. 2300"], correct: 1 },
+                { telugu: "రూ. 8000 అసలుపై సంవత్సరానికి 5% చక్రవడ్డీ చొప్పున 3 సంవత్సరాలకు మొత్తం ఎంత?", english: "Find total amount on Rs. 8000 at 5% per annum compounded annually for 3 years?", options: ["Rs. 9152.50", "Rs. 9261.00", "Rs. 9320.00", "Rs. 9500.00"], correct: 1 },
+                { telugu: "చక్రవడ్డీ ప్రకారం ఒక సొమ్ము 2 సంవత్సరాలలో 4 రెట్లు అయినచో, వడ్డీ రేటు ఎంత?", english: "A sum becomes 4 times in 2 years at compound interest compounded annually. Find rate of interest?", options: ["50%", "100%", "150%", "200%"], correct: 1 },
+                { telugu: "రూ. 20000 అసలుపై సంవత్సరానికి 20% చక్రవడ్డీ చొప్పున, వడ్డీ అర్ధవార్షికంగా (Half-yearly) లెక్కించినట్లయితే 1 సంవత్సరంలో చక్రవడ్డీ ఎంత?", english: "Find CI on Rs. 20000 at 20% per annum compounded half-yearly for 1 year?", options: ["Rs. 4000", "Rs. 4200", "Rs. 4400", "Rs. 4600"], correct: 2 },
+                { telugu: "ఒక పట్టణ జనాభా ప్రస్తుతం 16000. వార్షిక వృద్ధి రేటు 5% అయితే, 2 సంవత్సరాల తరువాత ఆ పట్టణ జనాభా ఎంత అవుతుంది?", english: "Population of a town is 16000. Growth rate is 5% per annum. Find population after 2 years?", options: ["17500", "17640", "18000", "18250"], correct: 1 },
+                { telugu: "ఏ అసలు సంవత్సరానికి 4% చక్రవడ్డీ చొప్పున 2 సంవత్సరాలలో రూ. 1352 అవుతుంది?", english: "What sum amounts to Rs. 1352 in 2 years at 4% per annum compound interest?", options: ["Rs. 1200", "Rs. 1250", "Rs. 1300", "Rs. 1320"], correct: 1 },
+                { telugu: "చక్రవడ్డీ ప్రకారం ఒక సొమ్ము 3 సంవత్సరాలలో 8 రెట్లు అయినచో, వార్షిక వడ్డీ రేటు ఎంత?", english: "A sum becomes 8 times in 3 years at compound interest. Find annual rate of interest?", options: ["50%", "100%", "150%", "200%"], correct: 1 },
+                { telugu: "రూ. 15625 అసలుపై సంవత్సరానికి 4% చక్రవడ్డీ చొప్పున 9 నెలలకు వడ్డీ ఎంత, వడ్డీ త్రైమాసికంగా (Quarterly) లెక్కించినచో?", english: "Find CI on Rs. 15625 at 4% per annum compounded quarterly for 9 months?", options: ["Rs. 450", "Rs. 475", "Rs. 485", "Rs. 500"], correct: 2 },
+                { telugu: "రూ. 4000 అసలుపై సంవత్సరానికి 10% చక్రవడ్డీ చొప్పున 2 సంవత్సరాల 6 నెలలకు మొత్తం ఎంత?", english: "Find total amount on Rs. 4000 at 10% per annum compound interest for 2 years 6 months?", options: ["Rs. 5000", "Rs. 5104", "Rs. 5200", "Rs. 5324"], correct: 1 },
+                { telugu: "ఒక యంత్రం విలువ ప్రతి సంవత్సరం 10% చొప్పున తగ్గుతుంది. ప్రస్తుతం దాని విలువ రూ. 72900 అయితే, 3 సంవత్సరాల క్రితం దాని విలువ ఎంత?", english: "Value of a machine depreciates by 10% annually. Present value is Rs. 72900. Find value 3 years ago?", options: ["Rs. 90000", "Rs. 100000", "Rs. 110000", "Rs. 120000"], correct: 1 }
+            ],
+            installments: [
+                { telugu: "రూ. 900 అప్పును సంవత్సరానికి 5% బారు వడ్డీ చొప్పున సమాన వార్షిక వాయిదాలలో 4 సంవత్సరాలలో తీర్చవలెను. ప్రతి వాయిదా విలువ ఎంత?", english: "A debt of Rs. 900 is to be paid in 4 equal annual installments at 5% simple interest per annum. Find each installment?", options: ["Rs. 200", "Rs. 210", "Rs. 220", "Rs. 225"], correct: 0 },
+                { telugu: "సంవత్సరానికి 10% చక్రవడ్డీ చొప్పున రూ. 210 అప్పును 2 సమాన వార్షిక వాయిదాలలో తీర్చవలెను. ప్రతి వాయిదా విలువ ఎంత?", english: "A debt of Rs. 210 is to be paid in 2 equal annual installments at 10% compound interest per annum. Find each installment?", options: ["Rs. 100", "Rs. 110", "Rs. 121", "Rs. 130"], correct: 2 },
+                { telugu: "సంవత్సరానికి 4% బారు వడ్డీ చొప్పున రూ. 848 అప్పును 4 సమాన వార్షిక వాయిదాలలో చెల్లించాలి. ప్రతి వాయిదా ఎంత?", english: "A debt of Rs. 848 is paid in 4 equal annual installments at 4% simple interest. Find each installment?", options: ["Rs. 200", "Rs. 212", "Rs. 220", "Rs. 225"], correct: 0 },
+                { telugu: "సంవత్సరానికి 5% చక్రవడ్డీ చొప్పున రూ. 882 అప్పును 2 సమాన వార్షిక వాయిదాలలో చెల్లించినచో, ప్రతి వాయిదా విలువ ఎంత?", english: "A sum of Rs. 882 is borrowed to be paid in 2 equal annual installments at 5% compound interest. Find each installment?", options: ["Rs. 420", "Rs. 440", "Rs. 441", "Rs. 460"], correct: 2 },
+                { telugu: "రూ. 770 అప్పును సంవత్సరానికి 5% బారు వడ్డీ చొప్పున 5 సమాన వాయిదాలలో తీర్చవలెను. ప్రతి వాయిదా ఎంత?", english: "A debt of Rs. 770 is paid in 5 equal annual installments at 5% simple interest. Find each installment?", options: ["Rs. 120", "Rs. 140", "Rs. 150", "Rs. 160"], correct: 1 },
+                { telugu: "సంవత్సరానికి 20% చక్రవడ్డీ చొప్పున రూ. 6630 అప్పును 3 సమాన వార్షిక వాయిదాలలో చెల్లించినచో, ప్రతి వాయిదా విలువ ఎంత?", english: "A debt of Rs. 6630 is paid in 3 equal annual installments at 20% compound interest. Find each installment?", options: ["Rs. 2850", "Rs. 3050", "Rs. 3110", "Rs. 3168"], correct: 3 },
+                { telugu: "రూ. 1740 అప్పును 3 సమాన వార్షిక వాయిదాలలో బారు వడ్డీ రేటు 5% చొప్పున చెల్లిస్తే ప్రతి వాయిదా ఎంత?", english: "A debt of Rs. 1740 is paid in 3 equal installments at 5% simple interest. Find installment?", options: ["Rs. 500", "Rs. 520", "Rs. 540", "Rs. 560"], correct: 1 },
+                { telugu: "సంవత్సరానికి 10% చక్రవడ్డీ చొప్పున రూ. 6600 అప్పును 2 సమాన వాయిదాలలో చెల్లిస్తే ప్రతి వాయిదా ఎంత?", english: "A debt of Rs. 6600 is paid in 2 equal installments at 10% compound interest. Find installment?", options: ["Rs. 3500", "Rs. 3630", "Rs. 3800", "Rs. 4000"], correct: 1 },
+                { telugu: "సంవత్సరానికి 5% బారు వడ్డీ చొప్పున 3 సంవత్సరాలలో రూ. 580 అప్పును తీర్చడానికి వార్షిక వాయిదా ఎంత?", english: "Find annual installment to discharge a debt of Rs. 580 in 3 years at 5% simple interest?", options: ["Rs. 160", "Rs. 180", "Rs. 200", "Rs. 210"], correct: 0 },
+                { telugu: "సంవత్సరానికి 10% చక్రవడ్డీ చొప్పున రూ. 1331 అప్పును 3 సమాన వార్షిక వాయిదాలలో చెల్లిస్తే వాయిదా ఎంత?", english: "A loan of Rs. 1331 is paid in 3 equal annual installments at 10% compound interest. Find installment?", options: ["Rs. 450", "Rs. 484", "Rs. 500", "Rs. 532"], correct: 1 }
+            ],
+            mixed_interest: [
+                { telugu: "ఒక నిర్దిష్ట సొమ్ముపై సంవత్సరానికి 5% వడ్డీ రేటు చొప్పున 2 సంవత్సరాలకు వచ్చే చక్రవడ్డీ మరియు బారు వడ్డీల మధ్య భేదం రూ. 25 అయితే, ఆ అసలు ఎంత?", english: "The difference between CI and SI on a certain sum at 5% per annum for 2 years is Rs. 25. Find the sum?", options: ["Rs. 8000", "Rs. 10000", "Rs. 12000", "Rs. 15000"], correct: 1 },
+                { telugu: "సంవత్సరానికి 10% వడ్డీ రేటు చొప్పున రూ. 1000 అసలుపై 3 సంవత్సరాలకు వచ్చే చక్రవడ్డీ మరియు బారు వడ్డీల మధ్య భేదం ఎంత?", english: "Find the difference between CI and SI on Rs. 1000 at 10% per annum for 3 years?", options: ["Rs. 25", "Rs. 30", "Rs. 31", "Rs. 35"], correct: 2 },
+                { telugu: "ఒక సొమ్ముపై 2 సంవత్సరాలకు 4% వడ్డీ చొప్పున బారు వడ్డీ రూ. 80 అయితే, అదే కాలానికి అదే వడ్డీ రేటుపై చక్రవడ్డీ ఎంత?", english: "SI on a sum for 2 years at 4% is Rs. 80. Find CI on the same sum for the same period and rate?", options: ["Rs. 81.60", "Rs. 82.00", "Rs. 83.20", "Rs. 84.00"], correct: 0 },
+                { telugu: "ఏ అసలుపై 2 సంవత్సరాలకు సంవత్సరానికి 10% చొప్పున చక్రవడ్డీ, బారు వడ్డీ కన్నా రూ. 63 ఎక్కువ ఇస్తుంది?", english: "On what principal does the difference between CI and SI for 2 years at 10% per annum is Rs. 63?", options: ["Rs. 5300", "Rs. 6000", "Rs. 6300", "Rs. 7000"], correct: 2 },
+                { telugu: "ఒక సొమ్ము బారు వడ్డీ ప్రకారం 2 సంవత్సరాలలో రూ. 2200 మరియు అదే సొమ్ము చక్రవడ్డీ ప్రకారం 2 సంవత్సరాలలో రూ. 2290 అయితే, వడ్డీ రేటు ఎంత?", english: "A sum amounts to Rs. 2200 in 2 years at SI and Rs. 2290 in 2 years at CI. Find the rate of interest?", options: ["5%", "8%", "9%", "10%"], correct: 1 },
+                { telugu: "సంవత్సరానికి 5% వడ్డీ రేటు చొప్పున రూ. 4000 అసలుపై 3 సంవత్సరాల చక్రవడ్డీ మరియు బారు వడ్డీల మధ్య భేదం ఎంత?", english: "Find the difference between CI and SI on Rs. 4000 at 5% per annum for 3 years?", options: ["Rs. 30.50", "Rs. 31.00", "Rs. 32.50", "Rs. 35.00"], correct: 0 },
+                { telugu: "ఒక సొమ్ము బారు వడ్డీ ప్రకారం 3 సంవత్సరాలలో రూ. 1200 మరియు చక్రవడ్డీ ప్రకారం 2 సంవత్సరాలలో రూ. 832 అయితే, అసలు ఎంత?", english: "A sum gives Rs. 1200 as SI in 3 years and Rs. 832 as CI in 2 years. Find the principal?", options: ["Rs. 1600", "Rs. 1800", "Rs. 2000", "Rs. 2500"], correct: 0 },
+                { telugu: "2 సంవత్సరాల కాలానికి ఒక నిర్దిష్ట వడ్డీ రేటు వద్ద చక్రవడ్డీ మరియు బారు వడ్డీల నిష్పత్తి 21:20 అయితే, వడ్డీ రేటు ఎంత?", english: "The ratio of CI to SI for 2 years at a certain rate of interest is 21:20. Find rate of interest?", options: ["4%", "5%", "6%", "10%"], correct: 1 },
+                { telugu: "రూ. 8000 అసలుపై 2 సంవత్సరాలకు చక్రవడ్డీ మరియు బారు వడ్డీల మధ్య భేదం రూ. 20 అయితే, వడ్డీ రేటు ఎంత?", english: "Difference between CI and SI on Rs. 8000 for 2 years is Rs. 20. Find rate of interest?", options: ["4%", "5%", "6%", "8%"], correct: 1 },
+                { telugu: "ఒక నిర్దిష్ట సొమ్ముపై 3 సంవత్సరాలకు బారు వడ్డీ రూ. 225 మరియు అదే సొమ్ముపై 2 సంవత్సరాలకు చక్రవడ్డీ రూ. 153 అయితే, అసలు ఎంత?", english: "SI for 3 years is Rs. 225 and CI for 2 years is Rs. 153 on a sum. Find the principal?", options: ["Rs. 1000", "Rs. 1200", "Rs. 1500", "Rs. 2000"], correct: 0 }
+            ]
+        };
+
+        let currentExamQuestions = [];
+        let userAnswers = [];
+        let visited = [];
+        let currentIndex = 0;
+        let timeLeft = 15 * 60;
+        let timerInterval;
+
+        function startExam(topicKey) {
+            let topicPool = database[topicKey];
+            currentExamQuestions = [...topicPool].sort(() => 0.5 - Math.random()).slice(0, 10);
+            
+            userAnswers = new Array(currentExamQuestions.length).fill(null);
+            visited = new Array(currentExamQuestions.length).fill(false);
+            visited[0] = true;
+            currentIndex = 0;
+            timeLeft = 15 * 60;
+
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('exam-view').style.display = 'flex';
+            document.querySelector('.timer-box').style.display = 'block';
+            document.getElementById('submit-btn').style.display = 'block';
+            document.getElementById('home-btn').style.display = 'none';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('timer').innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if(timeLeft <= 0) { clearInterval(timerInterval); submitExam(); }
+                timeLeft--;
+            }, 1000);
+
+            loadQuestion();
+        }
+
+        function returnToDashboard() {
+            clearInterval(timerInterval);
+            document.getElementById('exam-view').style.display = 'none';
+            document.querySelector('.timer-box').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+        }
+
+        function updateCounts() {
+            let ansCount = 0, skipCount = 0, notVisitedCount = 0;
+            currentExamQuestions.forEach((_, idx) => {
+                if (userAnswers[idx] !== null) ansCount++;
+                else if (visited[idx]) skipCount++;
+                else notVisitedCount++;
+            });
+            document.getElementById('count-ans').innerText = ansCount;
+            document.getElementById('count-skip').innerText = skipCount;
+            document.getElementById('count-not').innerText = notVisitedCount;
+        }
+
+        function renderPalette() {
+            let grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            currentExamQuestions.forEach((_, idx) => {
+                let btn = document.createElement('button');
+                let statusClass = '';
+                if (userAnswers[idx] !== null) statusClass = 'answered';
+                else if (visited[idx]) statusClass = 'skipped';
+                
+                btn.className = `palette-btn ${statusClass} ${currentIndex === idx ? 'current' : ''}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => { 
+                    currentIndex = idx; 
+                    visited[idx] = true;
+                    loadQuestion(); 
+                };
+                grid.appendChild(btn);
+            });
+            updateCounts();
+        }
+
+        function loadQuestion() {
+            let q = currentExamQuestions[currentIndex];
+            document.getElementById('q-num-title').innerText = `Question No. ${currentIndex + 1} of 10`;
+            document.getElementById('q-telugu').innerText = q.telugu;
+            document.getElementById('q-english').innerText = q.english;
+
+            let optHTML = '';
+            q.options.forEach((opt, idx) => {
+                let isSelected = userAnswers[currentIndex] === idx ? 'selected' : '';
+                optHTML += `<div class="option-item ${isSelected}" onclick="selectOption(${idx})"><b>${String.fromCharCode(65 + idx)})</b> ${opt}</div>`;
+            });
+            document.getElementById('options-container').innerHTML = optHTML;
+
+            renderPalette();
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentIndex] = optIdx;
+            renderPalette();
+        }
+
+        function clearAnswer() {
+            userAnswers[currentIndex] = null;
+            loadQuestion();
+        }
+
+        function nextQuestion() {
+            visited[currentIndex] = true;
+            if(currentIndex < currentExamQuestions.length - 1) { 
+                currentIndex++; 
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function prevQuestion() {
+            if(currentIndex > 0) { 
+                currentIndex--;
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            let score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if(ans === currentExamQuestions[idx].correct) score++;
+            });
+
+            document.getElementById('exam-screen').style.display = 'none';
+            let card = document.getElementById('score-card');
+            card.style.display = 'block';
+            document.getElementById('score-text').innerHTML = `Your Score: <span style="color:var(--yellow);">${score} / 10</span><br>Accuracy: ${(score/10*100).toFixed(1)}%`;
+            
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('home-btn').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

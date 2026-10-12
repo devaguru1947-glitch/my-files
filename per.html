@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Profit, Loss & Percentage Master Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Orbitron:wght@700;900&family=Noto+Sans+Telugu:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b1120; --primary: #38bdf8; --text-light: #f8fafc;
+            --card-bg: #1e293b; --yellow: #fde047; --green: #16a34a; --red: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+        body { 
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            background: var(--bg-color); color: var(--text-light); 
+            min-height: 100vh; display: flex; flex-direction: column;
+        }
+
+        header { 
+            background: #1e293b; border-bottom: 3px solid var(--primary); padding: 15px 30px; 
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        header h1 { color: var(--yellow); font-size: 1.1rem; font-weight: 900; text-transform: uppercase; }
+        
+        .timer-box {
+            background: var(--red); color: #fff; padding: 6px 15px; border-radius: 6px;
+            font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 900; display: none;
+        }
+
+        .main-wrapper { max-width: 1400px; margin: 0 auto; width: 100%; padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+
+        /* DASHBOARD VIEW */
+        #dashboard-view { display: block; width: 100%; }
+        .dash-title { font-size: 1.6rem; font-weight: 900; color: #fff; margin-bottom: 8px; }
+        .dash-sub { font-size: 1rem; color: #94a3b8; margin-bottom: 25px; }
+
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+        }
+        .card {
+            background: var(--card-bg); border: 2px solid #334155; border-radius: 12px; padding: 25px;
+            display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .card-title { font-size: 1.2rem; font-weight: 900; color: var(--yellow); margin-bottom: 10px; }
+        .card-desc { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 20px; line-height: 1.4; }
+        
+        .btn-practice {
+            background: linear-gradient(90deg, #0284c7, #0369a1); color: #fff; border: none;
+            padding: 10px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 900; cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .btn-practice:hover { opacity: 0.9; }
+
+        /* EXAM VIEW (CBT) */
+        #exam-view { display: none; flex-grow: 1; flex-direction: column; width: 100%; }
+        .exam-container { display: flex; flex-direction: column; flex-grow: 1; gap: 15px; width: 100%; }
+        @media (min-width: 900px) { .exam-container { flex-direction: row; } }
+
+        .q-panel {
+            flex-grow: 1; background: var(--card-bg); border: 2px solid #334155;
+            border-radius: 12px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 400px;
+        }
+
+        .q-header-info { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 900; color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px; }
+        .q-text-telugu { font-size: 1.3rem; font-weight: 900; color: #fff; line-height: 1.5; margin-bottom: 10px; }
+        .q-text-english { font-size: 1.05rem; font-weight: 800; color: var(--yellow); line-height: 1.4; margin-bottom: 20px; border-left: 4px solid var(--yellow); padding-left: 12px; }
+
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .option-item {
+            background: #0f172a; border: 2px solid #334155; padding: 14px 20px; border-radius: 8px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: 0.15s; color: #f8fafc;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .option-item:hover { border-color: var(--primary); background: #172554; }
+        .option-item.selected { border-color: var(--yellow); background: #1e3a8a; color: var(--yellow); }
+
+        .nav-buttons { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid #334155; padding-top: 15px; }
+        .btn { background: #0284c7; color: #fff; border: none; padding: 12px 22px; border-radius: 6px; font-size: 0.95rem; font-weight: 900; cursor: pointer; }
+        .btn-submit { background: var(--green); width: 100%; margin-top: 12px; padding: 14px; font-size: 1.1rem; }
+        .btn-home { background: #475569; width: 100%; margin-top: 8px; padding: 12px; font-size: 1rem; display: none; }
+
+        /* PALETTE PANEL */
+        .palette-panel {
+            width: 100%; max-width: 380px; background: var(--card-bg); border: 2px solid #334155; border-radius: 12px;
+            padding: 18px; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0;
+        }
+        .palette-title { font-size: 1rem; font-weight: 900; color: var(--yellow); text-align: center; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        
+        .legend-box { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.8rem; font-weight: 800; background: #0f172a; padding: 10px; border-radius: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+
+        .grid-palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; overflow-y: auto; max-height: 250px; }
+        .palette-btn { background: #475569; border: 2px solid #334155; color: #fff; font-weight: 900; height: 42px; border-radius: 6px; cursor: pointer; }
+        .palette-btn.answered { background: var(--green); border-color: #15803d; }
+        .palette-btn.skipped { background: var(--red); border-color: #991b1b; }
+        .palette-btn.current { border: 2px solid var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+
+        .score-card { background: #0f172a; border: 2px dashed var(--green); border-radius: 10px; padding: 20px; text-align: center; display: none; }
+        .score-card h2 { color: var(--green); font-size: 1.5rem; font-weight: 900; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RAHUL ACADEMY - PROFIT, LOSS & PERCENTAGE MASTER</h1>
+        <div class="timer-box" id="timer">15:00</div>
+    </header>
+
+    <div class="main-wrapper">
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view">
+            <div class="dash-title">Select Topic to Start CBT Exam</div>
+            <div class="dash-sub">Choose any topic below to start a 10-question practice test.</div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div>
+                        <div class="card-title">Profit & Loss (లాభం - నష్టం)</div>
+                        <div class="card-desc">Practice cost price, selling price, profit/loss percentage, and dishonest dealer problems.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('profit_loss')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Discount (రాయితీ / డిస్కౌంట్)</div>
+                        <div class="card-desc">Master marked price, selling price, successive discounts, and free item schemes.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('discount')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Percentage (శాతాలు)</div>
+                        <div class="card-desc">Practice percentage increase/decrease, population, consumption-expenditure, and exam marks.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('percentage')">Start Exam (10 Qs)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAM VIEW -->
+        <div id="exam-view">
+            <div class="exam-container">
+                <div class="q-panel" id="exam-screen">
+                    <div>
+                        <div class="q-header-info">
+                            <span id="q-num-title">Question No. 1 of 10</span>
+                            <button class="btn" style="padding: 6px 12px; font-size: 0.8rem; background:#475569;" onclick="returnToDashboard()">🏠 Home</button>
+                        </div>
+                        <div class="q-text-telugu" id="q-telugu"></div>
+                        <div class="q-text-english" id="q-english"></div>
+                        
+                        <div class="options-list" id="options-container"></div>
+                    </div>
+
+                    <div>
+                        <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                            <button class="btn" style="background: #475569;" onclick="clearAnswer()">Clear Answer</button>
+                        </div>
+                        <div class="nav-buttons">
+                            <button class="btn" onclick="prevQuestion()">&lt;&lt; Previous</button>
+                            <button class="btn" onclick="nextQuestion()">Save & Next &gt;&gt;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="palette-panel">
+                    <div class="palette-title">Question Palette</div>
+                    
+                    <div class="legend-box">
+                        <div class="legend-item"><span class="dot" style="background:var(--green);"></span> Answered (<span id="count-ans">0</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:var(--red);"></span> Skipped (<span id="count-skip">1</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:#475569;"></span> Unvisited (<span id="count-not">9</span>)</div>
+                    </div>
+
+                    <div class="grid-palette" id="palette-grid"></div>
+                    
+                    <div class="score-card" id="score-card">
+                        <h2>Exam Submitted!</h2>
+                        <p id="score-text" style="font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 10px;"></p>
+                    </div>
+
+                    <button class="btn btn-submit" id="submit-btn" onclick="submitExam()">Submit Exam</button>
+                    <button class="btn btn-home" id="home-btn" onclick="returnToDashboard()">🏠 Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const database = {
+            profit_loss: [
+                { telugu: "ఒక వస్తువును రూ. 500 కి కొని, రూ. 600 కి అమ్మితే వచ్చే లాభ శాతం ఎంత?", english: "An article is bought for Rs. 500 and sold for Rs. 600. Find the profit percentage?", options: ["15%", "20%", "25%", "30%"], correct: 1 },
+                { telugu: "ఒక వస్తువు యొక్క కొనుగోలు ధర రూ. 800. దానిని 12.5% నష్టానికి అమ్మితే, అమ్మకం ధర ఎంత?", english: "Cost price of an article is Rs. 800. If it is sold at a 12.5% loss, find selling price?", options: ["Rs. 650", "Rs. 700", "Rs. 720", "Rs. 750"], correct: 1 },
+                { telugu: "ఒక వ్యక్తి ఒక వస్తువును రూ. 720 కి అమ్మడం ద్వారా 20% లాభం పొందాడు. ఆ వస్తువు కొనుగోలు ధర ఎంత?", english: "A man sold an article for Rs. 720 and gained 20%. Find the cost price of the article?", options: ["Rs. 550", "Rs. 600", "Rs. 650", "Rs. 680"], correct: 1 },
+                { telugu: "15 వస్తువుల కొనుగోలు ధర 12 వస్తువుల అమ్మకం ధరకు సమానం అయినచో, లాభ శాతం ఎంత?", english: "Cost price of 15 articles is equal to selling price of 12 articles. Find profit percentage?", options: ["20%", "25%", "30%", "35%"], correct: 1 },
+                { telugu: "ఒక దుకాణదారుడు ఒక వస్తువును తప్పు తూకం ఉపయోగించి 10% మోసం చేసి కొనేటప్పుడు మరియు అమ్మేటప్పుడు లాభం పొందితే, అతని అసలు లాభ శాతం ఎంత? (కొనేటప్పుడు 10% ఎక్కువ, అమ్మేటప్పుడు 10% తక్కువ తీసుకుంటే)", english: "A dishonest dealer cheats by 10% while buying and 10% while selling using faulty weights. Find his total profit percentage?", options: ["20%", "21%", "22.21%", "25%"], correct: 1 },
+                { telugu: "ఒక వస్తువును రూ. 800 కి అమ్మడం ద్వారా వచ్చే లాభం, దానిని రూ. 400 కి అమ్మినప్పుడు వచ్చే నష్టానికి సమానం. ఆ వస్తువు కొనుగోలు ధర ఎంత?", english: "Profit on selling an article for Rs. 800 is equal to loss on selling it for Rs. 400. Find cost price?", options: ["Rs. 500", "Rs. 550", "Rs. 600", "Rs. 650"], correct: 2 },
+                { telugu: "ఒక వస్తువును 5% లాభానికి బదులుగా 10% లాభానికి అమ్మితే ఒక వ్యక్తికి రూ. 75 ఎక్కువ వస్తాయి. ఆ వస్తువు కొనుగోలు ధర ఎంత?", english: "An article is sold at 10% profit instead of 5% profit, giving Rs. 75 more. Find cost price?", options: ["Rs. 1000", "Rs. 1250", "Rs. 1500", "Rs. 2000"], correct: 2 },
+                { telugu: "రెండు వస్తువులలో ప్రతీదాన్ని రూ. 990 చొప్పున అమ్మారు. మొదటి దానిపై 10% లాభం, రెండవ దానిపై 10% నష్టం వస్తే, మొత్తం మీద లాభం లేదా నష్టం శాతం ఎంత?", english: "Two articles are sold at Rs. 990 each. One gains 10% and other loses 10%. Find overall profit or loss %?", options: ["1% Profit", "1% Loss", "2% Loss", "No Profit No Loss"], correct: 1 },
+                { telugu: "ఒక వ్యక్తి రెండు సైకిళ్లను మొత్తం రూ. 1200 కి కొన్నాడు. మొదటిదాన్ని 20% లాభానికి, రెండవదాన్ని 25% నష్టానికి అమ్మితే రెండు అమ్మకం ధరలు సమానం. మొదటి సైకిల్ కొనుగోలు ధర ఎంత?", english: "A man bought two cycles for Rs. 1200 total. First sold at 20% profit, second at 25% loss, giving equal SP. Find CP of first cycle?", options: ["Rs. 500", "Rs. 600", "Rs. 700", "Rs. 800"], correct: 0 },
+                { telugu: "ఒక వస్తువు అమ్మకం ధర దాని కొనుగోలు ధరలో 4/3 వంతు అయితే, లాభ శాతం ఎంత?", english: "Selling price of an article is 4/3 of its cost price. Find the profit percentage?", options: ["25%", "33.33%", "40%", "50%"], correct: 1 }
+            ],
+            discount: [
+                { telugu: "ప్రకటించిన ధర (Marked Price) రూ. 1000 గల ఒక వస్తువుపై 20% డిస్కౌంట్ ఇస్తే, దాని అమ్మకం ధర ఎంత?", english: "An article with marked price Rs. 1000 is sold at 20% discount. Find its selling price?", options: ["Rs. 750", "Rs. 800", "Rs. 850", "Rs. 900"], correct: 1 },
+                { telugu: "ఒక వస్తువు యొక్క ప్రకటన ధర రూ. 800 మరియు దానిని రూ. 680 కి అమ్మితే, ఇచ్చిన డిస్కౌంట్ శాతం ఎంత?", english: "Marked price of an article is Rs. 800 and it is sold for Rs. 680. Find discount percentage?", options: ["10%", "12.5%", "15%", "20%"], correct: 1 },
+                { telugu: "20% మరియు 10% వరుస డిస్కౌంట్లు (Successive discounts) ఇస్తే, వాటికి సమానమైన ఒకే ఒక్క డిస్కౌంట్ శాతం (Single equivalent discount) ఎంత?", english: "Find the single equivalent discount for successive discounts of 20% and 10%?", options: ["25%", "28%", "30%", "32%"], correct: 1 },
+                { telugu: "ఒక దుకాణదారుడు 3 వస్తువులు కొంటే 1 వస్తువు ఉచితంగా ఇస్తాడు (Buy 3 Get 1 Free). కస్టమర్‌కి లభించే డిస్కౌంట్ శాతం ఎంత?", english: "A shopkeeper gives 1 article free on purchase of 3 articles (Buy 3 Get 1 Free). Find discount percentage?", options: ["20%", "25%", "30%", "33.33%"], correct: 1 },
+                { telugu: "ఒక వస్తువు కొనుగోలు ధరపై 40% పెంచి ప్రకటన ధర (MP) నిర్ణయించారు. దానిపై 20% డిస్కౌంట్ ఇస్తే వచ్చే లాభ శాతం ఎంత?", english: "Marked price is 40% above cost price. A discount of 20% is given on it. Find profit percentage?", options: ["10%", "12%", "15%", "18%"], correct: 1 },
+                { telugu: "ఒక వస్తువును 10% డిస్కౌంట్ ఇచ్చి అమ్మినా 8% లాభం వస్తుంది. ఆ వస్తువు కొనుగోలు ధర రూ. 500 అయితే దాని ప్రకటన ధర ఎంత?", english: "An article is sold at 8% profit even after 10% discount. If CP is Rs. 500, find its marked price?", options: ["Rs. 550", "Rs. 580", "Rs. 600", "Rs. 650"], correct: 2 },
+                { telugu: "10%, 20% మరియు 25% వరుస డిస్కౌంట్ల యొక్క నికర డిస్కౌంట్ శాతం ఎంత?", english: "Find the net discount percentage for successive discounts of 10%, 20% and 25%?", options: ["45%", "50%", "52%", "55%"], correct: 1 },
+                { telugu: "ఒక దుకాణదారుడు తన వస్తువులపై 20% డిస్కౌంట్ ఇస్తాడు అయినప్పటికీ 20% లాభం పొందుతాడు. కొనుగోలు ధర రూ. 400 అయితే ప్రకటన ధర ఎంత?", english: "A shopkeeper allows 20% discount and still gains 20%. If CP is Rs. 400, find marked price?", options: ["Rs. 500", "Rs. 550", "Rs. 600", "Rs. 650"], correct: 2 },
+                { telugu: "ఒక రేడియో ప్రకటన ధర రూ. 1200. దానిని రెండు వరుస డిస్కౌంట్ల తర్వాత రూ. 972 కి అమ్మారు. మొదటి డిస్కౌంట్ 10% అయితే రెండవ డిస్కౌంట్ శాతం ఎంత?", english: "Marked price of a radio is Rs. 1200. Sold for Rs. 972 after two successive discounts. If first is 10%, find second discount %?", options: ["5%", "10%", "12.5%", "15%"], correct: 1 },
+                { telugu: "వరుసగా 'Buy 4 Get 1 Free' మరియు ఆపై మరో 10% డిస్కౌంట్ ఇస్తే నికర రాయితీ ఎంత?", english: "Find net discount when 'Buy 4 Get 1 Free' is followed by another 10% discount?", options: ["25%", "28%", "30%", "32%"], correct: 1 }
+            ],
+            percentage: [
+                { telugu: "50 లో 20 శాతం ఎంత?", english: "What is 20 percent of 50?", options: ["5", "10", "15", "20"], correct: 1 },
+                { telugu: "ఒక సంఖ్యను 20% పెంచిన తర్వాత 20% తగ్గించారు. ఆ సంఖ్యలో వచ్చే నికర మార్పు శాతం ఎంత?", english: "A number is increased by 20% and then decreased by 20%. Find the net percentage change in the number?", options: ["0%", "2% Loss", "4% Loss", "4% Profit"], correct: 2 },
+                { telugu: "ఒక పరీక్షలో విద్యార్థి 30% మార్కులు సాధించి 30 మార్కులతో ఫెయిల్ అయ్యాడు. అదే పరీక్షలో మరొకరు 45% మార్కులు సాధించి పాస్ మార్కుల కన్నా 15 మార్కులు ఎక్కువగా తెచ్చుకున్నాడు. పాస్ శాతం ఎంత?", english: "A student gets 30% marks and fails by 30 marks. Another gets 45% marks and scores 15 marks above passing marks. Find passing percentage?", options: ["33%", "35%", "40%", "42%"], correct: 1 },
+                { telugu: "చక్కెర ధర 25% పెరిగింది. వినియోగదారుడు తన ఖర్చును పెంచకూడదు అనుకుంటే వినియోగాన్ని ఎంత శాతం తగ్గించాలి?", english: "Price of sugar increases by 25%. By what percentage should a consumer reduce consumption to keep expenditure same?", options: ["15%", "20%", "25%", "30%"], correct: 1 },
+                { telugu: "రెండు సంఖ్యలు మూడవ సంఖ్య కన్నా వరుసగా 20% మరియు 50% ఎక్కువ. మొదటి సంఖ్య రెండవ సంఖ్యలో ఎంత శాతం?", english: "Two numbers are 20% and 50% more than a third number. What percentage is the first number of the second?", options: ["60%", "75%", "80%", "90%"], correct: 2 },
+                { telugu: "ఒక బ్యాలెట్ ఎన్నికలలో ఇద్దరు అభ్యర్థులు పాల్గొన్నారు. గెలిచిన అభ్యర్థి 60% ఓట్లు సాధించి 400 ఓట్ల తేడాతో గెలిచాడు. మొత్తం పోలైన ఓట్లు ఎన్ని?", english: "In an election between two candidates, winner got 60% votes and won by 400 votes. Find total votes polled?", options: ["1000", "1500", "2000", "2500"], correct: 2 },
+                { telugu: "ఒక వృత్తం యొక్క వ్యాసార్థాన్ని 10% పెంచితే, దాని వైశాల్యం ఎంత శాతం పెరుగుతుంది?", english: "If the radius of a circle is increased by 10%, by what percentage does its area increase?", options: ["10%", "21%", "25%", "30%"], correct: 1 },
+                { telugu: "ఒక వ్యక్తి తన ఆదాయంలో 20% ఇల్లు అద్దెకు, మిగిలిన దానిలో 70% గృహోపకరణాలకు ఖర్చు చేస్తే, అతని వద్ద రూ. 3600 మిగిలితే అతని మొత్తం ఆదాయం ఎంత?", english: "A man spends 20% of income on rent, and 70% of remaining on household. If he saves Rs. 3600, find total income?", options: ["Rs. 12000", "Rs. 15000", "Rs. 18000", "Rs. 20000"], correct: 1 },
+                { telugu: "తాజా పండ్లలో 68% నీరు మరియు ఎండిన పండ్లలో 20% నీరు ఉంటుంది. 100 కేజీల తాజా పండ్ల నుండి ఎన్ని కేజీల ఎండిన పండ్లను పొందవచ్చు?", english: "Fresh fruit contains 68% water and dry fruit contains 20% water. How much dry fruit can be obtained from 100 kg of fresh fruit?", options: ["30 kg", "40 kg", "50 kg", "60 kg"], correct: 1 },
+                { telugu: "ఒక సంచిలో ఉన్న బంతుల్లో 30% ఎరుపు, 40% పసుపు మరియు మిగిలినవి ఆకుపచ్చని బంతులు. ఆకుపచ్చ బంతుల సంఖ్య 90 అయితే, మొత్తం బంతుల సంఖ్య ఎంత?", english: "30% of balls in a bag are red, 40% are yellow and remaining are green. If green balls are 90, find total balls?", options: ["200", "250", "300", "350"], correct: 1 }
+            ]
+        };
+
+        let currentExamQuestions = [];
+        let userAnswers = [];
+        let visited = [];
+        let currentIndex = 0;
+        let timeLeft = 15 * 60;
+        let timerInterval;
+
+        function startExam(topicKey) {
+            let topicPool = database[topicKey];
+            currentExamQuestions = [...topicPool].sort(() => 0.5 - Math.random()).slice(0, 10);
+            
+            userAnswers = new Array(currentExamQuestions.length).fill(null);
+            visited = new Array(currentExamQuestions.length).fill(false);
+            visited[0] = true;
+            currentIndex = 0;
+            timeLeft = 15 * 60;
+
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('exam-view').style.display = 'flex';
+            document.querySelector('.timer-box').style.display = 'block';
+            document.getElementById('submit-btn').style.display = 'block';
+            document.getElementById('home-btn').style.display = 'none';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('timer').innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if(timeLeft <= 0) { clearInterval(timerInterval); submitExam(); }
+                timeLeft--;
+            }, 1000);
+
+            loadQuestion();
+        }
+
+        function returnToDashboard() {
+            clearInterval(timerInterval);
+            document.getElementById('exam-view').style.display = 'none';
+            document.querySelector('.timer-box').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+        }
+
+        function updateCounts() {
+            let ansCount = 0, skipCount = 0, notVisitedCount = 0;
+            currentExamQuestions.forEach((_, idx) => {
+                if (userAnswers[idx] !== null) ansCount++;
+                else if (visited[idx]) skipCount++;
+                else notVisitedCount++;
+            });
+            document.getElementById('count-ans').innerText = ansCount;
+            document.getElementById('count-skip').innerText = skipCount;
+            document.getElementById('count-not').innerText = notVisitedCount;
+        }
+
+        function renderPalette() {
+            let grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            currentExamQuestions.forEach((_, idx) => {
+                let btn = document.createElement('button');
+                let statusClass = '';
+                if (userAnswers[idx] !== null) statusClass = 'answered';
+                else if (visited[idx]) statusClass = 'skipped';
+                
+                btn.className = `palette-btn ${statusClass} ${currentIndex === idx ? 'current' : ''}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => { 
+                    currentIndex = idx; 
+                    visited[idx] = true;
+                    loadQuestion(); 
+                };
+                grid.appendChild(btn);
+            });
+            updateCounts();
+        }
+
+        function loadQuestion() {
+            let q = currentExamQuestions[currentIndex];
+            document.getElementById('q-num-title').innerText = `Question No. ${currentIndex + 1} of 10`;
+            document.getElementById('q-telugu').innerText = q.telugu;
+            document.getElementById('q-english').innerText = q.english;
+
+            let optHTML = '';
+            q.options.forEach((opt, idx) => {
+                let isSelected = userAnswers[currentIndex] === idx ? 'selected' : '';
+                optHTML += `<div class="option-item ${isSelected}" onclick="selectOption(${idx})"><b>${String.fromCharCode(65 + idx)})</b> ${opt}</div>`;
+            });
+            document.getElementById('options-container').innerHTML = optHTML;
+
+            renderPalette();
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentIndex] = optIdx;
+            renderPalette();
+        }
+
+        function clearAnswer() {
+            userAnswers[currentIndex] = null;
+            loadQuestion();
+        }
+
+        function nextQuestion() {
+            visited[currentIndex] = true;
+            if(currentIndex < currentExamQuestions.length - 1) { 
+                currentIndex++; 
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function prevQuestion() {
+            if(currentIndex > 0) { 
+                currentIndex--;
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            let score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if(ans === currentExamQuestions[idx].correct) score++;
+            });
+
+            document.getElementById('exam-screen').style.display = 'none';
+            let card = document.getElementById('score-card');
+            card.style.display = 'block';
+            document.getElementById('score-text').innerHTML = `Your Score: <span style="color:var(--yellow);">${score} / 10</span><br>Accuracy: ${(score/10*100).toFixed(1)}%`;
+            
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('home-btn').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

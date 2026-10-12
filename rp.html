@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Ratio, Average & Alligation Master Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Orbitron:wght@700;900&family=Noto+Sans+Telugu:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b1120; --primary: #38bdf8; --text-light: #f8fafc;
+            --card-bg: #1e293b; --yellow: #fde047; --green: #16a34a; --red: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+        body { 
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            background: var(--bg-color); color: var(--text-light); 
+            min-height: 100vh; display: flex; flex-direction: column;
+        }
+
+        header { 
+            background: #1e293b; border-bottom: 3px solid var(--primary); padding: 15px 30px; 
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        header h1 { color: var(--yellow); font-size: 1.1rem; font-weight: 900; text-transform: uppercase; }
+        
+        .timer-box {
+            background: var(--red); color: #fff; padding: 6px 15px; border-radius: 6px;
+            font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 900; display: none;
+        }
+
+        .main-wrapper { max-width: 1400px; margin: 0 auto; width: 100%; padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+
+        /* DASHBOARD VIEW */
+        #dashboard-view { display: block; width: 100%; }
+        .dash-title { font-size: 1.6rem; font-weight: 900; color: #fff; margin-bottom: 8px; }
+        .dash-sub { font-size: 1rem; color: #94a3b8; margin-bottom: 25px; }
+
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+        }
+        .card {
+            background: var(--card-bg); border: 2px solid #334155; border-radius: 12px; padding: 25px;
+            display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .card-title { font-size: 1.2rem; font-weight: 900; color: var(--yellow); margin-bottom: 10px; }
+        .card-desc { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 20px; line-height: 1.4; }
+        
+        .btn-practice {
+            background: linear-gradient(90deg, #0284c7, #0369a1); color: #fff; border: none;
+            padding: 10px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 900; cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .btn-practice:hover { opacity: 0.9; }
+
+        /* EXAM VIEW (CBT) */
+        #exam-view { display: none; flex-grow: 1; flex-direction: column; width: 100%; }
+        .exam-container { display: flex; flex-direction: column; flex-grow: 1; gap: 15px; width: 100%; }
+        @media (min-width: 900px) { .exam-container { flex-direction: row; } }
+
+        .q-panel {
+            flex-grow: 1; background: var(--card-bg); border: 2px solid #334155;
+            border-radius: 12px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 400px;
+        }
+
+        .q-header-info { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 900; color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px; }
+        .q-text-telugu { font-size: 1.3rem; font-weight: 900; color: #fff; line-height: 1.5; margin-bottom: 10px; }
+        .q-text-english { font-size: 1.05rem; font-weight: 800; color: var(--yellow); line-height: 1.4; margin-bottom: 20px; border-left: 4px solid var(--yellow); padding-left: 12px; }
+
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .option-item {
+            background: #0f172a; border: 2px solid #334155; padding: 14px 20px; border-radius: 8px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: 0.15s; color: #f8fafc;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .option-item:hover { border-color: var(--primary); background: #172554; }
+        .option-item.selected { border-color: var(--yellow); background: #1e3a8a; color: var(--yellow); }
+
+        .nav-buttons { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid #334155; padding-top: 15px; }
+        .btn { background: #0284c7; color: #fff; border: none; padding: 12px 22px; border-radius: 6px; font-size: 0.95rem; font-weight: 900; cursor: pointer; }
+        .btn-submit { background: var(--green); width: 100%; margin-top: 12px; padding: 14px; font-size: 1.1rem; }
+        .btn-home { background: #475569; width: 100%; margin-top: 8px; padding: 12px; font-size: 1rem; display: none; }
+
+        /* PALETTE PANEL */
+        .palette-panel {
+            width: 100%; max-width: 380px; background: var(--card-bg); border: 2px solid #334155; border-radius: 12px;
+            padding: 18px; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0;
+        }
+        .palette-title { font-size: 1rem; font-weight: 900; color: var(--yellow); text-align: center; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        
+        .legend-box { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.8rem; font-weight: 800; background: #0f172a; padding: 10px; border-radius: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+
+        .grid-palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; overflow-y: auto; max-height: 250px; }
+        .palette-btn { background: #475569; border: 2px solid #334155; color: #fff; font-weight: 900; height: 42px; border-radius: 6px; cursor: pointer; }
+        .palette-btn.answered { background: var(--green); border-color: #15803d; }
+        .palette-btn.skipped { background: var(--red); border-color: #991b1b; }
+        .palette-btn.current { border: 2px solid var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+
+        .score-card { background: #0f172a; border: 2px dashed var(--green); border-radius: 10px; padding: 20px; text-align: center; display: none; }
+        .score-card h2 { color: var(--green); font-size: 1.5rem; font-weight: 900; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RAHUL ACADEMY - RATIO, AVERAGE & ALLIGATION MASTER</h1>
+        <div class="timer-box" id="timer">15:00</div>
+    </header>
+
+    <div class="main-wrapper">
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view">
+            <div class="dash-title">Select Topic to Start CBT Exam</div>
+            <div class="dash-sub">Choose any topic below to start a 10-question practice test.</div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div>
+                        <div class="card-title">Average (సగటు)</div>
+                        <div class="card-desc">Practice consecutive numbers, cricketer innings, hostel expenses, and age average problems.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('average')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Ratio & Proportion (నిష్పత్తి - అనుపాతం)</div>
+                        <div class="card-desc">Master income-expenditure ratios, coin problems, proportional shifts, and mixing ratios.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('ratio')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Mixture & Alligation (మిశ్రమాలు)</div>
+                        <div class="card-desc">Alligation rule, replacing milk and water, and mixing concentrations.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('mixture')">Start Exam (10 Qs)</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-title">Partnership (భాగస్వామ్యం)</div>
+                        <div class="card-desc">Investment and time-based profit sharing, sleeping and working partners.</div>
+                    </div>
+                    <button class="btn-practice" onclick="startExam('partnership')">Start Exam (10 Qs)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAM VIEW -->
+        <div id="exam-view">
+            <div class="exam-container">
+                <div class="q-panel" id="exam-screen">
+                    <div>
+                        <div class="q-header-info">
+                            <span id="q-num-title">Question No. 1 of 10</span>
+                            <button class="btn" style="padding: 6px 12px; font-size: 0.8rem; background:#475569;" onclick="returnToDashboard()">🏠 Home</button>
+                        </div>
+                        <div class="q-text-telugu" id="q-telugu"></div>
+                        <div class="q-text-english" id="q-english"></div>
+                        
+                        <div class="options-list" id="options-container"></div>
+                    </div>
+
+                    <div>
+                        <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                            <button class="btn" style="background: #475569;" onclick="clearAnswer()">Clear Answer</button>
+                        </div>
+                        <div class="nav-buttons">
+                            <button class="btn" onclick="prevQuestion()">&lt;&lt; Previous</button>
+                            <button class="btn" onclick="nextQuestion()">Save & Next &gt;&gt;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="palette-panel">
+                    <div class="palette-title">Question Palette</div>
+                    
+                    <div class="legend-box">
+                        <div class="legend-item"><span class="dot" style="background:var(--green);"></span> Answered (<span id="count-ans">0</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:var(--red);"></span> Skipped (<span id="count-skip">1</span>)</div>
+                        <div class="legend-item"><span class="dot" style="background:#475569;"></span> Unvisited (<span id="count-not">9</span>)</div>
+                    </div>
+
+                    <div class="grid-palette" id="palette-grid"></div>
+                    
+                    <div class="score-card" id="score-card">
+                        <h2>Exam Submitted!</h2>
+                        <p id="score-text" style="font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 10px;"></p>
+                    </div>
+
+                    <button class="btn btn-submit" id="submit-btn" onclick="submitExam()">Submit Exam</button>
+                    <button class="btn btn-home" id="home-btn" onclick="returnToDashboard()">🏠 Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const database = {
+            average: [
+                { telugu: "వరుసగా ఉన్న 7 సంఖ్యల సగటు 24 అయినచో, మొదటి సంఖ్య ఎంత?", english: "The average of 7 consecutive numbers is 24. Find the first number?", options: ["18", "20", "21", "22"], correct: 2 },
+                { telugu: "15 ఇన్నింగ్స్‌లలో బ్యాట్స్‌మన్ సగటు 40. 16వ ఇన్నింగ్స్‌లో 96 పరుగులు చేస్తే కొత్త సగటు ఎంత?", english: "A batsman has an average of 40 runs in 15 innings. In the 16th innings he scores 96 runs. Find his new average?", options: ["42.0", "42.5", "43.0", "43.5"], correct: 3 },
+                { telugu: "5 సభ్యుల కుటుంబ సగటు వయస్సు 24 సంవత్సరాలు. అత్యంత చిన్నవాని వయస్సు 8 సంవత్సరాలు అయినచో, అతను పుట్టిన సమయానికి కుటుంబ సగటు వయస్సు ఎంత?", english: "The average age of a family of 5 members is 24 years. If the youngest member is 8 years old, what was the average age of the family at the birth of the youngest member?", options: ["16 Years", "18 Years", "20 Years", "22 Years"], correct: 2 },
+                { telugu: "20 సంఖ్యల సగటును లెక్కించినప్పుడు 50 కి బదులుగా పొరపాటున 80 తీసుకోవడం వల్ల సగటు 1.5 పెరిగింది. అసలు సంఖ్యల అసలు సగటు ఎంత?", english: "While calculating the average of 20 numbers, 80 was mistakenly taken instead of 50, which increased average by 1.5. Find corrected logic value?", options: ["Verified", "Corrected", "Checked", "Accurate"], correct: 0 },
+                { telugu: "మొదటి 10 సహజ సంఖ్యల సగటు ఎంత?", english: "Find the average of first 10 natural numbers?", options: ["5.0", "5.5", "6.0", "6.5"], correct: 1 },
+                { telugu: "A మరియు B ల సగటు 24, B మరియు C ల సగటు 30, C మరియు A ల సగటు 26 అయినచో C విలువ ఎంత?", english: "The average of A & B is 24, B & C is 30, and C & A is 26. Find the value of C?", options: ["28", "30", "32", "34"], correct: 2 },
+                { telugu: "ఒక బౌలర్ సగటు 12.4 పరుగులు/వికెట్. చివరి మ్యాచ్‌లో 26 పరుగులు ఇచ్చి 5 వికెట్లు తీయగా అతని సగటు 0.4 తగ్గింది. ఈ మ్యాచ్‌కు ముందు అతను తీసిన మొత్తం వికెట్లు ఎన్ని?", english: "A bowler's bowling average is 12.4 runs per wicket. He takes 5 wickets for 26 runs in a match and improves his average by 0.4. Find total wickets taken before this match?", options: ["75", "80", "85", "90"], correct: 2 },
+                { telugu: "హాస్టల్ ఖర్చులో కొంత భాగం స్థిరంగా ఉండి, మిగిలినది విద్యార్థుల సంఖ్యకు అనులోమానుపాతంలో ఉంటుంది. 60 మంది ఉన్నప్పుడు ఒక్కొక్కరికి రూ. 120, 80 మంది ఉన్నప్పుడు రూ. 100 పడుతుంది. 100 మంది ఉన్నప్పుడు ఒక్కొక్కరికి సగటు ఖర్చు ఎంత పడుతుంది?", english: "Hostel expenses consist of fixed and variable charges. For 60 students average is Rs. 120, for 80 students average is Rs. 100. Find average for 100 students?", options: ["₹ 80", "₹ 85", "₹ 88", "₹ 90"], correct: 2 },
+                { telugu: "ఒక తరగతిలోని 30 మంది విద్యార్థుల సగటు మార్కులు 50. మరో 20 మంది విద్యార్థులు చేరగా వారి సగటు మార్కులు 60. మొత్తం 50 మంది విద్యార్థుల సగటు మార్కులు ఎంత?", english: "Average marks of 30 students is 50. Another 20 students join with an average of 60. Find average marks of all 50 students?", options: ["52", "54", "55", "56"], correct: 1 },
+                { telugu: "10 మంది వ్యక్తుల సగటు బరువు 2 కేజీలు పెరిగింది. వారిలో 50 కేజీల బరువున్న వ్యక్తి స్థానంలో కొత్త వ్యక్తి వస్తే, కొత్త వ్యక్తి బరువు ఎంత?", english: "The average weight of 10 persons increases by 2 kg when a person of 50 kg is replaced. Find the weight of the new person?", options: ["60 kg", "70 kg", "75 kg", "80 kg"], correct: 1 }
+            ],
+            ratio: [
+                { telugu: "A : B = 2 : 3 మరియు B : C = 4 : 5 అయినచో, A : B : C ఎంత?", english: "If A : B = 2 : 3 and B : C = 4 : 5, find A : B : C?", options: ["8 : 12 : 15", "6 : 9 : 10", "8 : 10 : 15", "2 : 3 : 5"], correct: 0 },
+                { telugu: "రెండు సంఖ్యల నిష్పత్తి 3:4. ప్రతీ సంఖ్యకు 6 కలిపితే వాటి నిష్పత్తి 4:5 అవుతుంది. ఆ సంఖ్యలు ఏవి?", english: "Two numbers are in the ratio 3:4. If 6 is added to each, the ratio becomes 4:5. Find the numbers?", options: ["12, 16", "18, 24", "15, 20", "21, 28"], correct: 1 },
+                { telugu: "ఇద్దరు వ్యక్తుల ఆదాయాల నిష్పత్తి 5:3 మరియు వారి ఖర్చుల నిష్పత్తి 9:5. ఇద్దరూ రూ. 1300 ఆదా చేస్తే, వారి ఆదాయాలు ఎంత?", english: "Incomes of two persons are in the ratio 5:3 and their expenditures in 9:5. If each saves Rs. 1300, find their incomes?",options: ["Rs. 4000, Rs. 2400", "Rs. 6500, Rs. 3900", "Rs. 5000, Rs. 3000", "Rs. 6000, Rs. 3600"], correct: 1 },
+                { telugu: "ఒక సంచిలో రూ. 1, 50 పైసలు మరియు 25 పైసల నాణాలు 2:3:4 నిష్పత్తిలో ఉన్నాయి. వాటి మొత్తం విలువ రూ. 180 అయితే, 50 పైసల నాణాల సంఖ్య ఎంత?", english: "A bag contains Rs. 1, 50p and 25p coins in the ratio 2:3:4. Total value is Rs. 180. Find number of 50p coins?", options: ["120", "144", "150", "160"], correct: 1 },
+                { telugu: "ఏ సంఖ్యను 7, 16, 43 మరియు 99 ల నుండి తీసివేస్తే మిగిలిన సంఖ్యలు అనుపాతంలో ఉంటాయి?", english: "What number must be subtracted from 7, 16, 43 and 99 so that the remainders are in proportion?", options: ["1", "3", "5", "7"], correct: 1 },
+                { telugu: "రూ. 560 ని A, B మరియు C లకు పంచిపెట్టారు. A కి వచ్చే వాటாவில் половина (half of A) మరియు B లో 1/3 వంతు మరియు C లో 1/4 వంతు సమానం అయితే, B వాటా ఎంత?", english: "Rs. 560 is divided among A, B, C such that half of A, 1/3rd of B, and 1/4th of C are equal. Find B's share?", options: ["Rs. 160", "Rs. 180", "Rs. 240", "Rs. 280"], correct: 1 },
+                { telugu: "రెండు సంఖ్యల మొత్తం 40 మరియు వాటి వ్యత్యాసం 4 అయితే, ఆ సంఖ్యల నిష్పత్తి ఎంత?", english: "The sum of two numbers is 40 and their difference is 4. Find the ratio of the numbers?", options: ["11 : 9", "9 : 7", "10 : 8", "12 : 10"], correct: 0 },
+                { telugu: "ఒక మిశ్రమంలో పాలు మరియు నీటి నిష్పత్తి 5:3. అందులో 8 లీటర్ల నీరు కలిపితే ఆ నిష్పత్తి 3:5 అవుతుంది. మిశ్రమంలో ఉన్న పాలు ఎన్ని లీటర్లు?", english: "Ratio of milk and water in a mixture is 5:3. On adding 8 liters of water, ratio becomes 3:5. Find quantity of milk in mixture?", options: ["10 Liters", "12.5 Liters", "15 Liters", "18 Liters"], correct: 1 },
+                { telugu: "A మరియు B ల వయస్సుల నిష్పత్తి 4:5. 8 సంవత్సరాల తరువాత వారి వయస్సుల నిష్పత్తి 5:6 అయితే, ప్రస్తుత B వయస్సు ఎంత?", english: "Ratio of ages of A and B is 4:5. After 8 years ratio becomes 5:6. Find present age of B?", options: ["32 Years", "40 Years", "45 Years", "50 Years"], correct: 1 },
+                { telugu: "x : y = 3 : 4 అయినచో (7x + 3y) : (7x - 3y) విలువ ఎంత?", english: "If x : y = 3 : 4, find the value of (7x + 3y) : (7x - 3y)?", options: ["5 : 1", "9 : 5", "11 : 3", "7 : 2"], correct: 1 }
+            ],
+            mixture: [
+                { telugu: "లీటరు రూ. 20 మరియు లీటరు రూ. 30 విలువైన రెండు రకాల పాలను ఏ నిష్పత్తిలో కలిపితే మిశ్రమం ధర లీటరుకు రూ. 24 అవుతుంది?", english: "In what ratio must milk at Rs. 20/liter be mixed with milk at Rs. 30/liter so the mixture costs Rs. 24/liter?", options: ["2 : 3", "3 : 2", "4 : 1", "1 : 4"], correct: 1 },
+                { telugu: "60 లీటర్ల పాలు మరియు నీటి మిశ్రమంలో పాలు, నీటి నిష్పత్తి 2:1. ఆ నిష్పత్తి 1:2 కావాలంటే ఎంత నీరు కలపాలి?", english: "In a 60-liter mixture, milk and water are in the ratio 2:1. How much water must be added to make the ratio 1:2?", options: ["20 Liters", "30 Liters", "40 Liters", "60 Liters"], correct: 3 },
+                { telugu: "ఒక పాత్రలో 50 లీటర్ల శుద్ధ పాలు ఉన్నాయి. అందులో నుండి 10 లీటర్ల పాలు తీసి నీరు కలిపారు. ఈ ప్రక్రియను మరోసారి చేశారు. పాత్రలో మిగిలిన పాల పరిమాణం ఎంత?", english: "A vessel contains 50 liters of pure milk. 10 liters are withdrawn and replaced with water. This process is done once more. Find final quantity of milk?", options: ["32 Liters", "36 Liters", "40 Liters", "42 Liters"], correct: 0 },
+                { telugu: "స్పిరిట్ మరియు నీరు కలిగిన రెండు కంటైనర్లలో నిష్పత్తి 3:2 మరియు 2:5. రెండింటినీ సమాన పరిమాణాలలో కలిపితే కొత్త మిశ్రమంలో స్పిరిట్, నీటి నిష్పత్తి ఎంత?", english: "Two containers have spirit and water in ratio 3:2 and 2:5. If mixed in equal volumes, find new spirit to water ratio?", options: ["31 : 39", "25 : 35", "19 : 21", "29 : 41"], correct: 0 },
+                { telugu: "బంగారు మరియు రాగి కలిగిన రెండు మిశ్రమాలు A మరియు B లలో నిష్పత్తి 7:2 మరియు 7:11. కొత్త మిశ్రమంలో రెండు సమపాళ్లలో కలిపితే నిష్పత్తి ఎంత?", english: "Gold and copper alloys A and B are in ratio 7:2 and 7:11. Mixed in equal quantities, find new ratio?", options: ["5 : 3", "7 : 5", "2 : 1", "3 : 2"], correct: 1 },
+                { telugu: "ఒక వ్యక్తి రూ. 15 కి ఒక కేజీ చొప్పున 20 కేజీల బియ్యాన్ని, రూ. 20 కి ఒక కేజీ చొప్పున 30 కేజీల బియ్యాన్ని కలిపి అమ్మితే ఆ మిశ్రమం సగటు ధర ఎంత?", english: "A man mixes 20 kg of rice at Rs. 15/kg with 30 kg of rice at Rs. 20/kg. Find average price of mixture per kg?", options: ["Rs. 17.50", "Rs. 18.00", "Rs. 18.20", "Rs. 18.50"], correct: 2 },
+                { telugu: "ఖరీదైన టీ పౌడర్ కి రూ. 80 మరియు సాధారణ టీ పౌడర్ కి రూ. 40 అయితే, వాటిని 2:3 నిష్పత్తిలో కలిపితే మిశ్రమం ధర ఎంత?", english: "Expensive tea at Rs. 80/kg is mixed with normal tea at Rs. 40/kg in ratio 2:3. Find mixture price per kg?", options: ["Rs. 52", "Rs. 56", "Rs. 60", "Rs. 64"], correct: 1 },
+                { telugu: "ఒక పాత్రలో పాలు మరియు నీటి నిష్పత్తి 4:1. అందులో నుండి 15 లీటర్ల మిశ్రమం తీసి అంతే నీరు కలిపితే ఆ నిష్పత్తి 2:3 అయింది. మొదట్లో ఉన్న పాలు ఎన్ని లీటర్లు?", english: "A vessel has milk and water in ratio 4:1. 15 liters removed and replaced with water, ratio becomes 2:3. Initial milk quantity?", options: ["20 Liters", "24 Liters", "25 Liters", "30 Liters"], correct: 1 },
+                { telugu: "రెండు పాత్రలలో ఆమ్లం మరియు నీరు 1:3 మరియు 3:5 నిష్పత్తిలో ఉన్నాయి. వాటిని ఏ నిష్పత్తిలో కలిపితే కొత్త మిశ్రమంలో ఆమ్లం, నీరు సమానంగా ఉంటాయి?", english: "Two vessels have acid and water in ratio 1:3 and 3:5. In what ratio must they be mixed to get equal acid and water?", options: ["1 : 2", "2 : 3", "3 : 1", "3 : 2"], correct: 2 },
+                { telugu: "స్పిరిట్‌లో నీరు కలిపి కొన్న ధరకు అమ్మడం ద్వారా 25% లాభం పొందాలంటే, ఆ మిశ్రమంలో స్పిరిట్, నీటి నిష్పత్తి ఎంత ఉండాలి?", english: "To gain 25% profit by selling a mixture of spirit and water at cost price, find spirit to water ratio in mixture?", options: ["3 : 1", "4 : 1", "5 : 1", "5 : 2"], correct: 1 }
+            ],
+            partnership: [
+                { telugu: "A మరియు B లు వరుసగా రూ. 4000 మరియు రూ. 6000 పెట్టుబడితో వ్యాపారం ప్రారంభించారు. సంవత్సర చివరిలో వచ్చే రూ. 2000 లాభంలో A వాటా ఎంత?", english: "A and B started a business investing Rs. 4000 and Rs. 6000 respectively. Find A's share in annual profit of Rs. 2000?", options: ["Rs. 600", "Rs. 800", "Rs. 1000", "Rs. 1200"], correct: 1 },
+                { telugu: "A రూ. 5000 ని 9 నెలలకు మరియు B రూ. 6000 ని 6 నెలలకు వ్యాపారంలో పెట్టారు. వారి లాభాల నిష్పత్తి ఎంత?", english: "A invests Rs. 5000 for 9 months and B invests Rs. 6000 for 6 months. Find their profit sharing ratio?", options: ["3 : 2", "5 : 4", "4 : 3", "5 : 3"], correct: 1 },
+                { telugu: "A, B మరియు C లు 3:2:4 నిష్పత్తిలో పెట్టుబడి పెట్టారు. వారి పెట్టుబడి కాలాల నిష్పత్తి 1:2:3 అయితే, వారి లాభాల నిష్పత్తి ఎంత?", english: "A, B and C invest in the ratio 3:2:4. Their investment time periods are in ratio 1:2:3. Find profit ratio?", options: ["3 : 4 : 12", "1 : 2 : 3", "3 : 2 : 6", "2 : 3 : 4"], correct: 0 },
+                { telugu: "A ఒక వ్యాపారంలో రూ. 10,000 పెట్టుబడి పెట్టాడు. 4 నెలల తరువాత B రూ. 15,000 తో చేరాడు. సంవత్సర చివరిలో వచ్చిన రూ. 4000 లాభంలో B వాటా ఎంత?", english: "A invests Rs. 10,000. After 4 months B joins with Rs. 15,000. Find B's share in annual profit of Rs. 4000?", options: ["Rs. 1500", "Rs. 1800", "Rs. 2000", "Rs. 2400"], correct: 1 },
+                { telugu: "A ఒక వర్కింగ్ పార్టనర్ మరియు బిజినెస్ నిర్వహణకు లాభంలో 10% తీసుకుంటాడు. మిగిలిన లాభం వారి పెట్టుబడుల నిష్పత్తిలో పంచబడుతుంది. మొత్తం లాభం రూ. 5000 అయితే A కి మొత్తం ఎంత వస్తుంది?", english: "A is a working partner and takes 10% of profit for management. Remaining is shared on investment. If total profit is Rs. 5000, find total A's share?", options: ["Rs. 2500", "Rs. 2700", "Rs. 3000", "Rs. 3200"], correct: 1 },
+                { telugu: "A మరియు B లు ఒక వ్యాపారంలో 5:3 నిష్పత్తిలో పెట్టుబడి పెట్టారు. లాభంలో 10% ధర్మకోశానికి ఇచ్చాక, మిగిలిన దానిలో A వాటా రూ. 900 అయితే మొత్తం లాభం ఎంత?", english: "A and B invest in 5:3 ratio. After donating 10% of profit to charity, A's share is Rs. 900. Find total profit?", options: ["Rs. 1500", "Rs. 1600", "Rs. 1800", "Rs. 2000"], correct: 1 },
+                { telugu: "A, B, C లు సంయుక్తంగా ఒక వ్యాపారాన్ని ప్రారంభించారు. A మొత్తం పెట్టుబడిలో 1/3 వంతు, B మిగిలిన దానిలో 1/3 వంతు మరియు C మిగిలిన పెట్టుబడి పెట్టారు. సంవత్సర చివరిలో వచ్చిన రూ. 1800 లాభంలో C వాటా ఎంత?", english: "A invests 1/3rd of total capital, B 1/3rd of remaining, and C the rest. Find C's share in annual profit of Rs. 1800?", options: ["Rs. 600", "Rs. 700", "Rs. 800", "Rs. 900"], correct: 1 },
+                { telugu: "A మరియు B లు 2:3 నిష్పత్తిలో పెట్టుబడి పెట్టారు. 8 నెలల తరువాత A తన పెట్టుబడిని ఉపసంహరించుకున్నాడు. సంవత్సర చివరిలో లాభం ఏ నిష్పత్తిలో పంచబడుతుంది?", english: "A and B invest in 2:3. After 8 months A withdraws. In what ratio is annual profit shared?", options: ["3 : 4", "4 : 9", "2 : 3", "1 : 2"], correct: 1 },
+                { telugu: "P మరియు Q లు పెట్టిన పెట్టుబడుల నిష్పత్తి 4:5. 3 నెలల తరువాత P తన పెట్టుబడిలో 1/4 వంతు వెనక్కి తీసుకోగా, Q తన పెట్టుబడిలో 1/5 వంతు పెంచాడు. సంవత్సర చివరిలో వారి లాభాల నిష్పత్తి ఎంత?", english: "P and Q invest in 4:5. After 3 months P withdraws 1/4th, Q increases by 1/5th. Find annual profit ratio?", options: ["11 : 16", "13 : 20", "15 : 22", "12 : 17"], correct: 0 },
+                { telugu: "A మరియు B ల లాభాల నిష్పత్తి 2:3 మరియు వారి పెట్టుబడుల కాలాల నిష్పత్తి 1:2 అయితే, వారి పెట్టుబడుల నిష్పత్తి ఎంత?", english: "Profit ratio of A and B is 2:3 and their time ratio is 1:2. Find ratio of their investments?", options: ["3 : 2", "4 : 3", "5 : 3", "4 : 3"], correct: 1 }
+            ]
+        };
+
+        let currentExamQuestions = [];
+        let userAnswers = [];
+        let visited = [];
+        let currentIndex = 0;
+        let timeLeft = 15 * 60;
+        let timerInterval;
+
+        function startExam(topicKey) {
+            let topicPool = database[topicKey];
+            currentExamQuestions = [...topicPool].sort(() => 0.5 - Math.random()).slice(0, 10);
+            
+            userAnswers = new Array(currentExamQuestions.length).fill(null);
+            visited = new Array(currentExamQuestions.length).fill(false);
+            visited[0] = true;
+            currentIndex = 0;
+            timeLeft = 15 * 60;
+
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('exam-view').style.display = 'flex';
+            document.querySelector('.timer-box').style.display = 'block';
+            document.getElementById('submit-btn').style.display = 'block';
+            document.getElementById('home-btn').style.display = 'none';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('timer').innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if(timeLeft <= 0) { clearInterval(timerInterval); submitExam(); }
+                timeLeft--;
+            }, 1000);
+
+            loadQuestion();
+        }
+
+        function returnToDashboard() {
+            clearInterval(timerInterval);
+            document.getElementById('exam-view').style.display = 'none';
+            document.querySelector('.timer-box').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('score-card').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'flex';
+        }
+
+        function updateCounts() {
+            let ansCount = 0, skipCount = 0, notVisitedCount = 0;
+            currentExamQuestions.forEach((_, idx) => {
+                if (userAnswers[idx] !== null) ansCount++;
+                else if (visited[idx]) skipCount++;
+                else notVisitedCount++;
+            });
+            document.getElementById('count-ans').innerText = ansCount;
+            document.getElementById('count-skip').innerText = skipCount;
+            document.getElementById('count-not').innerText = notVisitedCount;
+        }
+
+        function renderPalette() {
+            let grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            currentExamQuestions.forEach((_, idx) => {
+                let btn = document.createElement('button');
+                let statusClass = '';
+                if (userAnswers[idx] !== null) statusClass = 'answered';
+                else if (visited[idx]) statusClass = 'skipped';
+                
+                btn.className = `palette-btn ${statusClass} ${currentIndex === idx ? 'current' : ''}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => { 
+                    currentIndex = idx; 
+                    visited[idx] = true;
+                    loadQuestion(); 
+                };
+                grid.appendChild(btn);
+            });
+            updateCounts();
+        }
+
+        function loadQuestion() {
+            let q = currentExamQuestions[currentIndex];
+            document.getElementById('q-num-title').innerText = `Question No. ${currentIndex + 1} of 10`;
+            document.getElementById('q-telugu').innerText = q.telugu;
+            document.getElementById('q-english').innerText = q.english;
+
+            let optHTML = '';
+            q.options.forEach((opt, idx) => {
+                let isSelected = userAnswers[currentIndex] === idx ? 'selected' : '';
+                optHTML += `<div class="option-item ${isSelected}" onclick="selectOption(${idx})"><b>${String.fromCharCode(65 + idx)})</b> ${opt}</div>`;
+            });
+            document.getElementById('options-container').innerHTML = optHTML;
+
+            renderPalette();
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentIndex] = optIdx;
+            renderPalette();
+        }
+
+        function clearAnswer() {
+            userAnswers[currentIndex] = null;
+            loadQuestion();
+        }
+
+        function nextQuestion() {
+            visited[currentIndex] = true;
+            if(currentIndex < currentExamQuestions.length - 1) { 
+                currentIndex++; 
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function prevQuestion() {
+            if(currentIndex > 0) { 
+                currentIndex--;
+                visited[currentIndex] = true;
+                loadQuestion(); 
+            }
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            let score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if(ans === currentExamQuestions[idx].correct) score++;
+            });
+
+            document.getElementById('exam-screen').style.display = 'none';
+            let card = document.getElementById('score-card');
+            card.style.display = 'block';
+            document.getElementById('score-text').innerHTML = `Your Score: <span style="color:var(--yellow);">${score} / 10</span><br>Accuracy: ${(score/10*100).toFixed(1)}%`;
+            
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('home-btn').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

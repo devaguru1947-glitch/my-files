@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - 4 Big Wheels Squares Game (Direct Answer Only)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b1120; --primary: #38bdf8; --secondary: #818cf8;
+            --text-light: #f8fafc; --card-bg: #1e293b; --yellow: #fde047;
+            --pink: #ec4899; --green: #15803d; --blue: #1d4ed8; --red: #b91c1c;
+        }
+
+        * { 
+            box-sizing: border-box; margin: 0; padding: 0; 
+            -webkit-user-select: none; -ms-user-select: none; user-select: none;
+        }
+
+        body { 
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            background: var(--bg-color); color: var(--text-light); 
+            line-height: 1.4; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        .watermark {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 7rem; font-weight: 900; color: rgba(255, 255, 255, 0.03);
+            pointer-events: none; z-index: 0; white-space: nowrap; letter-spacing: 5px;
+        }
+
+        header { 
+            text-align: center; padding: 5px 20px; background: linear-gradient(90deg, #1e293b, #0b1120); 
+            border-bottom: 2px solid var(--primary); z-index: 10; flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        h1 { color: var(--primary); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
+        .subtitle { font-size: 0.7rem; color: var(--yellow); font-weight: 700; }
+        .timer-box { background: var(--pink); color: #fff; padding: 3px 10px; border-radius: 6px; font-weight: 900; font-size: 0.9rem; }
+
+        .main-container {
+            display: flex; align-items: center; justify-content: center;
+            flex-grow: 1; padding: 8px; z-index: 2; gap: 15px; max-width: 1700px; margin: 0 auto;
+        }
+
+        .side-column {
+            display: flex; flex-direction: column; gap: 10px; width: 300px;
+        }
+
+        .wheel-box { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+
+        /* WHEEL CONTAINER */
+        .wheel-container {
+            position: relative; width: 270px; height: 270px;
+            border-radius: 50%; box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .pointer {
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 10px solid transparent;
+            border-right: 10px solid transparent; border-top: 20px solid var(--yellow);
+            z-index: 20; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));
+        }
+
+        .ring {
+            position: absolute; border-radius: 50%; border: 3px solid #000;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            display: flex; justify-content: center; align-items: center;
+            width: 270px; height: 270px; z-index: 1;
+        }
+        .ring-1 { background: #1e3a8a; }
+        .ring-2 { background: #831843; }
+        .ring-3 { background: #14532d; }
+        .ring-4 { background: #713f12; }
+        
+        .ring::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%;
+            background: repeating-conic-gradient(from -15deg, transparent 0, transparent calc(30deg - 2px), rgba(0,0,0,0.6) calc(30deg - 2px), rgba(0,0,0,0.6) 30deg);
+            pointer-events: none; z-index: 5;
+        }
+
+        .segment {
+            position: absolute; left: 50%; bottom: 50%; transform-origin: bottom center;
+            text-align: center; font-weight: 800; color: #fff; z-index: 2;
+        }
+        .wheel-text { width: 45px; height: 135px; transform: translateX(-50%); padding-top: 6px; font-size: 0.85rem; color: #fde047; }
+
+        /* RAHUL ACADEMY NAME PINNED INSIDE WHEEL CENTER */
+        .center-logo {
+            position: absolute; width: 75px; height: 75px; background: #fef08a;
+            border-radius: 50%; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 2px solid #000; box-shadow: 0 0 10px rgba(0,0,0,0.6); text-align: center; pointer-events: none;
+        }
+        .center-logo .logo-text { font-size: 0.55rem; font-weight: 900; line-height: 1.1; color: #b91c1c; text-transform: uppercase; }
+        .center-logo .logo-sub { font-size: 0.5rem; font-weight: 800; color: #000; }
+
+        .center-btn {
+            position: absolute; width: 35px; height: 35px; background: linear-gradient(145deg, #e2e8f0, #94a3b8);
+            border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; font-weight: 900; color: #000; cursor: pointer; border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: 0.2s;
+        }
+        .center-btn:hover { transform: scale(1.1); }
+
+        /* CENTER WORKSPACE */
+        .workspace {
+            width: 440px; background: var(--card-bg); border-radius: 15px;
+            border: 2px solid #334155; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+
+        .academy-brand-banner {
+            font-size: 0.9rem; font-weight: 800; color: var(--primary); letter-spacing: 1px; margin-bottom: 8px;
+            text-transform: uppercase; border-bottom: 1px dashed #334155; width: 100%; padding-bottom: 5px;
+        }
+
+        .q-statement {
+            font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 12px;
+            background: #0f172a; padding: 12px; border-radius: 8px; border-left: 4px solid var(--yellow);
+            width: 100%; line-height: 1.4;
+        }
+        .highlight { color: var(--yellow); font-size: 1.5rem; }
+
+        .btn-reveal {
+            background: var(--pink); color: #fff; border: none;
+            padding: 10px 25px; border-radius: 8px; font-size: 1rem; font-weight: 800;
+            cursor: pointer; transition: 0.3s; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+        }
+        .btn-reveal:hover { background: #be185d; transform: translateY(-2px); }
+
+        .answer-grid { display: flex; flex-direction: column; gap: 8px; width: 100%; display: none; }
+        .answer-grid.visible { display: flex; animation: fadeIn 0.4s forwards; }
+
+        .ans-box {
+            background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 12px; text-align: center;
+        }
+        .ans-box h3 { font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; }
+        .ans-box .val { font-size: 1.8rem; font-weight: 900; color: #22c55e; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body ondblclick="toggleFullScreen()" oncopy="return false;" oncut="return false;" onpaste="return false;" oncontextmenu="return false;">
+
+    <div class="watermark">RAHUL ACADEMY</div>
+
+    <header>
+        <div>
+            <h1>RAHUL ACADEMY</h1>
+            <div class="subtitle">🎯 4 Big Wheels : Direct Answer Magic Squares (1-100)</div>
+        </div>
+        <div class="timer-box" id="timer-display">⏱️ 10s</div>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- LEFT COLUMN: WHEEL 1 & WHEEL 2 -->
+        <div class="side-column">
+            <div class="wheel-box">
+                <div class="wheel-container">
+                    <div class="pointer"></div>
+                    <div class="ring ring-1" id="ring-1"></div>
+                    <div class="center-logo">
+                        <div class="logo-text">RAHUL</div>
+                        <div class="logo-sub">ACADEMY</div>
+                    </div>
+                    <div class="center-btn" onclick="spinWheel(1)">SPIN</div>
+                </div>
+            </div>
+
+            <div class="wheel-box">
+                <div class="wheel-container">
+                    <div class="pointer"></div>
+                    <div class="ring ring-2" id="ring-2"></div>
+                    <div class="center-logo">
+                        <div class="logo-text">RAHUL</div>
+                        <div class="logo-sub">ACADEMY</div>
+                    </div>
+                    <div class="center-btn" onclick="spinWheel(2)">SPIN</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CENTER WORKSPACE -->
+        <div class="workspace" id="workspace">
+            <div class="academy-brand-banner">✨ RAHUL CONCEPT ADDA - MAGIC SQUARES ✨</div>
+            <div class="q-statement" id="q-statement">
+                Selected Number: <span class="highlight" id="q-num">--</span><br>
+                Find Square (<span class="highlight" id="q-num-sq">--</span>²) !
+            </div>
+
+            <button class="btn-reveal" onclick="revealSquareDirect()">👁️ Reveal Direct Answer</button>
+
+            <div class="answer-grid" id="answer-grid">
+                <div class="ans-box">
+                    <h3>Direct Answer</h3>
+                    <div class="val" id="ans-final">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: WHEEL 3 & WHEEL 4 -->
+        <div class="side-column">
+            <div class="wheel-box">
+                <div class="wheel-container">
+                    <div class="pointer"></div>
+                    <div class="ring ring-3" id="ring-3"></div>
+                    <div class="center-logo">
+                        <div class="logo-text">RAHUL</div>
+                        <div class="logo-sub">ACADEMY</div>
+                    </div>
+                    <div class="center-btn" onclick="spinWheel(3)">SPIN</div>
+                </div>
+            </div>
+
+            <div class="wheel-box">
+                <div class="wheel-container">
+                    <div class="pointer"></div>
+                    <div class="ring ring-4" id="ring-4"></div>
+                    <div class="center-logo">
+                        <div class="logo-text">RAHUL</div>
+                        <div class="logo-sub">ACADEMY</div>
+                    </div>
+                    <div class="center-btn" onclick="spinWheel(4)">SPIN</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleFullScreen() {
+            var doc = window.document;
+            var docEl = doc.documentElement;
+            var requestFullScreen = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+            var cancelFullScreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            if(!doc.fullscreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                requestFullScreen.call(docEl).catch(err => console.log(err));
+            } else { cancelFullScreen.call(doc); }
+        }
+
+        const range1 = [2, 4, 7, 9, 11, 13, 16, 18, 20, 22, 23, 25];       
+        const range2 = [27, 29, 32, 34, 37, 39, 41, 43, 46, 48, 49, 50];  
+        const range3 = [51, 53, 56, 58, 61, 63, 66, 68, 70, 72, 74, 75];  
+        const range4 = [77, 79, 81, 83, 85, 87, 90, 92, 94, 97, 99, 100]; 
+
+        function drawWheels() {
+            renderRing('ring-1', range1);
+            renderRing('ring-2', range2);
+            renderRing('ring-3', range3);
+            renderRing('ring-4', range4);
+        }
+
+        function renderRing(elementId, numbersArray) {
+            const ring = document.getElementById(elementId);
+            let html = '';
+            let angleStep = 360 / numbersArray.length;
+
+            for(let i=0; i<numbersArray.length; i++) {
+                let rot = i * angleStep;
+                html += `<div class="segment wheel-text" style="transform: translateX(-50%) rotate(${rot}deg);">${numbersArray[i]}</div>`;
+            }
+            ring.innerHTML = html;
+        }
+
+        drawWheels();
+
+        let rotStates = { 1: 0, 2: 0, 3: 0, 4: 0 };
+        let chosenNumber = 54;
+        let countdownTimer;
+        let timeLeft = 10;
+
+        function startTimer() {
+            clearInterval(countdownTimer);
+            timeLeft = 10;
+            document.getElementById('timer-display').innerText = `⏱️ ${timeLeft}s`;
+            
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').innerText = `⏱️ ${timeLeft}s`;
+                if(timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    document.getElementById('timer-display').innerText = `⏰ Time's Up!`;
+                }
+            }, 1000);
+        }
+
+        function spinWheel(wheelNum) {
+            document.getElementById('answer-grid').classList.remove('visible');
+            clearInterval(countdownTimer);
+            document.getElementById('timer-display').innerText = `⏱️ 10s`;
+
+            let currentArray = range1;
+            if(wheelNum === 2) currentArray = range2;
+            if(wheelNum === 3) currentArray = range3;
+            if(wheelNum === 4) currentArray = range4;
+
+            let angleStep = 360 / currentArray.length;
+            let targetIndex = Math.floor(Math.random() * currentArray.length);
+            chosenNumber = currentArray[targetIndex];
+
+            rotStates[wheelNum] = rotStates[wheelNum] + 1800 + (360 - (targetIndex * angleStep) - (rotStates[wheelNum] % 360));
+            document.getElementById(`ring-${wheelNum}`).style.transform = `rotate(${rotStates[wheelNum]}deg)`;
+
+            setTimeout(() => {
+                document.getElementById('q-num').innerText = chosenNumber;
+                document.getElementById('q-num-sq').innerText = chosenNumber;
+                startTimer();
+            }, 4000);
+        }
+
+        function revealSquareDirect() {
+            clearInterval(countdownTimer);
+            let n = chosenNumber;
+            let ans = n * n;
+
+            document.getElementById('ans-final').innerText = ans;
+            document.getElementById('answer-grid').classList.add('visible');
+        }
+    </script>
+</body>
+</html>

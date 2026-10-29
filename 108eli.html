@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - All 108 Gunshot Elements Map (Clean Edition)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Noto+Sans+Telugu:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #020617; --primary: #38bdf8; --yellow: #fde047; --pink: #ec4899; --correct: #22c55e;
+            
+            --alkali: rgba(236, 72, 153, 0.25); --alkali-border: #ec4899;
+            --alkaline: rgba(253, 224, 71, 0.25); --alkaline-border: #fde047;
+            --transition: rgba(56, 189, 248, 0.2); --transition-border: #38bdf8;
+            --posttrans: rgba(14, 165, 233, 0.25); --posttrans-border: #0ea5e9;
+            --metalloid: rgba(249, 115, 22, 0.25); --metalloid-border: #f97316;
+            --nonmetal: rgba(168, 85, 247, 0.25); --nonmetal-border: #a855f7;
+            --halogen: rgba(234, 179, 8, 0.25); --halogen-border: #eab308;
+            --noble: rgba(34, 197, 94, 0.25); --noble-border: #22c55e;
+            --lanthanide: rgba(244, 63, 94, 0.25); --lanthanide-border: #f43f5e;
+            --actinide: rgba(192, 132, 252, 0.25); --actinide-border: #c084fc;
+            
+            --core-color: #38bdf8;
+            --orbit-color: rgba(56, 189, 248, 0.6);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #0c4a6e 100%);
+            color: #fff; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
+        }
+
+        .watermark-bg {
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            pointer-events: none; z-index: 0; display: flex; flex-wrap: wrap; justify-content: center; align-content: center;
+            transform: rotate(-25deg); overflow: hidden;
+        }
+        .watermark-bg span {
+            font-size: 5rem; font-weight: 900; color: transparent;
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.03);
+            margin: 25px 60px; white-space: nowrap; text-transform: uppercase; letter-spacing: 6px; user-select: none;
+        }
+
+        header { 
+            text-align: center; padding: 15px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--primary); position: relative; z-index: 10; box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+        h1 { color: var(--primary); font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(56,189,248,0.5);}
+        .subtitle { font-size: 1rem; color: var(--yellow); font-weight: 700; letter-spacing: 2px; font-family: 'Noto Sans Telugu', sans-serif;}
+
+        .fullscreen-btn {
+            position: absolute; top: 15px; right: 20px; background: var(--yellow); color: #000; 
+            border: none; padding: 6px 15px; border-radius: 6px; font-size: 0.85rem; font-weight: 800; cursor: pointer;
+            transition: 0.3s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(253, 224, 71, 0.3);
+        }
+        .fullscreen-btn:hover { transform: scale(1.05); }
+
+        .dashboard { display: flex; flex-direction: column; align-items: center; padding: 15px; z-index: 10; width: 100%; }
+        .table-wrapper { width: 100%; max-width: 1500px; overflow-x: auto; padding-bottom: 20px; }
+
+        .periodic-table {
+            display: grid; 
+            grid-template-columns: repeat(18, minmax(65px, 1fr)); 
+            grid-template-rows: repeat(10, minmax(65px, 1fr));
+            gap: 6px; 
+            width: 100%; 
+            min-width: 1200px;
+            margin-top: 10px;
+        }
+
+        .element {
+            background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px;
+            padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; position: relative; aspect-ratio: 1 / 1.1; backdrop-filter: blur(5px);
+        }
+        .element:hover { transform: scale(1.2); z-index: 20; box-shadow: 0 10px 25px rgba(0,0,0,0.8); border-color: #fff; }
+        .element.has-data { border-width: 1.5px; }
+        .element.has-data::after { content: '✨'; position: absolute; top: -2px; right: -2px; font-size: 0.6rem; animation: pulse 1.5s infinite;}
+
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.5; } }
+
+        .el-number { font-size: 0.6rem; font-weight: 700; align-self: flex-start; margin-left: 3px; opacity: 0.8;}
+        .el-symbol { font-size: 1.25rem; font-weight: 900; line-height: 1.1; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);}
+        .el-name { font-size: 0.52rem; font-weight: 600; text-transform: uppercase; opacity: 0.9; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;}
+
+        .alkali { background: var(--alkali); border-color: var(--alkali-border); }
+        .alkaline { background: var(--alkaline); border-color: var(--alkaline-border); }
+        .transition { background: var(--transition); border-color: var(--transition-border); }
+        .posttrans { background: var(--posttrans); border-color: var(--posttrans-border); }
+        .metalloid { background: var(--metalloid); border-color: var(--metalloid-border); }
+        .nonmetal { background: var(--nonmetal); border-color: var(--nonmetal-border); }
+        .halogen { background: var(--halogen); border-color: var(--halogen-border); }
+        .noble { background: var(--noble); border-color: var(--noble-border); }
+        .lanthanide { background: var(--lanthanide); border-color: var(--lanthanide-border); }
+        .actinide { background: var(--actinide); border-color: var(--actinide-border); }
+
+        /* MODAL POPUP */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(12px);
+            display: none; justify-content: center; align-items: center; z-index: 100;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        
+        .modal-content {
+            width: 92%; max-width: 1200px; height: 85vh;
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+            border: 2px solid var(--primary); border-radius: 20px;
+            display: flex; overflow: hidden; position: relative;
+            transform: scale(0.8) translateY(50px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 40px rgba(56,189,248,0.3);
+        }
+
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+
+        .modal-left {
+            width: 35%; background: rgba(0,0,0,0.6); display: flex; flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.1); padding: 30px; position: relative;
+        }
+        .modal-element-header { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; z-index: 2;}
+        .modal-symbol-box {
+            background: var(--primary); color: #000; width: 85px; height: 85px;
+            border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-weight: 900; box-shadow: 0 0 25px rgba(56,189,248,0.6); flex-shrink: 0;
+        }
+        .modal-sym { font-size: 2.8rem; line-height: 1; }
+        .modal-num { font-size: 1rem; }
+        .modal-title-box h2 { font-size: 2.2rem; color: #fff; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;}
+        .modal-title-box p { color: var(--yellow); font-weight: 700; font-size: 0.95rem; text-transform: uppercase;}
+
+        .modal-css-art {
+            flex: 1; width: 100%; border-radius: 15px; 
+            position: relative; box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+            border: 2px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            overflow: hidden;
+        }
+
+        .atom-container {
+            position: relative; width: 180px; height: 180px;
+            transform-style: preserve-3d; perspective: 1000px;
+        }
+
+        .nucleus {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 40px; height: 40px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff, var(--core-color));
+            box-shadow: 0 0 25px var(--core-color), 0 0 50px var(--core-color);
+            z-index: 10; animation: glow 2s infinite alternate;
+        }
+
+        .orbit {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border: 3px solid var(--orbit-color); border-radius: 50%;
+            box-shadow: inset 0 0 10px var(--orbit-color), 0 0 15px var(--orbit-color);
+            transform-style: preserve-3d;
+        }
+
+        .orbit-1 { animation: spin1 4s linear infinite; }
+        .orbit-2 { animation: spin2 4s linear infinite; }
+        .orbit-3 { animation: spin3 4s linear infinite; }
+
+        @keyframes spin1 { 0% { transform: rotateX(75deg) rotateZ(0deg); } 100% { transform: rotateX(75deg) rotateZ(360deg); } }
+        @keyframes spin2 { 0% { transform: rotateX(75deg) rotateY(60deg) rotateZ(0deg); } 100% { transform: rotateX(75deg) rotateY(60deg) rotateZ(360deg); } }
+        @keyframes spin3 { 0% { transform: rotateX(75deg) rotateY(120deg) rotateZ(0deg); } 100% { transform: rotateX(75deg) rotateY(120deg) rotateZ(360deg); } }
+        @keyframes glow { 0% { filter: brightness(1); } 100% { filter: brightness(1.5); } }
+
+        .img-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 12px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            color: var(--yellow); font-weight: 700; font-size: 1rem; text-align: center; z-index: 15; letter-spacing: 1px;
+        }
+
+        .modal-right {
+            width: 65%; padding: 30px 40px; overflow-y: auto; font-family: 'Noto Sans Telugu', sans-serif;
+            position: relative; background: rgba(15, 23, 42, 0.6); max-height: 85vh;
+            scrollbar-width: thin; scrollbar-color: var(--primary) rgba(0,0,0,0.2);
+        }
+        .modal-right::-webkit-scrollbar { width: 8px; }
+        .modal-right::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .modal-right::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        
+        .facts-title {
+            color: var(--yellow); font-size: 1.4rem; font-weight: 800; margin-bottom: 25px;
+            border-bottom: 2px dashed rgba(253,224,71,0.3); padding-bottom: 12px;
+            position: sticky; top: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px); z-index: 5;
+        }
+
+        .facts-list { list-style: none; display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px;}
+        .facts-list li {
+            background: rgba(255,255,255,0.03); padding: 12px 18px; border-radius: 10px;
+            border-left: 4px solid var(--primary); font-size: 1.1rem; line-height: 1.6;
+            color: #e2e8f0; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .facts-list li:hover { background: rgba(56, 189, 248, 0.1); transform: translateX(8px); border-color: var(--yellow);}
+        .facts-list li b { color: var(--primary); font-weight: 800;}
+
+        .close-btn {
+            position: absolute; top: 15px; right: 20px; background: rgba(239, 68, 68, 0.2);
+            color: #ef4444; border: 2px solid #ef4444; width: 40px; height: 40px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 1.8rem; font-weight: bold; cursor: pointer; transition: 0.3s; z-index: 10;
+        }
+        .close-btn:hover { background: #ef4444; color: #fff; box-shadow: 0 0 20px rgba(239,68,68,0.6); transform: rotate(90deg) scale(1.1);}
+
+        @media (max-width: 900px) {
+            .modal-content { flex-direction: column; height: 95vh; overflow-y: auto;}
+            .modal-left, .modal-right { width: 100%; border-right: none; }
+            .modal-left { height: 320px; flex-shrink: 0; padding: 20px;}
+            .modal-css-art { height: 180px; flex: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="watermark-bg">
+        <span>Rahul Academy</span><span>Rahul Academy</span><span>Rahul Academy</span>
+    </div>
+
+    <header>
+        <h1>RAHUL ACADEMY <span class="subtitle">| ALL 108 GUNSHOT ELEMENTS MAP (CLEAN EDITION)</span></h1>
+        <button class="fullscreen-btn" onclick="toggleFullScreen()">🔲 Full Screen</button>
+    </header>
+
+    <div class="dashboard">
+        <div class="table-wrapper">
+            <div class="periodic-table" id="periodic-table">
+                <!-- Elements injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE MODAL -->
+    <div class="modal-overlay" id="element-modal" onclick="if(event.target===this) closeModal()">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            
+            <div class="modal-left">
+                <div class="modal-element-header">
+                    <div class="modal-symbol-box" id="m-cat-bg">
+                        <span class="modal-num" id="m-num">--</span>
+                        <span class="modal-sym" id="m-sym">-</span>
+                    </div>
+                    <div class="modal-title-box">
+                        <h2 id="m-name">Element</h2>
+                        <p id="m-group">Category</p>
+                    </div>
+                </div>
+                
+                <div class="modal-css-art">
+                    <div class="atom-container">
+                        <div class="orbit orbit-1"></div>
+                        <div class="orbit orbit-2"></div>
+                        <div class="orbit orbit-3"></div>
+                        <div class="nucleus"></div>
+                    </div>
+                    <div class="img-overlay" id="m-img-caption">3D Atomic Visual Model</div>
+                </div>
+            </div>
+
+            <div class="modal-right">
+                <div class="facts-title">🎯 Top 10 UPSC / Competitive Exam Facts</div>
+                <ul class="facts-list" id="m-facts"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFullScreen() {
+            var doc = window.document;
+            var docEl = doc.documentElement;
+            var requestFullScreen = docEl.requestFullscreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            var cancelFullScreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            if(!doc.fullscreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                requestFullScreen.call(docEl).catch(err => console.log(err));
+            } else { cancelFullScreen.call(doc); }
+        }
+
+        // FULL 108 ELEMENTS MASTER DATABASE
+        const elementsData = [
+            { num: 1, sym: "H", name: "Hydrogen", group: 1, period: 1, cat: "nonmetal", fullCat: "Group 1 • Diatomic Nonmetal", coreColor: "#38bdf8", orbitColor: "rgba(56, 189, 248, 0.6)", caption: "Atomic Model of Hydrogen", facts: [
+                "భూమిపై మరియు విశ్వంలో అత్యధికంగా లభించే మూలకం (<b>Universe Most Abundant</b>).",
+                "భవిష్యత్ ఇంధనం (<b>Future Fuel</b>) అని పిలుస్తారు, ఎందుకంటే ఇది మండినప్పుడు నీరు మాత్రమే వస్తుంది.",
+                "సూర్యుడు మరియు నక్షత్రాలలో శక్తికి మూలం న్యూక్లియర్ ఫ్యూజన్ (<b>Nuclear Fusion</b>).",
+                "హైడ్రోజన్‌కు 3 ఐసోటోపులు ఉన్నాయి: ప్రోటియం, డ్యూటీరియం (భారీ నీరు), ట్రిటియం.",
+                "కావెండిష్ దీనిని కనుగొని 'ఇన్‌ఫ్లేమబుల్ ఎయిర్' అని పేరు పెట్టారు.",
+                "ద్రవ హైడ్రోజన్‌ను రాకెట్ ఇంధనంగా (<b>Rocket Propellant</b>) ఉపయోగిస్తారు.",
+                "ఆవర్తన పట్టికలో దీని స్థానం వివాదాస్పదంగా ఉంటుంది (గ్రూప్ 1 & 17).",
+                "వనస్పతి నూనెలను గట్టిపర్చడానికి (Hydrogenation) హైడ్రోజన్ వాయువు వాడతారు.",
+                "ఆక్సిజన్‌తో కలిసి ఇది అత్యంత శక్తివంతమైన నీటిని (H2O) ఏర్పరుస్తుంది.",
+                "విశ్వంలోని మొత్తం ద్రవ్యరాశిలో దాదాపు 75% భాగం హైడ్రోజనే ఉంటుంది."
+            ]},
+            { num: 2, sym: "He", name: "Helium", group: 18, period: 1, cat: "noble", fullCat: "Group 18 • Noble Gas", coreColor: "#22c55e", orbitColor: "rgba(34, 197, 94, 0.6)", caption: "Atomic Model of Helium", facts: [
+                "విశ్వంలో హైడ్రోజన్ తర్వాత రెండవ అత్యధికంగా లభించే మూలకం.",
+                "చాలా తేలికైనది మరియు జడ వాయువు కావడం వల్ల బెలూన్లలో, విమాన టైర్లలో నింపుతారు.",
+                "ద్రవ హీలియం (Liquid Helium) అతి తక్కువ ఉష్ణోగ్రతలను సృష్టించడానికి వాడతారు.",
+                "శ్వాస తీసుకోవడానికి ఆక్సిజన్‌తో కలిపి డీప్-సీ డైవర్స్ (Scuba divers) వాడతారు.",
+                "సూర్యునిపై స్పెక్ట్రోస్కోపీ ద్వారా దీనిని మొదట కనుగొన్నారు.",
+                "ఇది ఏ ఇతర మూలకంతోనూ సాధారణంగా రసాయన సమ్మేళనాలను ఏర్పరచదు.",
+                "MRI స్కాన్ మెషిన్లలో సూపర్‌కండక్టింగ్ మాగ్నెట్లను చల్లబరచడానికి వాడతారు.",
+                "దీని ఉడకబెట్టే స్థానం (Boiling Point) అన్ని మూలకాల కంటే తక్కువ.",
+                "గొంతులో పీల్చుకుంటే గొంతు బొంగురుపోయేలా (Donald Duck voice) మారుస్తుంది.",
+                "సహజ వాయువు నిక్షేపాల నుండి దీనిని వాణిజ్యపరంగా వేరుచేస్తారు."
+            ]},
+            { num: 3, sym: "Li", name: "Lithium", group: 1, period: 2, cat: "alkali", fullCat: "Group 1 • Alkali Metal", coreColor: "#ec4899", orbitColor: "rgba(236, 72, 153, 0.6)", caption: "Atomic Model of Lithium", facts: [
+                "అన్ని ఘన లోహాలలో కెల్లా అత్యంత తేలికైనది (Lowest Density - నీటిపై తేలుతుంది).",
+                "స్మార్ట్‌ఫోన్లు, లాప్‌టాప్‌లు, EVలలో వాడే <b>లిథియం-అయాన్ బ్యాటరీల</b> తయారీలో ప్రధానం.",
+                "భారతదేశంలో జమ్మూ కాశ్మీర్‌లో భారీగా లిథియం నిల్వలు కనుగొనబడ్డాయి.",
+                "బైపోలార్ డిజార్డర్ (మానసిక రుగ్మతలు) నివారణకు మందులలో వాడతారు.",
+                "గాలిలో త్వరగా ఆక్సీకరణ చెందుతుంది కాబట్టి కిరోసిన్‌లో నిల్వ చేస్తారు.",
+                "దీనిని కత్తితో సులభంగా కోయవచ్చు (Soft metal).",
+                "గ్లాస్ మరియు సిరామిక్స్ తయారీలో ఉష్ణతను తట్టుకునే శక్తినిస్తుంది.",
+                "బాణసంచా (Fireworks) తయారీలో ఎరుపు రంగు కోసం వాడతారు.",
+                "ఇది భూపటలంలో అత్యంత అరుదుగా లభించే క్షార లోహం.",
+                "అణు రియాక్టర్లలో ట్రిటియం ఉత్పత్తి చేయడానికి లిథియం ఉపయోగిస్తారు."
+            ]},
+            { num: 4, sym: "Be", name: "Beryllium", group: 2, period: 2, cat: "alkaline", fullCat: "Group 2 • Alkaline Earth Metal", coreColor: "#fde047", orbitColor: "rgba(253, 224, 71, 0.6)", caption: "Atomic Model of Beryllium", facts: [
+                "అంతరిక్ష టెలిస్కోపులు (James Webb) మరియు క్షిపణుల నిర్మాణంలో వాడతారు.",
+                "దీని సమ్మేళనాలు తియ్యని రుచిని కలిగి ఉంటాయి కానీ అత్యంత విషపూరితమైనవి.",
+                "ఎక్స్-రే ట్యూబులలో విండోస్ తయారీకి రేడియేషన్‌ను పంపిణీ చేయడానికి వాడతారు.",
+                "తేలికైనది మరియు దృఢమైనది కావడం వల్ల ఏరోస్పేస్ రంగంలో ప్రాధాన్యం ఉంది.",
+                "పచ్చ (Emerald) మరియు అక్వామరైన్ వంటి విలువైన రత్నాలలో బెరీలియం ఉంటుంది.",
+                "ఇది ఉక్కు కంటే తేలికైనది మరియు గట్టిదైనది.",
+                "అణు రియాక్టర్లలో రిఫ్లెక్టర్ మరియు మోడరేటర్‌గా పనిచేస్తుంది.",
+                "దీని ఉత్పత్తి సమయంలో వచ్చే ధూళి పీలిస్తే తీవ్రమైన శ్వాసకోశ వ్యాధి వస్తుంది.",
+                "అల్యూమినియంతో కలిపి బలమైన మిశ్రమ లోహాలు తయారు చేస్తారు.",
+                "ఇది భూపటలంలో చాలా అరుదైన క్షారభూమి లోహం."
+            ]},
+            { num: 5, sym: "B", name: "Boron", group: 13, period: 2, cat: "metalloid", fullCat: "Group 13 • Metalloid", coreColor: "#f97316", orbitColor: "rgba(249, 115, 22, 0.6)", caption: "Atomic Model of Boron", facts: [
+                "న్యూక్లియర్ రియాక్టర్లలో న్యూట్రాన్లను నియంత్రించడానికి (Control Rods) వాడతారు.",
+                "గ్లాస్ మరియు ఫైబర్‌గ్లాస్ తయారీలో బోరాక్స్ రూపంలో ఉపయోగిస్తారు.",
+                "బోరాన్ కార్బైడ్ అనేది ట్యాంక్ ఆర్మర్ తయారీకి వాడే అతి కఠినమైన పదార్థం.",
+                "మొక్కల ఎదుగుదలలో కణాల గోడల నిర్మాణానికి ఇది అత్యవసరమైన సూక్ష్మపోషకం.",
+                "అర్ధవాహక (Semiconductor) పరిశ్రమలో డోపింగ్ ఏజెంట్‌గా వాడతారు.",
+                "దీని సమ్మేళనాలు ఆలివ్ గ్రీన్ రంగు జ్వాలను ఇస్తాయి.",
+                "యాంటీసెప్టిక్ మరియు క్లీనింగ్ ఉత్పత్తులలో బోరాక్స్ విరివిగా వాడతారు.",
+                "ఇది ప్రకృతిలో ఎప్పుడూ స్వచ్ఛమైన రూపంలో లభించదు.",
+                "అగ్గిపుల్లల హెడ్స్‌లో మరియు బాణసంచాలో ఆక్సిడైజర్‌గా పనిచేస్తుంది.",
+                "దీనిని తొలిసారిగా గే-ಲ್ಯూసాక్ మరియు తేనార్డ్ వేరుచేశారు."
+            ]},
+            { num: 6, sym: "C", name: "Carbon", group: 14, period: 2, cat: "nonmetal", fullCat: "Group 14 • Nonmetal", coreColor: "#334155", orbitColor: "rgba(148, 163, 184, 0.6)", caption: "Atomic Model of Carbon", facts: [
+                "కాటనేషన్ (<b>Catenation</b>) గుణం వల్ల అత్యధిక సమ్మేళనాలు ఏర్పరుస్తుంది.",
+                "డైమండ్, గ్రాఫైట్, ఫుల్లరీన్ మరియు గ్రాఫీన్ అనేవి కార్బన్ రూపాంతరాలు.",
+                "వజ్రం (<b>Diamond</b>) ప్రకృతిలో లభించే అత్యంత కఠినమైన పదార్థం.",
+                "గ్రాఫైట్ ఒక అలోహం అయినప్పటికీ విద్యుత్‌ను ప్రసరింపజేస్తుంది.",
+                "శిలాజాల వయస్సును నిర్ధారించడానికి <b>కార్బన్ డేటింగ్ (C-14)</b> వాడతారు.",
+                "పెన్సిల్ లెడ్ తయారీలో మరియు న్యూక్లియర్ రియాక్టర్లలో గ్రాఫైట్ వాడతారు.",
+                "గ్రీన్ హౌస్ ఎఫెక్ట్‌కు ప్రధాన కారణం కార్బన్ డై ఆక్సైడ్ (CO2).",
+                "<b>డ్రై ఐస్ (Dry Ice)</b> అని ఘన కార్బన్ డై ఆక్సైడ్ ని పిలుస్తారు.",
+                "నానోటెక్నాలజీలో కార్బన్ నానో ట్యూబ్స్ (CNTs) విప్లవాత్మకమైనవి.",
+                "కర్బన రసాయన శాస్త్రం (Organic Chemistry) పూర్తిగా కార్బన్ ఆధారితమైనది."
+            ]},
+            { num: 7, sym: "N", name: "Nitrogen", group: 15, period: 2, cat: "nonmetal", fullCat: "Group 15 • Nonmetal", coreColor: "#a855f7", orbitColor: "rgba(168, 85, 247, 0.6)", caption: "Atomic Model of Nitrogen", facts: [
+                "వాతావరణంలో అత్యధికంగా (సుమారు 78%) లభించే వాయువు.",
+                "మొక్కల ఎదుగుదలకు అత్యంత ముఖ్యమైన పోషకం (యూరియా మరియు ఎరువులలో).",
+                "చిప్స్ ప్యాకెట్లలో ఆహారం పాడవకుండా ఆక్సిజన్‌కు బదులుగా నైట్రోజన్ నింపుతారు.",
+                "ద్రవ నైట్రోజన్ (Liquid Nitrogen) ను జీవ నమూనాల భద్రపరచడానికి వాడతారు.",
+                "డైనమైట్, TNT వంటి పేలుడు పదార్థాల తయారీలో నైట్రోజన్ తప్పనిసరి.",
+                "మానవ DNA మరియు ప్రోటీన్ల నిర్మాణంలో నైట్రోజన్ ప్రధాన భాగం.",
+                "డేనియల్ రూథర్‌ఫర్డ్ దీనిని కనుగొన్నారు.",
+                "ఇది గది ఉష్ణోగ్రత వద్ద జడ స్వభావాన్ని కలిగి ఉంటుంది.",
+                "అమ్మోనియా తయారీకి హేబర్ విధానంలో నైట్రోజన్ ముడిసరుకు.",
+                "వాతావరణంలో ఇది వృక్షాలకు నేరుగా అందదు, బాక్టీరియా ద్వారా స్థిరీకరించబడుతుంది."
+            ]},
+            { num: 8, sym: "O", name: "Oxygen", group: 16, period: 2, cat: "nonmetal", fullCat: "Group 16 • Nonmetal", coreColor: "#7dd3fc", orbitColor: "rgba(125, 211, 252, 0.6)", caption: "Atomic Model of Oxygen", facts: [
+                "భూపటలంలో అత్యధికంగా లభించే మూలకం (సుమారు 46%).",
+                "శ్వాసక్రియకు మరియు దహన ప్రక్రియకు (Combustion) అత్యంత ఆవశ్యకం.",
+                "ఓజోన్ (O3) రూపంలో సూర్యుని నుండి వచ్చే హానికరమైన UV కిరణాల నుండి రక్షిస్తుంది.",
+                "ద్రవ ఆక్సిజన్ లేత నీలం రంగులో ఉండి, పారా అయస్కాంత స్వభావం చూపుతుంది.",
+                "రాకెట్ ఇంజిన్లలో లిక్విడ్ ఆక్సిజన్ (LOX) ను ఆక్సిడైజర్‌గా వాడతారు.",
+                "కిరణజన్య సంయోగక్రియ ద్వారా మొక్కలు ఆక్సిజన్‌ను విడుదల చేస్తాయి.",
+                "మానవ శరీరంలో ద్రవ్యరాశి పరంగా అత్యధికంగా ఉండే మూలకం (65%).",
+                "జోసెఫ్ ప్రీస్ట్లీ మరియు కార్ల్ షీలే దీనిని కనుగొన్నారు.",
+                "ఆసుపత్రులలో రోగులకు ఇచ్చే కృత్రిమ శ్వాసలో ఆక్సిజన్ వాడతారు.",
+                "నీటి అణువు (H2O) లో ఆక్సిజన్ కేంద్రక మూలకం."
+            ]},
+            { num: 9, sym: "F", name: "Fluorine", group: 17, period: 2, cat: "halogen", fullCat: "Group 17 • Halogen", coreColor: "#eab308", orbitColor: "rgba(234, 179, 8, 0.6)", caption: "Atomic Model of Fluorine", facts: [
+                "అత్యంత విద్యుదృణాత్మకత (Highest Electronegativity) మరియు చురుకైన హాలోజన్.",
+                "టూత్‌పేస్ట్‌లలో దంతక్షయం కాకుండా ఫ్లోరైడ్ రూపంలో వాడతారు.",
+                "టెఫ్లాన్ (Teflon - నాన్-స్టిక్ కుక్ వేర్) తయారీలో ఫ్లోరిన్ సమ్మేళనాలు వాడతారు.",
+                "యూరేనియం సుసంపన్నతలో (Uranium Enrichment) UF6 గ్యాస్‌గా ఉపయోగిస్తారు.",
+                "ఇది గాలిలో ఉన్నా మంటలను పుట్టిస్తుంది, అత్యంత ప్రమాదకరమైన వాయువు.",
+                "ఫ్రిజ్‌లు మరియు ఏసీలలో వాడే క్లోరోఫ్లోరోకార్బన్లలో (CFCs) ఇది ఉంటుంది.",
+                "దీనిని హన్‌ఫ్రీ డేవి మరియు మోస్సన్ తీవ్ర శ్రమతో వేరుచేశారు.",
+                "ఇది ఎముకలు మరియు దంతాలలో స్వల్పంగా ఉంటుంది.",
+                "అన్ని లోహాలతోనూ అత్యంత హింసాత్మకంగా చర్య జరుపుతుంది.",
+                "దూద్ సాగర్ వంటి జలపాతాల పేర్లలో కాకపోయినా కెమిస్ట్రీలో ఇది టాప్ ర్యాంక్."
+            ]},
+            { num: 10, sym: "Ne", name: "Neon", group: 18, period: 2, cat: "noble", fullCat: "Group 18 • Noble Gas", coreColor: "#22c55e", orbitColor: "rgba(34, 197, 94, 0.6)", caption: "Atomic Model of Neon", facts: [
+                "అడ్వర్టైజింగ్ నియాన్ సైన్‌బోర్డ్స్ మరియు గ్లోయింగ్ లైట్లలో ప్రకాశవంతమైన రంగుల కోసం వాడతారు.",
+                "ఇది ఒక జడ వాయువు (Noble Gas) కాబట్టి సాధారణంగా ఏ ఇతర మూలకంతోనూ కలవదు.",
+                "ద్రవ నియాన్, ద్రవ హీలియం కంటే ఎక్కువ శీతలీకరణ శక్తిని ఇస్తుంది.",
+                "విలియం రామ్సే మరియు మోరిస్ ట్రావర్స్ దీనిని కనుగొన్నారు.",
+                "వాతావరణంలో దీని లభ్యత చాలా తక్కువ (సుమారు 0.0018%).",
+                "అధిక విద్యుత్ వోల్టేజ్ పంపినప్పుడు ఎరుపు-నారింజ రంగు వెలుగును ప్రసరిస్తుంది.",
+                "హై-వోల్టేజ్ సూచికలలో మరియు లైటింగ్ అరెస్టర్లలో వాడతారు.",
+                "ఇది రంగులేని, వాసన లేని ఏకపరమాణుక వాయువు.",
+                "కాస్మిక్ కిరణాల పరిశోధనలో బబుల్ ఛాంబర్లలో వాడతారు.",
+                "దీని పరమాణు సంఖ్య 10 మరియు ఇది పూర్తి బాహ్య కక్ష్యను కలిగి ఉంటుంది."
+            ]},
+            { num: 11, sym: "Na", name: "Sodium", group: 1, period: 3, cat: "alkali", fullCat: "Group 1 • Alkali Metal", coreColor: "#fde047", orbitColor: "rgba(253, 224, 71, 0.6)", caption: "Atomic Model of Sodium", facts: [
+                "కత్తితో కోయగల మెత్తని లోహం; గాలిలో త్వరగా మండుతుంది కాబట్టి కిరోసిన్‌లో దాస్తారు.",
+                "వీధి దీపాలలో పసుపు రంగు కాంతిని ఇవ్వడానికి సోడియం వేపర్ ల్యాంప్స్ వాడతారు.",
+                "టేబుల్ సాల్ట్ (NaCl) మరియు బేకింగ్ సోడా (NaHCO3) తయారీలో ప్రధానం.",
+                "నాడీ వ్యవస్థలో విద్యుత్ సంకేతాల ప్రసారానికి సోడియం-పొటాషియం పంప్ అత్యవసరం.",
+                "అణు రియాక్టర్లలో ద్రవ సోడియంను కూలెంట్ (Coolant) గా వాడతారు.",
+                "మంటపై ఉంచినపుడు ఇది బంగారు పసుపు రంగు (Golden Yellow Flame) ఇస్తుంది.",
+                "సబ్బుల తయారీలో కాస్టిక్ సోడా (NaOH) రూపంలో వాడతారు.",
+                "చిలీ సాల్ట్ పీటర్ (Sodium Nitrate) దీని ప్రధాన ముడిఖనిజం.",
+                "రక్తపోటును నియంత్రించడంలో మరియు ద్రవాభిసరణలో కీలక పాత్ర పోషిస్తుంది.",
+                "హంఫ్రీ డేవి దీనిని విద్యుత్ విశ్లేషణ ద్వారా మొదటిసారి వేరుచేశారు."
+            ]},
+            { num: 12, sym: "Mg", name: "Magnesium", group: 2, period: 3, cat: "alkaline", fullCat: "Group 2 • Alkaline Earth Metal", coreColor: "#cbd5e1", orbitColor: "rgba(203, 213, 225, 0.6)", caption: "Atomic Model of Magnesium", facts: [
+                "మంటగలిపితే తెల్లటి ప్రకాశవంతమైన కాంతిని (బ్లైండింగ్ ఫ్లాష్) ఇస్తుంది.",
+                "మొక్కలలోని పత్రహరితం (<b>Chlorophyll</b>) లో కేంద్రంగా ఉండే లోహం.",
+                "తేలికైన అల్లాయ్ (Magnalium) తయారీలో విమాన మరియు క్షిపణి భాగాలకు వాడతారు.",
+                "టాబ్లెట్లలో యాంటాసిడ్ (Milk of Magnesia - Mg(OH)2) గా కడుపులో మంట తగ్గించడానికి వాడతారు.",
+                "బాణసంచా మరియు ఫ్లాష్ గన్‌పౌడర్ తయారీలో ఉపయోగిస్తారు.",
+                "మానవ శరీరంలో కండరాల పనితీరుకు మరియు ఎముకల ఆరోగ్యానికి అవసరం.",
+                "సముద్రపు నీటి నుండి వాణిజ్యపరంగా దీనిని పెద్దఎత్తున సేకరిస్తారు.",
+                "ఇది గాలిలో కాలిపోయినప్పుడు మెగ్నీషియం ఆక్సైడ్ బూడిదను ఇస్తుంది.",
+                "ఇనుముతో కలిపి ఉక్కును శుద్ధి చేయడానికి డీసల్ఫరైజేషన్‌లో వాడతారు.",
+                "జోసెఫ్ బ్లాక్ దీనిని ఒక ప్రత్యేక మూలకంగా గుర్తించారు."
+            ]},
+            { num: 13, sym: "Al", name: "Aluminum", group: 13, period: 3, cat: "posttrans", fullCat: "Group 13 • Post-Transition Metal", coreColor: "#94a3b8", orbitColor: "rgba(148, 163, 184, 0.6)", caption: "Atomic Model of Aluminum", facts: [
+                "భూపటలంలో అత్యధికంగా లభించే లోహం (Most Abundant Metal - 8%).",
+                "బాక్సైట్ (Bauxite) అనేది అల్యూమినియం యొక్క ప్రధాన ముడి ఖనిజం.",
+                "తేలికగా ఉండటం మరియు తుప్పు పట్టకపోవడం వల్ల విమానాల తయారీలో వాడతారు.",
+                "థర్మైట్ వెల్డింగ్ లో ఐరన్ ఆక్సైడ్‌తో కలిపి రైల్వే ట్రాక్‌లను అతుకడానికి వాడతారు.",
+                "వంట పాత్రలు మరియు ఫుడ్ ప్యాకింగ్ ఫాయిల్స్ తయారీలో విరివిగా ఉపయోగిస్తారు.",
+                "దీని విద్యుత్ వాహకత రాగి కంటే తక్కువైనా, బరువు తక్కువగా ఉండటం వల్ల పవర్ కేబుల్స్‌లో వాడతారు.",
+                "బాక్సైట్ నుండి దీనిని 'హాల్-హెరాల్ట్ విధానం' ద్వారా వెలికితీస్తారు.",
+                "అల్యూమినియం ఆక్సైడ్ రత్నాలకు (రుబీ, నీలం) రంగును ఇస్తుంది.",
+                "ఇది ఆక్సీకరణ చెంది పైన ఒక రక్షిత పొరను (Al2O3) ఏర్పరుచుకుంటుంది.",
+                "అన్ని రకాల ప్యాకేజింగ్ డ్రింక్ క్యాన్లలో ఇది ప్రధాన మెటల్."
+            ]},
+            { num: 14, sym: "Si", name: "Silicon", group: 14, period: 3, cat: "metalloid", fullCat: "Group 14 • Metalloid", coreColor: "#f97316", orbitColor: "rgba(249, 115, 22, 0.6)", caption: "Atomic Model of Silicon", facts: [
+                "సెమీకండక్టర్లు మరియు కంప్యూటర్ మైక్రోచిప్స్ తయారీలో మూలస్తంభం (Silicon Valley).",
+                "భూపటలంలో ఆక్సిజన్ తర్వాత అత్యధికంగా (సుమారు 27.7%) లభించే మూలకం.",
+                "గ్లాస్, సిరామిక్స్, సిమెంట్ మరియు ఇసుక (Silica) తయారీలో ప్రధానం.",
+                "సోలార్ ప్యానెల్స్‌లో సూర్యరశ్మిని విద్యుత్తుగా మార్చడానికి సిలికాన్ వాడతారు.",
+                "సిలికాన్ నూనెలు మరియు సిలికాన్ రబ్బర్లు (Silicones) సీలెంట్లుగా వాడతారు.",
+                "బజెలియస్ దీనిని మొదటిసారిగా స్వచ్ఛమైన రూపంలో తయారు చేశారు.",
+                "ఇది లోహం మరియు అలోహం రెండింటి లక్షణాలను ప్రదర్శిస్తుంది.",
+                "ఇంటిగ్రేటెడ్ సర్క్యూట్స్ (ICs) మరియు ట్రాన్సిస్టర్లలో టెక్నాలజీ గుండెకాయ.",
+                "క్వార్ץ (Quartz) రూపంలో స్పటికాలుగా ప్రకృతిలో లభిస్తుంది.",
+                "హైపర్-ప్యూరిఫైడ్ సిలికాన్ సెమీకండక్టర్ పరిశ్రమలో అత్యంత కీలకం."
+            ]},
+            { num: 15, sym: "P", name: "Phosphorus", group: 15, period: 3, cat: "nonmetal", fullCat: "Group 15 • Nonmetal", coreColor: "#a855f7", orbitColor: "rgba(168, 85, 247, 0.6)", caption: "Atomic Model of Phosphorus", facts: [
+                "అగ్గిపెట్టెల తయారీలో మరియు ఎరువుల (Fertilizers) తయారీలో విరివిగా వాడతారు.",
+                "ఎముకలు, దంతాలు మరియు డీఎన్‌ఏ (DNA) నిర్మాణంలో కీలక పాత్ర పోషిస్తుంది.",
+                "తెల్ల భాస్వరం (White Phosphorus) గాలిలో వాటంతట అవే మండుతుంది, అందుకే నీటిలో దాస్తారు.",
+                "ఎరుపు భాస్వరం (Red Phosphorus) సురక్షితమైనది, అగ్గిపుల్లల తయారీలో వాడతారు.",
+                "హెన్నిగ్ బ్రాండ్ దీనిని మానవ మూత్రం నుండి మొదటిసారిగా కనుగొన్నారు.",
+                "వ్యవసాయంలో పాస్ఫేట్ ఎరువుల రూపంలో పంటల దిగుబడికి అత్యవసరం.",
+                "బాణసంచా మరియు పొగ బాంబుల తయారీలో ఉపయోగిస్తారు.",
+                "డీఎన్‌ఏ మరియు ఆర్‌ఎన్‌ఏ వెన్నెముకలో ఫాస్ఫేట్ గ్రూప్స్ ఉంటాయి.",
+                "దీని సమ్మేళనాలు డిటర్జెంట్లు మరియు వాటర్ సాఫ్ట్‌ననర్లలో వాడతారు.",
+                "ఎముకల బూడిద నుండి ఒకప్పుడు దీనిని పెద్దఎత్తున సేకరించేవారు."
+            ]},
+            { num: 16, sym: "S", name: "Sulfur", group: 16, period: 3, cat: "nonmetal", fullCat: "Group 16 • Nonmetal", coreColor: "#eab308", orbitColor: "rgba(234, 179, 8, 0.6)", caption: "Atomic Model of Sulfur", facts: [
+                "రబ్బరు గట్టిపడే ప్రక్రియలో <b>వల్కనైజేషన్ (Vulcanization)</b> కోసం వాడతారు.",
+                "గన్ పౌడర్ మరియు బాణసంచా తయారీలో ప్రధాన పదార్థం.",
+                "సల్ఫ్యూరిక్ ఆమ్లం (H2SO4 - ఆమ్లాల రాజు / King of Chemicals) తయారీకి ముడిసరుకు.",
+                "చర్ధ్ వ్యాధులు మరియు యాంటీ-ఫంగల్ మెడిసిన్లలో పురాతన కాలం నుండి వాడకంలో ఉంది.",
+                "ज्வாలాముఖి (Volcanic) ప్రాంతాలలో మరియు వేడి నీటి బుగ్గలలో సహజంగా లభిస్తుంది.",
+                "పెట్రోలియం రిఫైనింగ్‌లో హైడ్రోజన్ సల్ఫైడ్ తొలగింపులో కీలకం.",
+                "అమినో ఆమ్లాలు (సిస్టీన్, మెథియోనిన్) మరియు ప్రోటీన్లలో సల్ఫర్ ఉంటుంది.",
+                "దీనిని పురాతన కాలంలో 'గంధకం' అని పిలిచేవారు.",
+                "ఆమ్ల వర్షాలకు కారణమయ్యే సల్ఫర్ డయాక్సైడ్ (SO2) దీని దహనం వల్ల వస్తుంది.",
+                "డిటర్జెంట్లు మరియు పేపర్ ఇండస్ట్రీలో బ్లీచింగ్ ఏజెంట్‌గా వాడతారు."
+            ]},
+            { num: 17, sym: "Cl", name: "Chlorine", group: 17, period: 3, cat: "halogen", fullCat: "Group 17 • Halogen", coreColor: "#84cc16", orbitColor: "rgba(132, 204, 22, 0.6)", caption: "Atomic Model of Chlorine", facts: [
+                "తాగునీటిని శుద్ధి చేయడానికి (Purification of Water) మరియు బ్లీచింగ్ పౌడర్ తయారీలో వాడతారు.",
+                "మొదటి ప్రపంచ యుద్ధంలో విషపూరిత వాయువుగా (Mustard gas precursor) వాడబడింది.",
+                "పీవీసీ (PVC - Polyvinyl Chloride) ప్లాస్టిక్ పైపుల తయారీకి ముడిసరుకు.",
+                "కార్ల్ విల్హెమ్ షీలే దీనిని కనుగొన్నారు, హంఫ్రీ డేవి దీనికి క్లోరిన్ అని పేరు పెట్టారు.",
+                "ఉప్పు (NaCl) లో క్లోరిన్ ప్రధాన భాగం, జీర్ణకారి హైడ్రోక్లోરિક ఆమ్లం (HCl) తయారీకి అవసరం.",
+                "ఇది ఆకుపచ్చ-పసుపు రంగులో ఉండే ఉక్కిరిబిక్కిరి చేసే వాయువు.",
+                "ఈత కొలనులలో (Swimming pools) బ్యాక్టీరియాను చంపడానికి వాడతారు.",
+                "సేంద్రీయ రసాయన శాస్త్రంలో హలోజినేషన్ రియాక్షన్లలో వాడతారు.",
+                "ఇది గది ఉష్ణోగ్రత వద్ద వాయు రూపంలో ఉంటుంది.",
+                "సముద్రపు నీటి నుండి సోడియం క్లోరైడ్ విద్యుత్ విశ్లేషణ ద్వారా ఉత్పత్తి చేస్తారు."
+            ]},
+            { num: 18, sym: "Ar", name: "Argon", group: 18, period: 3, cat: "noble", fullCat: "Group 18 • Noble Gas", coreColor: "#22c55e", orbitColor: "rgba(34, 197, 94, 0.6)", caption: "Atomic Model of Argon", facts: [
+                "వాతావరణంలో అత్యధికంగా లభించే జడ వాయువు (సుమారు 0.93%).",
+                "ఎలక్ట్రిక్ బల్బులలో టంగ్‌స్టన్ ఫిలమెంట్ కాలిపోకుండా నింపడానికి వాడతారు.",
+                "వెల్డింగ్ సమయంలో మెటల్ ఆక్సీకరణ చెందకుండా ఇనర్ట్ వాతావరణం సృష్టిస్తుంది.",
+                "లార్డ్ రేలే మరియు విలియం రామ్సే దీనిని సంయుక్తంగా కనుగొన్నారు.",
+                "ఇది రంగులేని, వాసన లేని పూర్తిగా జడ స్వభావం గల వాయువు.",
+                "డబుల్ గ్లేజ్డ్ విండోస్‌లో ఇన్సులేషన్ కోసం మధ్యలో అర్జాన్ నింపుతారు.",
+                "రేడియోమెట్రిక్ డేటింగ్‌లో పొటాషియం-ఆర్జాన్ డేటింగ్ పద్ధతికి ఆధారం.",
+                "అతి తక్కువ ఉష్ణ వాహకత కలిగి ఉంటుంది.",
+                "టైటానియం వంటి రియాక్టివ్ లోహాల తయారీలో రక్షణ వాయువుగా వాడతారు.",
+                "దీని పరమాణు సంఖ్య 18."
+            ]},
+
+            // Period 4
+            { num: 19, sym: "K", name: "Potassium", group: 1, period: 4, cat: "alkali", fullCat: "Group 1 • Alkali Metal", coreColor: "#fde047", orbitColor: "rgba(253, 224, 71, 0.6)", caption: "Atomic Model of Potassium", facts: [
+                "మొక్కల పెరుగుదలకు మరియు మానవ గుండె కండరాల పనితీరుకు అత్యవసరమైన ఖనిజం.",
+                "గన్ పౌడర్ తయారీలో పొటాషియం నైట్రేట్ (Saltpeter) రూపంలో వాడతారు.",
+                "నీటితో అత్యంత హింసాత్మకంగా చర్య జరిపి మంటలను పుట్టిస్తుంది.",
+                "హంఫ్రీ డేవి దీనిని పొటాష్ నుండి కాస్టిక్ పొటాష్ విద్యుత్ విశ్లేషణ ద్వారా కనుగొన్నారు.",
+                "మొక్కలలో సూర్యరశ్మి శక్తిని మళ్లించడంలో మరియు వేర్ల అభివృద్ధికి కీలకం.",
+                "మానవ శరీరంలో ఎలక్ట్రోలైట్ సమతుల్యతను కాపాడుతుంది.",
+                "దీనిని కత్తితో సులభంగా కోయవచ్చు, వెండి లాంటి మెరుపు ఉంటుంది.",
+                "మంటపై ఉంచినపుడు ఇది లేత ఊదా రంగు (Lilac Flame) జ్వాలను ఇస్తుంది.",
+                "సబ్బుల తయారీలో సాఫ్ట్ సోప్స్ తయారీకి KOH వాడతారు.",
+                "అత్యంత చురుకైన క్షార లోహాలలో ఒకటి."
+            ]},
+            { num: 20, sym: "Ca", name: "Calcium", group: 2, period: 4, cat: "alkaline", fullCat: "Group 2 • Alkaline Earth Metal", coreColor: "#cbd5e1", orbitColor: "rgba(203, 213, 225, 0.6)", caption: "Atomic Model of Calcium", facts: [
+                "ఎముకలు మరియు దంతాల గట్టిదనానికి మరియు నిర్మాణానికి ప్రధాన ఆధారం.",
+                "సున్నపురాయి (CaCO3), ప్లాస్టర్ ఆఫ్ పారిస్ మరియు సిమెంట్ తయారీలో అత్యంత కీలకం.",
+                "రక్తము గడ్డకట్టడంలో (Blood coagulation) కాల్షియం అయాన్లు కీలక పాత్ర పోషిస్తాయి.",
+                "నీటితో చర్య జరిపి కాల్షియం హైడ్రాక్సైడ్ (Slaked lime) ను ఇస్తుంది.",
+                "మెటలర్జీలో ఆక్సిజన్‌ను తొలగించడానికి రెడ్యూసింగ్ ఏజెంట్‌గా వాడతారు.",
+                "మొక్కలలో కణాల గోడల బలానికి కాల్షియం పెక్టేట్ అవసరం.",
+                "పాల ఉత్పత్తులు మరియు ఆకుకూరలలో కాల్షియం సమృద్ధిగా లభిస్తుంది.",
+                "ఇది వెండి-తెలుపు రంగు గల మెరిసే క్షారభూమి లోహం.",
+                "దీని లోపం వల్ల రికెట్స్ (ఎముకలు మెత్తబడటం) వ్యాధి వస్తుంది.",
+                "హంఫ్రీ డేవి దీనిని విద్యుత్ విశ్లేషణ ద్వారా వేరుచేశారు."
+            ]},
+            { num: 21, sym: "Sc", name: "Scandium", group: 3, period: 4, cat: "transition", fullCat: "Group 3 • Transition Metal", coreColor: "#38bdf8", orbitColor: "rgba(56, 189, 248, 0.6)", caption: "Atomic Model of Scandium", facts: [
+                "అంతరిక్ష విమానాలు మరియు ఏరోస్పేస్ మిశ్రమాలు గట్టిగా ఉండటానికి అల్యూమినియంతో కలుపుతారు.",
+                "హై-ఇంటెన్సిటీ మెటల్ హాలైడ్ ల్యాంప్స్‌లో క్రీడా మైదానాల లైటింగ్ కోసం వాడతారు.",
+                "లార్స్ ఫ్రెడరిక్ నిల్సన్ దీనిని స్కాండినేవియా ప్రాంతపు ఖనిజాల నుండి కనుగొన్నారు.",
+                "ఇది తేలికపాటి పరివర్తన లోహం (Light transition metal).",
+                "రష్యన్ శాస్త్రవేత్త మెండలీవ్ దీనిని ఆవర్తన పట్టికలో ముందుగానే ఊహించి 'ఏకా-బోరాన్' అని పేరు పెట్టారు.",
+                "దీని సమ్మేళనాలు చాలా అరుదుగా మరియు తక్కువ మోతాదులో లభిస్తాయి.",
+                "అల్యూమినియం-స్కాండియం అల్లాయ్ వెల్డింగ్ చేయడానికి అనుకూలంగా ఉంటుంది.",
+                "అథ్లెటిక్స్ బైకులు మరియు బేస్‌బాల్ బ్యాట్ల తయారీలో వాడతారు.",
+                "ఇది గాలిలో కొద్దిగా మందకొడిగా ఆక్సీకరణ చెందుతుంది.",
+                "దీని పరమాణు సంఖ్య 21."
+            ]},
+            { num: 22, sym: "Ti", name: "Titanium", group: 4, period: 4, cat: "transition", fullCat: "Group 4 • Transition Metal", coreColor: "#94a3b8", orbitColor: "rgba(148, 163, 184, 0.6)", caption: "Atomic Model of Titanium", facts: [
+                "అత్యధిక బలం-బరువు నిష్పత్తి కలిగి ఉండటం వల్ల దీనిని <b>'వండర్ మెటల్'</b> అంటారు.",
+                "ఆర్టిఫిషియల్ కీళ్ళు, దంతాల ఇంప్లాంట్స్ మరియు సర్జికల్ టూల్స్‌లో వాడతారు.",
+                "ఫైటర్ జెట్లు, రాకెట్లు మరియు సబ్ సైన్యాల హల్ తయారీలో ఉపయోగిస్తారు.",
+                "తుప్పు పట్టని స్వభావం కలిగి ఉండి సముద్రపు నీటిని కూడా తట్టుకుంటుంది.",
+                "విలియం గ్రెగర్ దీనిని కనుగొన్నారు, మార్టిన్ క్లాప్రోత్ దీనికి గ్రీకు దేవతల పేరు పెట్టారు.",
+                "వైట్ పిగ్మెంట్ (TiO2) గా పెయింట్లు, సన్‌స్క్రీన్ లోషన్లలో విరివిగా వాడతారు.",
+                "ఉక్కు అంత బలంగా ఉండి, దానిలో సగం బరువు మాత్రమే కలిగి ఉంటుంది.",
+                "అంతరిక్ష పరిశోధనలలో ఇది ఒక అత్యంత వ్యూహాత్మక లోహం.",
+                "అధిక ఉష్ణోగ్రతల వద్ద కూడా తన బలాన్ని కోల్పోదు.",
+                "ఇది భూపటలంలో తొమ్మిదవ అత్యధికంగా లభించే మూలకం."
+            ]},
+            { num: 23, sym: "V", name: "Vanadium", group: 5, period: 4, cat: "transition", fullCat: "Group 5 • Transition Metal", coreColor: "#0284c7", orbitColor: "rgba(2, 132, 199, 0.6)", caption: "Atomic Model of Vanadium", facts: [
+                "ఉక్కును (Steel) అత్యంత దృఢంగా మరియు షాక్ రెసిస్టెంట్‌గా మార్చడానికి వాడతారు.",
+                "కార్ల స్ప్రింగ్‌లు, గేర్ షాఫ్ట్‌లు మరియు టూల్స్ తయారీలో వాడే వెనాడియం స్టీల్ ప్రసిద్ధి.",
+                "రసాయన పరిశ్రమలో సల్ఫ్యూరిక్ ఆమ్లం తయారీకి కాంటాక్ట్ విధానంలో ఉత్ప్రేరకంగా (V2O5) వాడతారు.",
+                "ఆండ్రెస్ మాన్యువల్ డెల్ రియో దీనిని మెక్సికోలో కనుగొన్నారు.",
+                "నార్డిక్ బ్యూటీ దేవత 'వానాడిస్' పేరు మీద దీనికి వెనాడియం అని పేరు పెట్టారు.",
+                "కొన్ని సముద్ర జీవులు (ట్యానికేట్లు) తమ రక్తంలో వెనాడియంను కేంద్రీకరించుకుంటాయి.",
+                "రీచార్జబుల్ వెనాడియం రెడాక్స్ ఫ్లో బ్యాటరీలలో లార్జ్-స్కేల్ పవర్ స్టోరేజ్‌కి వాడతారు.",
+                "ఇది తుప్పు పట్టడాన్ని అడ్డుకునే అద్భుతమైన పరివర్తన లోహం.",
+                "అధిక ద్రవీభవన స్థానం కలిగిన హార్డ్ మెటల్.",
+                "దీని పరమాణు సంఖ్య 23."
+            ]},
+            { num: 24, sym: "Cr", name: "Chromium", group: 6, period: 4, cat: "transition", fullCat: "Group 6 • Transition Metal", coreColor: "#cbd5e1", orbitColor: "rgba(203, 213, 225, 0.6)", caption: "Atomic Model of Chromium", facts: [
+                "సైకిల్ హ్యాండిల్స్, కార్ల బంపర్లపై తుప్పు పట్టకుండా ఇచ్చే మెరిసే పూత <b>క్రోమ్ ప్లేటింగ్</b>.",
+                "స్టెయిన్‌లెస్ స్టీల్ (ఉక్కుకు తుప్పు పట్టకుండా చేసేది) తయారీలో ప్రధాన భాగం.",
+                "లూయಿಸ್ వాక్విలిన్ దీనిని కనుగొన్నారు, దీని సమ్మేళనాల రంగుల వల్ల 'క్రోమా' (రంగు) అని పేరు వచ్చింది.",
+                "రుబీ మరియు ఎమరాల్డ్ రత్నాలకు సహజమైన ఎరుపు, పచ్చ రంగులు క్రోమియం వల్లనే వస్తాయి.",
+                "ఇది ఉక్కును గట్టిపరిచి ఆక్సీకరణను పూర్తిగా నిరోధిస్తుంది.",
+                "తోలును ట్యాానింగ్ (Leather tanning) చేయడానికి క్రోమియం లవణాలు వాడతారు.",
+                "అధిక ఉష్ణోగ్రతలను తట్టుకునే రిఫ్రాక్టరీ ఇటుకల తయారీలో వాడతారు.",
+                "మానవ శరీరంలో గ్లూకోజ్ మెటబాలిజానికి ట్రేస్ అమౌంట్స్‌లో అవసరం.",
+                "క్రోమియం హెక్సావాలెంట్ సమ్మేళనాలు కొద్దిగా విషపూరితమైనవి.",
+                "దీని పరమాణు సంఖ్య 24."
+            ]},
+            { num: 25, sym: "Mn", name: "Manganese", group: 7, period: 4, cat: "transition", fullCat: "Group 7 • Transition Metal", coreColor: "#475569", orbitColor: "rgba(71, 85, 105, 0.6)", caption: "Atomic Model of Manganese", facts: [
+                "రైల్వే ట్రాక్‌లు మరియు బుల్లెట్ ప్రూఫ్ సేఫ్ వాల్స్ తయారీలో స్టీల్‌ను గట్టిపరచడానికి వాడతారు.",
+                "డ్రై సెల్ బ్యాటరీలలో మ్యాగనీస్ డయాక్సైడ్ (MnO2) డిపోలరైజర్‌గా ఉపయోగిస్తారు.",
+                "కార్ల్ విల్హెమ్ షీలే దీనిని గుర్తించారు, జాన్ గాట్లీబ్ గాన్ దీనిని మెటల్ రూపంలో వేరుచేశారు.",
+                "మొక్కలలో కిరణజన్య సంయోగక్రియ సమయంలో నీటి విభజనకు (Photolysis) మ్యాగనీస్ అత్యవసరం.",
+                "గ్లాస్‌లో ఇనుము వల్ల వచ్చే ఆకుపచ్చ రంగును తొలగించడానికి గ్లాస్ ఇండస్ట్రీలో వాడతారు.",
+                "ఇది ఇనుము తయారీలో సల్ఫర్ మరియు ఆక్సిజన్‌ను తొలగించడానికి ఫ్లక్స్‌గా పనిచేస్తుంది.",
+                "సముద్రపు అడుగుభాగంలో 'మ్యాగనీస్ నాడ్యూల్స్' రూపంలో అపార నిల్వలు ఉన్నాయి.",
+                "మానవ మెదడు మరియు ఎముకల అభివృద్ధికి ఇది ఒక ముఖ్యమైన పోషక ఖనిజం.",
+                "ఇది పెర్మాంగనేట్ రూపంలో శక్తివంతమైన ఆక్సిడైజింగ్ ఏజెంట్.",
+                "దీని పరమాణు సంఖ్య 25."
+            ]},
+            { num: 26, sym: "Fe", name: "Iron", group: 8, period: 4, cat: "transition", fullCat: "Group 8 • Transition Metal", coreColor: "#94a3b8", orbitColor: "rgba(148, 163, 184, 0.6)", caption: "Atomic Model of Iron", facts: [
+                "భూమి కేంద్రంలో (Earth's Core) ద్రవ్యరాశి పరంగా అత్యధికంగా ఉండే మూలకం.",
+                "హెమటైట్, మాగ్నెటైట్ అనేవి ఐరన్ యొక్క ముఖ్యమైన ముడి ఖనిజాలు.",
+                "మానవ రక్తంలోని 'హీమోగ్లోబిన్' లోని ప్రధాన మూలకం, ఆక్సిజన్ రవాణా చేస్తుంది.",
+                "గాలి, తేమకు గురైనప్పుడు ఫెర్రిక్ ఆక్సైడ్ (తుప్పు / Rust) గా మారుతుంది.",
+                "తుప్పు పట్టకుండా నిరోధించడానికి ఐరన్ పై జింక్ పూత పూస్తారు (గాల్వనైజేషన్).",
+                "ఐరన్‌ను కార్బన్‌తో కలిపితే 'స్టీల్' (ఉక్కు) అనే బలమైన మిశ్రమ లోహం తయారవుతుంది.",
+                "హరప్పా ప్రజలకు ఐరన్ తెలియదు, ఇది వేద కాలం (Iron Age) లో వాడుకలోకి వచ్చింది.",
+                "గది ఉష్ణోగ్రత వద్ద ఫెర్రో అయస్కాంత (Ferromagnetic) లక్షణాన్ని కలిగి ఉంటుంది.",
+                "హేబర్ విధానం ద్వారా అమ్మోనియా తయారీలో ఉత్ప్రేరకంగా పనిచేస్తుంది.",
+                "శరీరంలో ఐరన్ లోపిస్తే ఎనీమియా (రక్తహీనత) వ్యాధి వస్తుంది."
+            ]},
+            { num: 27, sym: "Co", name: "Cobalt", group: 9, period: 4, cat: "transition", fullCat: "Group 9 • Transition Metal", coreColor: "#2563eb", orbitColor: "rgba(37, 99, 235, 0.6)", caption: "Atomic Model of Cobalt", facts: [
+                "విటమిన్ బి-12 (Cobalamin) లో ఉండే ప్రధాన లోహం, ఇది లేకపోతే రక్తహీనత వస్తుంది.",
+                "రేడియోధార్మిక కోబాల్ట్-60 క్యాన్సర్ చికిత్సలో (Radiation Therapy) వాడతారు.",
+                "అల్ట్రా-స్ట్రాంగ్ మాగ్నెట్లు మరియు జెట్ ఇంజిన్ అలాయిస్‌ తయారీలో వాడతారు.",
+                "గ్లాస్ మరియు సిరామిక్స్‌కు అందమైన నీలం రంగు (Cobalt blue) ఇవ్వడానికి వాడతారు.",
+                "జార్జ్ బ్రಾಂట్ దీనిని కనుగొన్నారు, జర్మన్ పదమైన 'ಕೊಬೊಲ್ಡ್' (దుష్ట ఆత్మ) నుండి పేరు వచ్చింది.",
+                "లిథియం-అయాన్ బ్యాటరీల కేథోడ్ మెటీరియల్‌లో కోబాల్ట్ అత్యంత కీలకం.",
+                "పెట్రోలియం రిఫైనింగ్‌లో డీసల్ఫరైజేషన్ ఉత్ప్రేరకంగా పనిచేస్తుంది.",
+                "ఇది ఇనుము మరియు నికెల్ వలె బలమైన అయస్కాంత లక్షణం గల లోహం.",
+                "దీని ఉత్పత్తిలో కాంగో దేశం ప్రపంచంలోనే అగ్రస్థానంలో ఉంది.",
+                "దీని పరమాణు సంఖ్య 27."
+            ]},
+            { num: 28, sym: "Ni", name: "Nickel", group: 10, period: 4, cat: "transition", fullCat: "Group 10 • Transition Metal", coreColor: "#64748b", orbitColor: "rgba(100, 116, 139, 0.6)", caption: "Atomic Model of Nickel", facts: [
+                "వనస్పతి నూనెలను గట్టిపర్చడానికి (Hydrogenation) ఉత్ప్రేరకంగా వాడతారు.",
+                "నికెల్-కాడ్మియం (NiCd) మరియు నికెల్-మెటల్ హైడ్రైడ్ రీచార్జబుల్ బ్యాటరీలలో వాడతారు.",
+                "స్టెయిన్‌లెస్ స్టీల్‌కు తుప్పు పట్టకుండా రక్షణనిచ్చే ప్రధాన లోహాలలో ఒకటి.",
+                "ఆక్సెల్ ఫ్రెడరిక్ ಕ್ರೋನ್‌ಸ್ಟೆಡ್ దీనిని కనుగొన్నారు.",
+                "యూఎస్‌లో వాడే 5 సెంట్ల నాణెం (Nickels) తయారీలో నికెల్ వాడతారు.",
+                "ఇది తుప్పు పట్టడాన్ని తట్టుకునే వెండి-తెలుపు రంగు పరివర్తన లోహం.",
+                "నాణేలు, ఆభరణాలు (వైట్ గోల్డ్ లో) మరియు ప్లేటింగ్ పరిశ్రమలో విస్తృతంగా వాడతారు.",
+                "భూమి కేంద్రంలో (Core) ఇనుముతో పాటు నికెల్ కూడా ద్రవ రూపంలో ఉంటుంది (NIFE layer).",
+                "అధిక ఉష్ణోగ్రతలను మరియు రసాయన క్షయాలను అద్భుతంగా తట్టుకుంటుంది.",
+                "దీని పరమాణు సంఖ్య 28."
+            ]},
+            { num: 29, sym: "Cu", name: "Copper", group: 11, period: 4, cat: "transition", fullCat: "Group 11 • Transition Metal", coreColor: "#f97316", orbitColor: "rgba(249, 115, 22, 0.6)", caption: "Atomic Model of Copper", facts: [
+                "మానవుడు ఉపయోగించిన మొట్టమొదటి లోహం కాపర్ (చాల్కోలిథిక్ యుగం).",
+                "విద్యుత్ వాహకత చాలా ఎక్కువ, అందుకే వైరింగ్‌లో విరివిగా వాడతారు.",
+                "తగరంతో కలిపి బ్రాంజ్ (కంచు), జింక్‌తో కలిపి బ్రాస్ (ఇత్తడి) తయారు చేస్తారు.",
+                "గాలి, తేమ తగలడం వల్ల ఆక్సీకరణ చెంది ఆకుపచ్చ రంగు (కాపర్ కార్బోనేట్ పటీనా) లోకి మారుతుంది.",
+                "సహజంగానే సూక్ష్మజీవులను నాశనం చేసే యాంటీ-మైక్రోబయల్ లక్షణం దీనికి ఉంది.",
+                "మానవ శరీరంలో ఐరన్ శోషణకు, ఎర్ర రక్త కణాల తయారీకి ఇది అత్యవసరం.",
+                "ఎలక్ట్రోప్లేటింగ్ మరియు ప్రింటెడ్ సర్క్యూట్ బోర్డ్స్ (PCBs) లో ఉపయోగిస్తారు.",
+                "నత్తలు, పీతలలో ఆక్సిజన్ సరఫరాకు 'హీమోసైనిన్' (కాపర్ ప్రోటీన్) ఉంటుంది.",
+                "చాల్కోపైరైట్, మలాకైట్ అనేవి కాపర్ యొక్క ముఖ్యమైన ముడి ఖనిజాలు.",
+                "సోలార్ ప్యానెల్స్, హీట్ ఎక్స్ఛేంజర్స్ లో ఉష్ణ మార్పిడికి వాడతారు."
+            ]},
+            { num: 30, sym: "Zn", name: "Zinc", group: 12, period: 4, cat: "transition", fullCat: "Group 12 • Transition Metal", coreColor: "#94a3b8", orbitColor: "rgba(148, 163, 184, 0.6)", caption: "Atomic Model of Zinc", facts: [
+                "గాల్వనైజేషన్‌లో ఐరన్‌కు తుప్పు పట్టకుండా రక్షణగా పూత పూయడానికి వాడతారు.",
+                "డ్రై సెల్ బ్యాటరీలలో ఆనోడ్‌గా (కంటైనర్‌గా) పనిచేస్తుంది.",
+                "రాగితో కలిపి ఇత్తడి (Brass) మిశ్రమ లోహాన్ని తయారు చేస్తారు.",
+                "మానవ శరీరంలో రోగనిరోధక శక్తికి, గాయాలు మానడానికి అత్యవసరమైన ఖనిజం.",
+                "జింక్ ఆక్సైడ్ (ZnO) ను సన్‌స్క్రీన్ లోషన్లు, ఆయింట్‌మెంట్లలో వాడతారు.",
+                "జింక్ సల్ఫైడ్ (ZnS) ను చీకటిలో మెరిసే గడియారపు ముళ్ళ పెయింట్లలో వాడతారు.",
+                "మొక్కలలో ఆక్సిన్ (హార్మోన్) తయారీకి మరియు పెరుగుదలకు అవసరం.",
+                "ఇది నీటిలో కరగదు కానీ ఆమ్లాలలో కరిగి హైడ్రోజన్ వాయువును విడుదల చేస్తుంది.",
+                "గాలేనా తర్వాత జింక్ బ్లెండే (Sphalerite) దీని ప్రధాన ముడి ఖనిజం.",
+                "దీని పరమాణు సంఖ్య 30."
+            ]},
+            { num: 35, sym: "Br", name: "Bromine", group: 17, period: 4, cat: "halogen", fullCat: "Group 17 • Halogen", coreColor: "#eab308", orbitColor: "rgba(234, 179, 8, 0.6)", caption: "Atomic Model of Bromine", facts: [
+                "గది ఉష్ణోగ్రత వద్ద ద్రవ రూపంలో ఉండే ఏకైక అలోహం (Liquid Non-Metal).",
+                "కాల్చితే ముదురు ఎరుపు రంగు ఆవిరిని ఇచ్చే ఘాటైన వాసన గల పదార్థం.",
+                "అంటోన్ బాలాර් మరియు కార్ల్ లోవిగ్ దీనిని స్వతంత్రంగా కనుగొన్నారు.",
+                "ఫోటోగ్రఫీలో సిల్వర్ బ్రోమైడ్ తయారీకి మరియు మందులలో వాడతారు.",
+                "ప్లాస్టిక్స్ మరియు ఎలక్ట్రానిక్ వస్తువులలో మంటలుឆ్తేయకుండా (Flame retardants) వాడతారు.",
+                "సముద్రపు నీటిలో మరియు ఉప్పునీటి సరస్సులలో బ్రోమైడ్ లవణాలుగా లభిస్తుంది.",
+                "ఇది చర్మానికి తగిలితే తీవ్రమైన కాలిన గాయాలు ఏర్పరుస్తుంది.",
+                "చలనచిత్ర ఫిలింల తయారీలో పురాతన కాలం నుండి ఉపయోగించబడింది.",
+                "దీని సమ్మేళనాలు రంగుల తయారీలో మరియు రసాయన సంశ్లేషణలో వాడతారు.",
+                "దీని పరమాణు సంఖ్య 35."
+            ]},
+            { num: 47, sym: "Ag", name: "Silver", group: 11, period: 5, cat: "transition", fullCat: "Group 11 • Transition Metal", coreColor: "#f1f5f9", orbitColor: "rgba(241, 245, 249, 0.6)", caption: "Atomic Model of Silver", facts: [
+                "అన్ని లోహాల కంటే అత్యుత్తమ విద్యుత్ మరియు ఉష్ణ వాహకం (Best Conductor).",
+                "ఎన్నికల సిరా తయారీలో సిల్వర్ నైట్రేట్ (AgNO3 - లూనార్ కాస్టిక్) ఉపయోగిస్తారు.",
+                "మేఘ మథనం (Cloud Seeding) లో సిల్వర్ అయోడైడ్ (AgI) ను వాడతారు.",
+                "ఫోటోగ్రఫీలో కాంతికి ప్రతిస్పందించే సిల్వర్ బ్రోమైడ్ (AgBr) ను ఉపయోగిస్తారు.",
+                "గాలిలోని సల్ఫర్‌తో చర్య పొంది ఇది నల్లగా (Silver Sulfide) మారుతుంది.",
+                "ఇది సహజమైన యాంటీ-బాక్టీరియల్ లక్షణాలు కలిగిన నోబుల్ మెటల్.",
+                "సోలార్ ప్యానెల్స్, అత్యుత్తమ దర్పణాల (Mirrors) తయారీలో వెండి పూత వాడతారు.",
+                "అమాల్గమ్ (దంతాల ఫిల్లింగ్) లో పాదరసంతో పాటు వెండి కలుపుతారు.",
+                "ఆర్న్‌గైరైట్ (Argentite) అనేది వెండి యొక్క ప్రధాన ఖనిజం.",
+                "స్వీట్లపైన అలంకరణకు వాడే పలుచని పొర (Vark) స్వచ్ఛమైన వెండితో తయారు చేస్తారు."
+            ]},
+            { num: 53, sym: "I", name: "Iodine", group: 17, period: 5, cat: "halogen", fullCat: "Group 17 • Halogen", coreColor: "#84cc16", orbitColor: "rgba(132, 204, 22, 0.6)", caption: "Atomic Model of Iodine", facts: [
+                "గది ఉష్ణోగ్రత వద్ద ఉజ్జ్వలమైన ఊదా రంగు స్పటికాలుగా ఉండే ఘన హాలోజన్.",
+                "థైరాయిడ్ గ్రంథి సక్రమంగా పనిచేసి గాయిటర్ రాకుండా ఉప్పులో కలుపుతారు.",
+                "బర్నార్డ్ కోర్ట్వా దీనిని సముద్రపు నాచు బూడిద నుండి కనుగొన్నారు.",
+                "గాయాలకు యాంటీసెప్టిక్‌గా 'టించర్ అయోడిన్' వాడతారు.",
+                "మేఘ మథనంలో మరియు రేడియోధార్మిక అయోడిన్ క్యాన్సర్ చికిత్సలో వాడతారు.",
+                "ఇది వేడి చేసినప్పుడు ద్రవంగా మారకుండా నేరుగా ఆవిరిగా మారుతుంది (ఉర్ధ్వపాతం).",
+                "స్టార్చ్‌తో చర్య జరిపినప్పుడు ఇది ముదురు నీలం/నలుపు రంగును ఇస్తుంది.",
+                "సముద్రపు చేపలు మరియు షెల్ ఫిష్‌లలో అయోడిన్ సమృద్ధిగా ఉంటుంది.",
+                "ఇది మానవ శరీరానికి అత్యంత అరుదైన ట్రేస్ మినరల్.",
+                "దీని పరమాణు సంఖ్య 53."
+            ]},
+            { num: 74, sym: "W", name: "Tungsten", group: 6, period: 6, cat: "transition", fullCat: "Group 6 • Transition Metal", coreColor: "#e2e8f0", orbitColor: "rgba(226, 232, 240, 0.6)", caption: "Atomic Model of Tungsten", facts: [
+                "అన్ని లోహాలకంటే అత్యధిక ద్రవీభవన స్థానం (Highest Melting Point - 3422°C) కలిగి ఉంది.",
+                "ఎలక్ట్రిక్ బల్బ్ ఫిలమెంట్ల తయారీలో విరివిగా వాడతారు ('W' చిహ్నం వోల్ఫ్రమ్).",
+                "టంగ్‌స్టన్ కార్బైడ్ (WC) అనేది కట్టింగ్ టూల్స్, డ్రిల్లింగ్ బిట్లు తయారీకి వాడతారు.",
+                "ఫారెస్ట్ జువాన్ మరియుత్ ఎలుయార్ దీనిని వోల్ఫ్రమైట్ ఖనిజం నుండి కనుగొన్నారు.",
+                "దీని సాంద్రత బంగారం అంత ఎక్కువగా ఉంటుంది.",
+                "అధిక ఉష్ణోగ్రతల వద్ద కూడా తన బలాన్ని కోల్పోకుండా నిలకడగా ఉంటుంది.",
+                "రాకెట్ ఇంజిన్ నూజిల్స్ మరియు స్పేస్‌క్రాఫ్ట్ షీల్డ్స్‌లో వాడతారు.",
+                "టిగ్ వెల్డింగ్ (TIG welding) లో ఎలక్ట్రోడ్‌గా ఉపయోగిస్తారు.",
+                "ఇది తుప్పు పట్టడాన్ని మరియు ఆమ్లాలను అద్భుతంగా తట్టుకుంటుంది.",
+                "దీని పరమాణు సంఖ్య 74."
+            ]},
+            { num: 78, sym: "Pt", name: "Platinum", group: 10, period: 6, cat: "transition", fullCat: "Group 10 • Transition Metal", coreColor: "#f8fafc", orbitColor: "rgba(248, 250, 252, 0.6)", caption: "Atomic Model of Platinum", facts: [
+                "దీనిని <b>'తెల్ల బంగారం' (White Gold)</b> అని పిలుస్తారు; అత్యంత అరుదైన లోహం.",
+                "రసాయన చర్యలకు సులువుగా లోనుకాదు, ఆమ్లాలలో కరగదు (Noble metal).",
+                "వాహనాల నుండి వెలువడే విషపూరిత వాయువులను తగ్గించడానికి <b>కటాలిటిక్ కన్వర్టర్లలో</b> వాడతారు.",
+                "అంతర్జాతీయ ప్రమాణాల ప్రకారం కిలోగ్రామ్ బరువును కొలవడానికి ప్లాటినం సిలిండర్ వాడేవారు.",
+                "క్యాన్సర్ చికిత్సలో వాడే 'సిస్ప్లాటిన్' వంటి కీమోథెరపీ మందులలో ఉంటుంది.",
+                "అంటోనియో డి ఉల్లోవా దీనిని స్పానిష్ అమెరికాలో కనుగొన్నారు.",
+                "హై-ఎండ్ ఆభరణాలు మరియు లాబొరేటరీ క్రూసిబుల్స్ తయారీలో వాడతారు.",
+                "ఇది అద్భుతమైన ఉత్ప్రేరక గుణం కలిగి ఉంది.",
+                "పెట్రోలియం క్రాకింగ్‌లో మరియు హైడ్రోజనేషన్ రియాక్షన్లలో వాడతారు.",
+                "దీని పరమాణు సంఖ్య 78."
+            ]},
+            { num: 79, sym: "Au", name: "Gold", group: 11, period: 6, cat: "transition", fullCat: "Group 11 • Transition Metal", coreColor: "#fbbf24", orbitColor: "rgba(251, 191, 36, 0.6)", caption: "Atomic Model of Gold", facts: [
+                "అత్యంత సాగే గుణం (Ductility) మరియు రేకులుగా మారు గుణం (Malleability) కలిగిన లోహం.",
+                "ఆక్వా రెజియా (3 HCl : 1 HNO3) ద్రావణంలో మాత్రమే బంగారం కరుగుతుంది.",
+                "స్వచ్ఛమైన బంగారాన్ని 24 క్యారెట్లు (100% Purity) అంటారు.",
+                "ఆభరణాల తయారీకి 22 క్యారెట్ల బంగారంలో రాగి లేదా వెండి కలుపుతారు (హాల్‌మార్క్).",
+                "ఐరన్ పైరైట్స్‌ను దాని రంగు కారణంగా 'ఫూల్స్ గోల్డ్' (Fool's Gold) అంటారు.",
+                "అంతర్జాతీయ ద్రవ్య నిల్వలలో (Forex Reserves) బంగారం ప్రామాణిక కరెన్సీ మద్దతు.",
+                "తృప్పు పట్టని, రసాయన చర్యలకు లోనుకాడని (Unreactive) నోబుల్ లోహం.",
+                "క్యాన్సర్ చికిత్స, ఆర్థరైటిస్ మందులలో బంగారు ఐసోటోపులు వాడతారు.",
+                "క్యాల్వెరైట్, సిల్వనైట్ లు బంగారం యొక్క ముఖ్యమైన ఖనిజాలు.",
+                "అంతరిక్ష వ్యోమగాముల హెల్మెట్లపై సూర్యరశ్మిని ప్రతిబింబించడానికి బంగారు పూత వాడతారు."
+            ]},
+            { num: 80, sym: "Hg", name: "Mercury", group: 12, period: 6, cat: "transition", fullCat: "Group 12 • Transition Metal", coreColor: "#94a3b8", orbitColor: "rgba(148, 163, 184, 0.6)", caption: "Atomic Model of Mercury", facts: [
+                "గది ఉష్ణోగ్రత వద్ద ద్రవ రూపంలో ఉండే ఏకైక లోహం (Liquid Metal).",
+                "దీనిని 'క్విక్‌సిల్వర్' (Quicksilver) లేదా ద్రవ వెండి అని పిలుస్తారు.",
+                "వైద్య థర్మామీటర్లు మరియు రక్తపోటు మాపకాలలో (Sphygmomanometer) వాడతారు.",
+                "బంగారంతో కలిసి ఇది 'అమాల్గమ్' (Amalgam) మిశ్రమ లోహాన్ని ఏర్పరుస్తుంది.",
+                "సినబార్ (Cinnabar - మెర్క్యురీ సల్ఫైడ్) అనేది దీని ప్రధాన ముడి ఖనిజం.",
+                "ఇది గది ఉష్ణోగ్రత వద్ద కూడా ఆవిరవుతుంది మరియు దీని ఆవిరి అత్యంత విషపూరితమైనది.",
+                "జపాన్‌లో దీని కాలుష్యం వల్ల 'మినామాటా వ్యాధి' (Minamata Disease) ప్రసిద్ధి చెందింది.",
+                "ఫ్లోరోసెంట్ ల్యాంప్స్ మరియు CFL బల్బులలో పాదరస ఆవిరిని వాడతారు.",
+                "అద్దాల తయారీలో వెండి పూతకు ముందు పాదరసం వాడేవారు.",
+                "ఇది గాజు ఉపరితలాన్ని తడవదు (Non-wetting property due to high surface tension)."
+            ]},
+            { num: 82, sym: "Pb", name: "Lead", group: 14, period: 6, cat: "posttrans", fullCat: "Group 14 • Post-Transition Metal", coreColor: "#475569", orbitColor: "rgba(71, 85, 105, 0.6)", caption: "Atomic Model of Lead", facts: [
+                "లెడ్-యాసిడ్ స్టోరేజ్ బ్యాటరీలలో (కార్ బ్యాటరీలు) విరివిగా వాడతారు.",
+                "ఎక్స్-రే మరియు గామా రేడియేషన్ తగలకుండా రక్షణగా లెడ్ జాకెట్లు, షీల్డ్స్ వాడతారు.",
+                "ఇది చాలా బరువైనది మరియు మృదువైన విషపూరిత లోహం.",
+                "గెలీనా (Galena - PbS) అనేది సీసం యొక్క ప్రధాన ముడి ఖనిజం.",
+                "పురాతన కాలంలో నీటి సరఫరా పైపుల తయారీలో వాడటం వల్ల రోమన్ సామ్రాజ్యంలో ప్రసిద్ధి.",
+                "పెట్రోల్‌లో నాకింగ్ తగ్గించడానికి గతంలో టెట్రాథైల్ లెడ్ కలిపేవారు.",
+                "బుల్లెట్లు, ఆయుధాల తయారీలో మరియు రేడియోధార్మిక షీల్డింగ్‌లో వాడతారు.",
+                "దీని శరీరం లోపల చేరితే 'ప్లంబిజం' (Lead poisoning) అనే నాడీ సంబంధిత వ్యాధి వస్తుంది.",
+                "ఇది ఆమ్లాలతో చర్య జరిపి లెడ్ సాల్ట్స్‌ను ఇస్తుంది.",
+                "దీని పరమాణు సంఖ్య 82."
+            ]},
+            { num: 88, sym: "Ra", name: "Radium", group: 2, period: 7, cat: "alkaline", fullCat: "Group 2 • Alkaline Earth Metal", coreColor: "#fde047", orbitColor: "rgba(253, 224, 71, 0.6)", caption: "Atomic Model of Radium", facts: [
+                "పియరీ క్యూరీ మరియు మేరీ క్యూరీ దంపతులు పిచ్‌బ్లెండ్ నుండి దీనిని కనుగొన్నారు.",
+                "ఇది అత్యంత శక్తివంతమైన రేడియోధార్మిక లోహం మరియు చీకటిలో నీలిరంగు కాంతిని ఇస్తుంది.",
+                "పురాతన గడియారాల ముళ్ళు రాత్రి సమయంలో కనిపించడానికి రేడియం పెయింట్ వాడేవారు.",
+                "క్యాన్సర్ చికిత్సలో రేడియోథెరపీలో దీనిని ప్రారంభంలో విరివిగా వాడారు.",
+                "ఇది క్షారభూమి లోహాలలో అత్యంత బరువైనది మరియు అస్థిరమైనది.",
+                "దీని రేడియోధార్మిక క్షయం వల్ల నిరంతరం వేడి విడుదలవుతుంది.",
+                "శరీరంలోకి వెళ్తే కాల్షియం లాగానే ఎముకలలో నిల్వ হয়ে తీవ్రమైన క్యాన్సర్‌కు దారితీస్తుంది.",
+                "దీని పేరు లాటిన్ పదమైన 'రేడియస్' (రేఖ/కిరణం) నుండి వచ్చింది.",
+                "ఇది క్షీణించి చివరికి సీసంగా (Lead) మారుతుంది.",
+                "దీని పరమాణు సంఖ్య 88."
+            ]},
+            { num: 92, sym: "U", name: "Uranium", group: 3, period: 7, cat: "actinide", fullCat: "Actinide Series", coreColor: "#c084fc", orbitColor: "rgba(192, 132, 252, 0.6)", caption: "Atomic Model of Uranium", facts: [
+                "అణు ఇంధనంగా (Nuclear Fuel - U-235) అణు విద్యుత్ కేంద్రాలలో వాడే ప్రధాన రేడియోధార్మిక మూలకం.",
+                "మార్టిన్ ಹೆన్రిచ్ క్లాప్రోత్ దీనిని యురేనస్ గ్రహం పేరు మీద కనుగొన్నారు.",
+                "ప్రకృతిలో లభించే అత్యంత బరువైన సహజ మూలకం (Natural heavy element).",
+                "అణు బాంబుల తయారీలో మరియు న్యూక్లియర్ సబ్‌మైన్లలో శక్తి వనరుగా వాడతారు.",
+                "పిచ్‌బ్లెండ్ (Pitchblende) అనేది యురేనియం యొక్క ప్రధాన ముడి ఖనిజం.",
+                "దీనిని అణు రియాక్టర్లలో వాడటానికి 'యురేనియం సుసంపన్నత' (Enrichment) చేస్తారు.",
+                "ఇది వెండి-తెలుపు రంగు గల మెరిసే రేడియోధార్మిక లోహం.",
+                "భూమి అంతర్గత వేడికి మరియు టెక్టానిక్ కదలికలకు రేడియోధార్మిక యురేనియం క్షయం కారణం.",
+                "దీని క్షయం వల్ల చివరికి స్థిరమైన సీసం (Lead) ఏర్పడుతుంది.",
+                "దీని పరమాణు సంఖ్య 92."
+            ]},
+            { num: 94, sym: "Pu", name: "Plutonium", group: 3, period: 7, cat: "actinide", fullCat: "Actinide Series", coreColor: "#c084fc", orbitColor: "rgba(192, 132, 252, 0.6)", caption: "Atomic Model of Plutonium", facts: [
+                "రెండవ ప్రపంచ యుద్ధంలో నాగసాకిపై వేసిన 'ఫ్యాట్ మ్యాన్' అణుబాంబు తయారీలో వాడతారు.",
+                "గ్లెన్ సీబోర్గ్ మరియు అతని బృందం దీనిని కృత్రిమంగా సృష్టించారు.",
+                "అంతరిక్ష పరిశోధనలలో రోవర్లు మరియు నౌకలకు పవర్ సోర్స్‌గా (RTG) వాడతారు.",
+                "ఇది అత్యంత విషపూరితమైన మరియు రేడియోధార్మికత గల సింథటిక్ ఆక్టినైడ్.",
+                "ప్లూటో గ్రహం పేరు మీద దీనికి ఆ పేరు పెట్టారు.",
+                "అణు రియాక్టర్లలో యురేనియంను కాల్చడం ద్వారా ఉపఉత్పత్తిగా తయారవుతుంది.",
+                "ఇది గది ఉష్ణోగ్రత వద్ద సిల్వర్ మెరుపును కలిగి ఉంటుంది.",
+                "దీని క్రిటికల్ మాస్ చాలా తక్కువగా ఉండటం వల్ల అణు విస్ఫోటనం చెందిస్తుంది.",
+                "దీని సమ్మేళనాలు అద్భుతమైన ఉష్ణాన్ని వెలువరిస్తాయి.",
+                "దీని పరమాణు సంఖ్య 94."
+            ]},
+            { num: 108, sym: "Hs", name: "Hassium", group: 8, period: 7, cat: "transition", fullCat: "Group 8 • Transition Metal", coreColor: "#38bdf8", orbitColor: "rgba(56, 189, 248, 0.6)", caption: "Atomic Model of Hassium", facts: [
+                "జర్మనీలోని 'హెస్సే' (Hesse) రాష్ట్రం పేరు మీద దీనికి హస్సియం అని పేరు పెట్టారు.",
+                "ప్రయోగశాలలో కణాల త్వరితకర్తల ద్వారా కృత్రిమంగా సృష్టించబడిన సూపర్-హెవీ మూలకం.",
+                "ఇది అత్యంత అస్థిరమైన రేడియోధార్మిక మూలకం, కొన్ని మిలిసెకన్లలోనే క్షీణిస్తుంది.",
+                "పీటర్ అమ్రూస్టర్ మరియు గొట్‌ఫ్రైడ్ మున్జెన్‌బర్గ్ జర్మనీలోని జియెసి ల్యాబ్‌లో కనుగొన్నారు.",
+                "ఇది ఆవర్తన పట్టికలో ఐరన్, రుథేనియం ఉన్న గ్రూప్ 8 లో వస్తుంది.",
+                "సూపర్-హెవీ మూలకాల 'ఐలాండ్ ఆఫ్ స్టెబిలిటీ' పరిశోధనలలో ఇది కీలకం.",
+                "దీనిని సాధారణ పరిస్థితుల్లో వేరుచేయడం లేదా చూడటం అసంభవం.",
+                "ఇది కేవలం శాస్త్రీయ ప్రయోగాల కోసం మాత్రమే సృష్టించబడింది.",
+                "దీని పరమాణు సంఖ్య 108.",
+                "ఈ మూలకం భౌతిక ధర్మాలపై ఇంకా స్పష్టమైన పరిశోధనలు జరుగుతూనే ఉన్నాయి."
+            ]}
+        ];
+
+        // GENERIC CLEAN FACTS FOR REMAINING ELEMENTS (WITHOUT NUMBERING PREFIX)
+        function fillRemainingElements() {
+            for (let i = 1; i <= 108; i++) {
+                let existing = elementsData.find(e => e.num === i);
+                if (!existing) {
+                    let g = 1, p = 1, cat = "transition", fullCat = "Transition Metal", core = "#38bdf8", orbit = "rgba(56,189,248,0.6)";
+                    
+                    if (i === 25) { g=7; p=4; cat="transition"; fullCat="Group 7 • Transition Metal"; core="#475569"; }
+                    else if (i >= 31 && i <= 34) { g = i - 18; p = 4; cat = (i===33||i===32)? "metalloid":"posttrans"; fullCat="Period 4 Element"; }
+                    else if (i >= 36 && i <= 46) { g = i - 35; p = 5; cat = (i===36)?"noble":"transition"; fullCat="Period 5 Element"; }
+                    else if (i >= 48 && i <= 52) { g = i - 35; p = 5; cat = (i===51||i===52)?"metalloid":"posttrans"; fullCat="Period 5 Element"; }
+                    else if (i >= 54 && i <= 73) { g = (i <= 56) ? i - 53 : (i - 71); p = (i <= 56) ? 5 : 6; cat = (i===54)?"noble":(i===57)?"lanthanide":"transition"; }
+                    else if (i >= 75 && i <= 77) { g = i - 68; p = 6; cat = "transition"; }
+                    else if (i >= 81 && i <= 87) { g = i - 67; p = 6; cat = (i===84)?"metalloid":(i===85||i===87)?"halogen":"posttrans"; }
+                    else if (i >= 89 && i <= 107) { g = (i===89)?3:((i>=90&&i<=103)? (i-87) : (i-95)); p = (i<=103)?7:7; cat=(i>=90&&i<=103)?"actinide":"transition"; }
+                    else {
+                        g = ((i - 1) % 18) + 1;
+                        p = Math.floor((i - 1) / 18) + 1;
+                    }
+
+                    elementsData.push({
+                        num: i,
+                        sym: `E${i}`,
+                        name: `Element ${i}`,
+                        group: g,
+                        period: p,
+                        cat: cat,
+                        fullCat: fullCat,
+                        coreColor: core,
+                        orbitColor: orbit,
+                        caption: `Atomic Model of Element ${i}`,
+                        facts: [
+                            `పరమాణు సంఖ్య ${i} కలిగిన ఈ మూలకం ఆవర్తన పట్టికలో <b>${fullCat}</b> వర్గానికి చెందుతుంది.`,
+                            `రసాయన చర్యలలో దీని ఎలక్ట్రాన్ విన్యాసం మరియు సంయోజకత (Valency) కీలక పాత్ర పోషిస్తాయి.`,
+                            `ఈ మూలకం యొక్క ఆక్సైడ్లు మరియు ఇతర సమ్మేళనాలు విశిష్టమైన భౌతిక, రసాయన ధర్మాలను కలిగి ఉంటాయి.`,
+                            `దీని ఐసోటోపులు మరియు పరమాణు భారము కాంపిటేటివ్ పరీక్షల దృష్ట్యా ముఖ్యమైన సైన్స్ అంశాలు.`,
+                            `ఆధునిక మెటీరియల్ సైన్స్ మరియు నానో టెక్నాలజీ పరిశోధనలలో దీని అనువర్తనాలు అధ్యయన దశలో ఉన్నాయి.`,
+                            `దీని స్పెక్ట్రల్ రేఖలు (Spectral lines) ఖచ్చితమైన తరంగదైర్ఘ్యాలను ప్రదర్శిస్తాయి.`,
+                            `ఇతర మూలకాలతో చర్య జరిపినప్పుడు ఇది ప్రత్యేకమైన రసాయన బంధాలను (Chemical bonds) ఏర్పరుస్తుంది.`,
+                            `అత్యధిక ఉష్ణోగ్రతలు మరియు పీడనాల వద్ద దీని భౌతిక స్థితి మరియు ప్రవర్తన భిన్నంగా ఉంటుంది.`,
+                            `ప్రకృతిలో దీని లభ్యత లేదా ప్రయోగశాలలో దీని సంశ్లేషణ (Synthesis) సైన్స్ అండ్ టెక్నాలజీలో ముఖ్యం.`,
+                            `పారిశ్రామిక ఉత్పత్తులు లేదా రసాయన విశ్లేషణలలో దీని ఉపయోగాలు పరీక్షలలో తరచుగా అడుగుతారు.`
+                        ]
+                    });
+                }
+            }
+        }
+
+        function renderPeriodicTable() {
+            fillRemainingElements();
+            const tableElement = document.getElementById('periodic-table');
+            tableElement.innerHTML = '';
+            
+            elementsData.forEach(el => {
+                const elDiv = document.createElement('div');
+                let extraClass = (el.facts && el.facts.length >= 10) ? 'has-data' : '';
+                elDiv.className = `element ${el.cat} ${extraClass}`;
+                elDiv.style.gridColumn = el.group;
+                elDiv.style.gridRow = el.period;
+                
+                elDiv.innerHTML = `
+                    <div class="el-number">${el.num}</div>
+                    <div class="el-symbol">${el.sym}</div>
+                    <div class="el-name">${el.name}</div>
+                `;
+
+                elDiv.onclick = () => openModal(el);
+                tableElement.appendChild(elDiv);
+            });
+        }
+
+        function openModal(el) {
+            document.getElementById('m-num').innerText = el.num;
+            document.getElementById('m-sym').innerText = el.sym;
+            document.getElementById('m-name').innerText = el.name;
+            document.getElementById('m-group').innerText = el.fullCat || "Advanced Element";
+            document.getElementById('m-img-caption').innerText = el.caption || `Atomic Model of ${el.name}`;
+            
+            document.documentElement.style.setProperty('--core-color', el.coreColor || '#38bdf8');
+            document.documentElement.style.setProperty('--orbit-color', el.orbitColor || 'rgba(56, 189, 248, 0.6)');
+            
+            const colorMap = {
+                'transition': 'var(--transition-border)',
+                'alkali': 'var(--alkali-border)',
+                'nonmetal': 'var(--nonmetal-border)',
+                'noble': 'var(--noble-border)',
+                'halogen': 'var(--halogen-border)',
+                'posttrans': 'var(--posttrans-border)',
+                'metalloid': 'var(--metalloid-border)',
+                'alkaline': 'var(--alkaline-border)',
+                'lanthanide': 'var(--lanthanide-border)',
+                'actinide': 'var(--actinide-border)'
+            };
+            document.getElementById('m-cat-bg').style.background = colorMap[el.cat] || 'var(--primary)';
+
+            const factsList = document.getElementById('m-facts');
+            factsList.innerHTML = '';
+            
+            el.facts.forEach(fact => {
+                const li = document.createElement('li');
+                li.innerHTML = fact;
+                factsList.appendChild(li);
+            });
+
+            document.getElementById('element-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('element-modal').classList.remove('active');
+        }
+
+        window.onload = renderPeriodicTable;
+    </script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul Academy - Interactive Lesson (Clocks)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050b14;
+            --panel-bg: #091322;
+            --primary-cyan: #00eaff;
+            --accent-pink: #ff00d4;
+            --text-main: #f8fafc;
+            --text-muted: #8290a4;
+            --border-glow: rgba(0, 234, 255, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* TOP HEADER BAR */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 35px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(5, 11, 20, 0.9);
+            flex-shrink: 0;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: var(--primary-cyan);
+        }
+        .header-center {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .slide-counter {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .progress-bar-container {
+            width: 140px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            width: 85%;
+            height: 100%;
+            background: var(--primary-cyan);
+            box-shadow: 0 0 10px var(--primary-cyan);
+        }
+
+        /* MAIN CONTENT LAYOUT */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 60px;
+            gap: 40px;
+        }
+
+        /* LEFT TEXT SECTION */
+        .left-content {
+            flex: 1;
+            max-width: 550px;
+        }
+        .section-tag {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--accent-pink);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        .main-title {
+            font-size: 3.2rem;
+            font-weight: 900;
+            line-height: 1.15;
+            color: var(--primary-cyan);
+            text-shadow: 0 0 25px rgba(0, 234, 255, 0.4);
+            margin-bottom: 25px;
+        }
+        .main-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* RIGHT PANEL SECTION (CLOCK & SLIDERS) */
+        .right-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 30px;
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(0, 234, 255, 0.05);
+        }
+
+        /* CLOCK CONTAINER */
+        .clock-wrapper {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, #0b1524 0%, #03070d 100%);
+            border: 6px solid #1a293e;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(0,0,0,0.9);
+            margin-bottom: 20px;
+        }
+        .clock-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 10px; height: 10px;
+            background: #fff;
+            border: 3px solid var(--accent-pink);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            box-shadow: 0 0 8px var(--accent-pink);
+        }
+        .tick {
+            position: absolute;
+            width: 2px; height: 8px;
+            background: rgba(255,255,255,0.25);
+            top: 6px; left: calc(50% - 1px);
+            transform-origin: 1px 124px;
+        }
+        .tick.major {
+            width: 3px; height: 12px;
+            background: rgba(255,255,255,0.7);
+            left: calc(50% - 1.5px);
+            top: 6px;
+            transform-origin: 1.5px 124px;
+        }
+        .clock-num {
+            position: absolute;
+            width: 30px; height: 30px;
+            text-align: center;
+            line-height: 30px;
+            font-weight: 800;
+            font-size: 16px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        .hand {
+            position: absolute;
+            bottom: 50%; left: 50%;
+            transform-origin: bottom center;
+            border-radius: 4px;
+            z-index: 5;
+            transition: transform 0.1s ease-out;
+        }
+        .hour-hand {
+            width: 6px; height: 75px;
+            background: #fff;
+            margin-left: -3px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        .minute-hand {
+            width: 4px; height: 105px;
+            background: var(--primary-cyan);
+            margin-left: -2px;
+            box-shadow: 0 0 12px var(--primary-cyan);
+        }
+
+        /* READOUT & SLIDERS */
+        .live-readout {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        .live-readout span {
+            color: var(--primary-cyan);
+        }
+        .sub-instruction {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sliders-box {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .slider-label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .slider-label-row span:last-child {
+            color: var(--text-main);
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #152238;
+            border-radius: 3px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-cyan);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--primary-cyan);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span>⏰</span> CLOCKS <span style="font-weight: 400; color: var(--text-muted); font-size: 0.9rem; margin-left: 10px;">| INTERACTIVE LESSON</span>
+        </div>
+        <div class="header-center">Rahul Academy Digital Board</div>
+        <div class="header-right">
+            <span class="slide-counter">SLIDE 11 / 13</span>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- LEFT TEXT -->
+        <div class="left-content">
+            <div class="section-tag">10 • EXPLORE THE CLOCK</div>
+            <h1 class="main-title">Move the hands yourself</h1>
+            <p class="main-desc">
+                Drag either slider and watch the hands move. The time and smaller angle update instantly to help you master clock reasoning visually.
+            </p>
+        </div>
+
+        <!-- RIGHT CLOCK & SLIDERS PANEL -->
+        <div class="right-panel">
+            <div class="clock-wrapper" id="clock">
+                <div id="hand-h" class="hand hour-hand"></div>
+                <div id="hand-m" class="hand minute-hand"></div>
+            </div>
+
+            <div class="live-readout" id="readout-text">10:10 • <span>115°</span></div>
+            <div class="sub-instruction">Adjust the sliders to explore</div>
+
+            <div class="sliders-box">
+                <div class="slider-group">
+                    <div class="slider-label-row">
+                        <span>Hour</span>
+                        <span id="val-h">10</span>
+                    </div>
+                    <input type="range" id="slider-h" min="1" max="12" value="10" oninput="onSliderChange()">
+                </div>
+
+                <div class="slider-group">
+                    <div class="slider-label-row">
+                        <span>Minute</span>
+                        <span id="val-m">10</span>
+                    </div>
+                    <input type="range" id="slider-m" min="0" max="59" value="10" oninput="onSliderChange()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate Ticks and Numbers on Clock Face
+        const clock = document.getElementById('clock');
+        const radius = 112;
+
+        for (let i = 0; i < 60; i++) {
+            let tick = document.createElement('div');
+            tick.className = 'tick' + (i % 5 === 0 ? ' major' : '');
+            tick.style.transform = `rotate(${i * 6}deg)`;
+            clock.appendChild(tick);
+        }
+
+        // Clock Numbers 1 to 12
+        for (let i = 1; i <= 12; i++) {
+            let num = document.createElement('div');
+            num.className = 'clock-num';
+            num.innerText = i;
+            let angle = i * 30;
+            let rad = (angle - 90) * (Math.PI / 180);
+            let x = 130 + (radius - 15) * Math.cos(rad) - 15;
+            let y = 130 + (radius - 15) * Math.sin(rad) - 15;
+            num.style.left = `${x}px`;
+            num.style.top = `${y}px`;
+            clock.appendChild(num);
+        }
+
+        function onSliderChange() {
+            let h = parseInt(document.getElementById('slider-h').value);
+            let m = parseInt(document.getElementById('slider-m').value);
+
+            document.getElementById('val-h').innerText = h;
+            document.getElementById('val-m').innerText = m < 10 ? '0' + m : m;
+
+            // Calculations for hands
+            let hAngle = ((h % 12) * 30) + (m * 0.5);
+            let mAngle = m * 6;
+
+            document.getElementById('hand-h').style.transform = `rotate(${hAngle}deg)`;
+            document.getElementById('hand-m').style.transform = `rotate(${mAngle}deg)`;
+
+            // Calculate Angle
+            let diff = Math.abs(hAngle - mAngle);
+            let angle = diff > 180 ? 360 - diff : diff;
+
+            document.getElementById('readout-text').innerHTML = `${h}:${m < 10 ? '0' + m : m} • <span>${angle.toFixed(0)}°</span>`;
+        }
+
+        // Initial trigger
+        onSliderChange();
+    </script>
+</body>
+</html>

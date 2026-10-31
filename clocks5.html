@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Clocks Interactive Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Black / Dark Theme */
+            --bg-color: #000000; /* Solid Black Background */
+            --panel-bg: #111111; /* Very dark gray for panels */
+            --primary-cyan: #0ea5e9; /* Light blue accent */
+            --secondary-blue: #38bdf8; /* Lighter vivid blue */
+            --text-main: #f8fafc; /* White text */
+            --text-muted: #94a3b8; /* Slate gray */
+            --yellow: #facc15; /* Yellow for highlights */
+            --correct: #22c55e; /* Green */
+            --border-glow: rgba(14, 165, 233, 0.3); 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            line-height: 1.5; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        /* WATERMARK */
+        .watermark-bg {
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            pointer-events: none; z-index: 1;
+            display: flex; flex-wrap: wrap; justify-content: center; align-content: center;
+            transform: rotate(-25deg); overflow: hidden;
+            opacity: 0.05;
+        }
+        .watermark-bg span {
+            font-size: 4.5rem; font-weight: 900; color: transparent;
+            -webkit-text-stroke: 1.5px #334155; 
+            margin: 25px 60px; white-space: nowrap; text-transform: uppercase;
+            letter-spacing: 6px;
+        }
+
+        /* HEADER */
+        header { 
+            text-align: center; padding: 15px 35px; 
+            background-color: #000000; 
+            border-bottom: 1px solid #334155;
+            position: relative; flex-shrink: 0; z-index: 15;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-title { display: flex; align-items: center; gap: 10px; }
+        h1 { color: #ffffff; font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin: 0;}
+        .subtitle { font-size: 0.95rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1px;}
+
+        .fullscreen-btn {
+            background: #1e293b; color: #fff; 
+            border: 1px solid #334155; padding: 8px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 800; cursor: pointer;
+            transition: 0.3s; text-transform: uppercase;
+        }
+        .fullscreen-btn:hover { background-color: #334155; }
+
+        /* MAIN CONTENT LAYOUT */
+        .main-container {
+            flex: 1; display: flex; justify-content: space-between; align-items: stretch;
+            padding: 25px; gap: 25px; z-index: 10; position: relative; height: calc(100vh - 70px);
+        }
+
+        /* LEFT PANEL (CLOCK & CONTROLS) */
+        .left-panel {
+            width: 45%; background-color: var(--panel-bg); border-radius: 12px; 
+            padding: 25px; border: 1px solid #334155; display: flex; 
+            flex-direction: column; align-items: center; 
+            overflow-y: hidden;
+        }
+
+        .time-slots-header { font-weight: 700; color: #fff; font-size: 1rem; margin-bottom: 15px; width: 100%; text-align: left;}
+        
+        .time-slots-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; margin-bottom: 30px; flex-shrink: 0;
+        }
+        .time-btn {
+            background: #000000; border: 1px solid #334155; color: var(--text-muted);
+            padding: 10px 5px; border-radius: 6px; font-weight: 600; font-size: 0.95rem;
+            cursor: pointer; transition: 0.2s; font-family: 'Montserrat', sans-serif;
+        }
+        .time-btn:hover { background: #1e293b; color: #fff;}
+        .time-btn.active { background: var(--primary-cyan); color: #fff; border-color: var(--primary-cyan); font-weight: 800;}
+
+        .clock-container {
+            width: 100%; max-width: 380px; aspect-ratio: 1; position: relative;
+            background: #000000; border-radius: 50%;
+            border: 4px solid #334155;
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+            margin: auto 0;
+        }
+        
+        .clock-svg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        
+        /* Updated hand styles to use CSS transforms safely */
+        .hand { transform-origin: 50px 50px; transition: transform 0.8s cubic-bezier(0.4, 2.0, 0.2, 1); }
+        .center-dot { fill: var(--primary-cyan); stroke: #000; stroke-width: 1.5; }
+
+        .frac { display: inline-flex; flex-direction: column; text-align: center; vertical-align: middle; margin: 0 4px; font-size: 0.85em; font-weight: 800; color: var(--yellow); line-height: 1.2;}
+        .frac .top { border-bottom: 2px solid var(--yellow); padding: 0 2px; }
+        .frac .bottom { padding: 0 2px; }
+
+        /* RIGHT PANEL (QUESTIONS) */
+        .right-panel {
+            width: 55%; background-color: var(--panel-bg); border-radius: 12px; 
+            padding: 30px; border: 1px solid #334155; display: flex; 
+            flex-direction: column; overflow-y: auto;
+        }
+
+        .dynamic-title {
+            font-size: 1.15rem; font-weight: 700; color: var(--text-main);
+            margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed #334155;
+            line-height: 1.6;
+        }
+        .dynamic-title span { color: var(--primary-cyan); font-weight: 900;}
+
+        .q-list { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px;}
+        
+        .q-card { display: flex; flex-direction: column; }
+        
+        .q-item {
+            background: #000000; border: 1px solid #334155; border-left: 4px solid #334155;
+            padding: 16px 20px; border-radius: 8px; font-size: 1.05rem; font-weight: 500;
+            cursor: pointer; transition: 0.2s; color: var(--text-main);
+        }
+        .q-item:hover { background: #1e293b; border-color: #475569; }
+        .q-item.active {
+            background: #1e3a8a; color: #fff; border-color: var(--primary-cyan);
+            border-left-color: var(--primary-cyan); font-weight: 600;
+            border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+        }
+
+        .expl-box {
+            background-color: #022c22; border-left: 4px solid var(--correct);
+            padding: 20px; border-radius: 0 0 8px 8px; color: var(--text-main);
+            font-size: 1.1rem; font-weight: 500; line-height: 1.6; width: 100%;
+            border-right: 1px solid #064e3b; border-bottom: 1px solid #064e3b;
+            display: none; animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+    <div class="watermark-bg">
+        <span>Rahul Academy</span><span>Rahul Academy</span><span>Rahul Academy</span>
+        <span>Rahul Academy</span><span>Rahul Academy</span><span>Rahul Academy</span>
+        <span>Rahul Academy</span><span>Rahul Academy</span><span>Rahul Academy</span>
+    </div>
+
+    <header>
+        <div class="header-title">
+            <h1>RAHUL SIR</h1>
+            <span class="subtitle">| CLOCKS - INTERACTIVE EXPLORER</span>
+        </div>
+        <button class="fullscreen-btn" onclick="toggleFullScreen()">🔳 Full Screen</button>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- LEFT PANEL (CLOCK & CONTROLS) -->
+        <div class="left-panel">
+            <div class="time-slots-header">Select Time Interval:</div>
+            <div class="time-slots-grid" id="time-grid">
+                <!-- Buttons generated by JS -->
+            </div>
+
+            <div class="clock-container">
+                <svg viewBox="0 0 100 100" class="clock-svg" id="clock-svg">
+                    <!-- SVG structure - ticks will be appended dynamically behind the hands -->
+                    <!-- Hands are placed at the bottom so they are drawn on top -->
+                    <!-- Minute hand is made thicker (2.5) and white to not blend into the 12 o'clock text -->
+                    <line id="min-hand" class="hand" x1="50" y1="50" x2="50" y2="10" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" style="transform: rotate(0deg);"/>
+                    <line id="hour-hand" class="hand" x1="50" y1="50" x2="50" y2="25" stroke="#0ea5e9" stroke-width="4" stroke-linecap="round" style="transform: rotate(120deg);"/>
+                    <circle cx="50" cy="50" r="3.5" class="center-dot"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL (QUESTIONS ACCORDION) -->
+        <div class="right-panel">
+            <div class="dynamic-title">
+                When the time is between <span id="hour-display">4 and 5</span> o'clock...<br>
+                <span style="font-size: 0.95rem; color: var(--text-muted); font-weight: 500;">Click on any question below to view the exact time and watch the clock animate.</span>
+            </div>
+            
+            <div class="q-list">
+                <div class="q-card">
+                    <div class="q-item" onclick="solve(15, 'ans-15', this)">i) At what time will the hands make an angle of <b>15°</b> with each other?</div>
+                    <div id="ans-15" class="expl-box"></div>
+                </div>
+
+                <div class="q-card">
+                    <div class="q-item" onclick="solve(30, 'ans-30', this)">ii) At what time will the hands make an angle of <b>30°</b> with each other?</div>
+                    <div id="ans-30" class="expl-box"></div>
+                </div>
+
+                <div class="q-card">
+                    <div class="q-item" onclick="solve(90, 'ans-90', this)">iii) At what time will the hands be perpendicular to each other <b>(90°)</b>?</div>
+                    <div id="ans-90" class="expl-box"></div>
+                </div>
+
+                <div class="q-card">
+                    <div class="q-item" onclick="solve(0, 'ans-0', this)">iv) At what time will the hands coincide with each other <b>(0°)</b>?</div>
+                    <div id="ans-0" class="expl-box"></div>
+                </div>
+
+                <div class="q-card">
+                    <div class="q-item" onclick="solve(180, 'ans-180', this)">v) At what time are the hands on the same straight line but facing opposite directions <b>(180°)</b>?</div>
+                    <div id="ans-180" class="expl-box"></div>
+                </div>
+
+                <div class="q-card">
+                    <div class="q-item" onclick="solve('interchange', 'ans-interchange', this)">vi) A man goes out between <span class="h1-txt">4</span>-<span class="h2-txt">5</span> o'clock and comes back between <span class="h2-txt">5</span>-<span class="h3-txt">6</span> o'clock. He observes that the hands of the clock have interchanged their positions. Find when he went out.</div>
+                    <div id="ans-interchange" class="expl-box"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleFullScreen() {
+            var doc = window.document;
+            var docEl = doc.documentElement;
+            var requestFullScreen = docEl.requestFullscreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            var cancelFullScreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            if(!doc.fullscreenElement) { requestFullScreen.call(docEl).catch(err => console.log(err)); } 
+            else { cancelFullScreen.call(doc); }
+        }
+
+        // Draw Clock Background
+        const svg = document.getElementById('clock-svg');
+        const minHand = document.getElementById('min-hand');
+        const hrHand = document.getElementById('hour-hand');
+
+        for (let i = 1; i <= 60; i++) {
+            let angle = (i * 6) - 90;
+            let rad = angle * (Math.PI / 180);
+            
+            if(i % 5 !== 0) {
+                let x1 = 50 + 46 * Math.cos(rad), y1 = 50 + 46 * Math.sin(rad);
+                let x2 = 50 + 48 * Math.cos(rad), y2 = 50 + 48 * Math.sin(rad);
+                let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+                line.setAttribute('stroke', '#475569'); line.setAttribute('stroke-width', '1.5');
+                svg.insertBefore(line, minHand);
+            } else {
+                let num = i / 5;
+                let nx = 50 + 38 * Math.cos(rad), ny = 50 + 38 * Math.sin(rad);
+                let text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', nx); text.setAttribute('y', ny + 2.5); // Adjusted for better centering
+                text.setAttribute('text-anchor', 'middle'); text.setAttribute('alignment-baseline', 'middle');
+                text.setAttribute('font-size', '8'); text.setAttribute('font-weight', '700');
+                text.setAttribute('fill', '#f8fafc'); text.textContent = num;
+                svg.insertBefore(text, minHand);
+                
+                let tx1 = 50 + 43 * Math.cos(rad), ty1 = 50 + 43 * Math.sin(rad);
+                let tx2 = 50 + 48 * Math.cos(rad), ty2 = 50 + 48 * Math.sin(rad);
+                let tline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                tline.setAttribute('x1', tx1); tline.setAttribute('y1', ty1);
+                tline.setAttribute('x2', tx2); tline.setAttribute('y2', ty2);
+                tline.setAttribute('stroke', '#0ea5e9'); tline.setAttribute('stroke-width', '3');
+                svg.insertBefore(tline, minHand);
+            }
+        }
+
+        // Global State
+        let currentHour = 4;
+        let currentActiveQuestionType = null;
+        let currentActiveElementId = null;
+
+        // Generate Time Slot Buttons
+        const grid = document.getElementById('time-grid');
+        for(let i=1; i<=12; i++) {
+            let next = (i === 12) ? 1 : i+1;
+            let btn = document.createElement('button');
+            btn.className = `time-btn ${i === currentHour ? 'active' : ''}`;
+            btn.innerText = `${i}-${next}`;
+            btn.onclick = () => setHour(i, btn);
+            grid.appendChild(btn);
+        }
+
+        function setHour(h, btnElement) {
+            currentHour = h;
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            
+            let h2 = (h === 12) ? 1 : h+1;
+            let h3 = (h2 === 12) ? 1 : h2+1;
+
+            document.getElementById('hour-display').innerText = `${h} and ${h2}`;
+            
+            // Update question texts for Interchange question
+            document.querySelectorAll('.h1-txt').forEach(el => el.innerText = h);
+            document.querySelectorAll('.h2-txt').forEach(el => el.innerText = h2);
+            document.querySelectorAll('.h3-txt').forEach(el => el.innerText = h3);
+
+            // Re-solve if a question is already selected
+            if(currentActiveQuestionType !== null && currentActiveElementId !== null) {
+                let el = document.getElementById(currentActiveElementId).previousElementSibling;
+                solve(currentActiveQuestionType, currentActiveElementId, el);
+            } else {
+                // Reset clock to base hour
+                minHand.style.transform = `rotate(0deg)`;
+                hrHand.style.transform = `rotate(${h * 30}deg)`;
+            }
+        }
+
+        function solve(type, ansId, element) {
+            currentActiveQuestionType = type;
+            currentActiveElementId = ansId;
+
+            // Remove active class and hide all explanation boxes
+            document.querySelectorAll('.q-item').forEach(q => q.classList.remove('active'));
+            document.querySelectorAll('.expl-box').forEach(b => b.style.display = 'none');
+            
+            element.classList.add('active');
+            const explBox = document.getElementById(ansId);
+            
+            let html = "";
+            let targetRawMin = 0;
+
+            if (type === 'interchange') {
+                let H1 = currentHour;
+                let H2 = (H1 === 12) ? 1 : H1 + 1;
+                
+                // M = 60 * (H1 + 12*H2) / 143
+                let num = 60 * (H1 + 12 * H2);
+                let den = 143;
+                
+                targetRawMin = num / den;
+                let intPart = Math.floor(targetRawMin);
+                let rem = num % den;
+                
+                let fracHTML = "";
+                if (rem > 0) {
+                    fracHTML = '<div class="frac"><span class="top">' + rem + '</span><span class="bottom">' + den + '</span></div>';
+                }
+                
+                html += '<div style="font-weight:700; color:var(--primary-cyan); margin-bottom:10px;">Interchange Formula (Departure Time):</div>';
+                html += 'Minutes = <div class="frac"><span class="top">60</span><span class="bottom">143</span></div> × (H₁ + 12H₂)<br>';
+                html += 'H₁ = ' + H1 + ', H₂ = ' + H2 + '<br>';
+                html += '= <div class="frac"><span class="top">60</span><span class="bottom">143</span></div> × (' + H1 + ' + 12(' + H2 + ')) = <div class="frac"><span class="top">' + num + '</span><span class="bottom">143</span></div><br><br>';
+                html += '<div style="color:var(--correct); font-weight:700; font-size:1.2rem;">Answer: ' + H1 + ' hr ' + intPart + ' ' + fracHTML + ' min</div>';
+            } else {
+                let theta = parseInt(type);
+                
+                // Handle 12 o'clock specifically for math logic (12 behaves as 0 degrees initially)
+                let H_math = (currentHour === 12) ? 0 : currentHour;
+                
+                // Calculate all 4 possible mathematical points for any angle
+                let M_values = [
+                    (30 * H_math - theta) * 2 / 11,
+                    (30 * H_math + theta) * 2 / 11,
+                    (30 * H_math - 360 + theta) * 2 / 11,
+                    (30 * H_math + 360 - theta) * 2 / 11
+                ];
+                
+                let valid_M = [];
+                for (let i = 0; i < M_values.length; i++) {
+                    let m = M_values[i];
+                    let rounded = Math.round(m * 10000) / 10000;
+                    // Ensure the minute is valid for the CURRENT hour [0 to 60)
+                    if (rounded >= 0 && rounded < 60) {
+                        let exists = false;
+                        for (let j = 0; j < valid_M.length; j++) {
+                            if (Math.abs(valid_M[j] - rounded) < 0.01) exists = true;
+                        }
+                        if (!exists) valid_M.push(rounded);
+                    }
+                }
+                // Sort ascending
+                valid_M.sort(function(a, b) { return a - b; });
+                
+                html += '<div style="font-weight:700; color:var(--primary-cyan); margin-bottom:12px;">Angle Target: ' + theta + '°</div>';
+                
+                if (valid_M.length > 0) {
+                    targetRawMin = valid_M[0]; // Animate to the first occurrence
+                    
+                    for (let i = 0; i < valid_M.length; i++) {
+                        let m = valid_M[i];
+                        let totalParts = Math.round(m * 11);
+                        let intPart = Math.floor(totalParts / 11);
+                        let rem = totalParts % 11;
+                        
+                        let fracHTML = "";
+                        if (rem > 0) {
+                            fracHTML = '<div class="frac"><span class="top">' + rem + '</span><span class="bottom">11</span></div>';
+                        }
+                        
+                        html += '<div style="background:#022c22; border:1px solid #064e3b; padding:12px 15px; border-radius:6px; margin-bottom:10px;">';
+                        html += '<div style="color:var(--yellow); font-weight:600; font-size:0.95rem; margin-bottom:5px;">Occurrence ' + (i + 1) + ':</div>';
+                        html += '<div style="color:var(--correct); font-weight:700; font-size: 1.15rem;">Time = ' + currentHour + ' hr ' + intPart + ' ' + fracHTML + ' min</div>';
+                        html += '</div>';
+                    }
+                } else {
+                    html += '<div style="color:var(--wrong); font-weight:bold; padding: 10px 0;">This angle does not occur during this exact hour.</div>';
+                    targetRawMin = 0; 
+                }
+            }
+
+            explBox.innerHTML = html;
+            explBox.style.display = 'block';
+
+            // Animate Clock Safely first! (Before scroll)
+            let minAngle = targetRawMin * 6;
+            let hrAngle = (currentHour * 30) + (targetRawMin * 0.5);
+            
+            minHand.style.transform = `rotate(${minAngle}deg)`;
+            hrHand.style.transform = `rotate(${hrAngle}deg)`;
+
+            // Safe scrolling with try-catch
+            setTimeout(() => {
+                try {
+                    explBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } catch(e) {
+                    // Ignore errors in older webviews
+                }
+            }, 50);
+        }
+
+        // Initialize clock at default hour on load
+        setTimeout(() => {
+            minHand.style.transform = `rotate(0deg)`;
+            hrHand.style.transform = `rotate(120deg)`;
+        }, 100);
+    </script>
+</body>
+</html>

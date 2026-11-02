@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Interactive Clocks (Mirror & Water)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #000000; 
+            --panel-bg: #111111; 
+            --primary-cyan: #0ea5e9; 
+            --secondary-blue: #38bdf8; 
+            --text-main: #f8fafc; 
+            --text-muted: #94a3b8; 
+            --yellow: #facc15; 
+            --correct: #22c55e; 
+            --mirror-color: #ec4899; /* Pink for Mirror */
+            --water-color: #8b5cf6; /* Purple for Water */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            line-height: 1.5; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+            user-select: none; /* Prevent text selection while dragging */
+        }
+
+        /* WATERMARK */
+        .watermark-bg {
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            pointer-events: none; z-index: 1;
+            display: flex; flex-wrap: wrap; justify-content: center; align-content: center;
+            transform: rotate(-25deg); overflow: hidden;
+            opacity: 0.05;
+        }
+        .watermark-bg span {
+            font-size: 4.5rem; font-weight: 900; color: transparent;
+            -webkit-text-stroke: 1.5px #334155; 
+            margin: 25px 60px; white-space: nowrap; text-transform: uppercase;
+            letter-spacing: 6px;
+        }
+
+        /* HEADER */
+        header { 
+            text-align: center; padding: 15px 35px; 
+            background-color: #000000; 
+            border-bottom: 1px solid #334155;
+            position: relative; flex-shrink: 0; z-index: 15;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-title { display: flex; align-items: center; gap: 10px; }
+        h1 { color: #ffffff; font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin: 0;}
+        .subtitle { font-size: 0.95rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1px;}
+
+        .fullscreen-btn {
+            background: #1e293b; color: #fff; 
+            border: 1px solid #334155; padding: 8px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 800; cursor: pointer;
+            transition: 0.3s; text-transform: uppercase;
+        }
+        .fullscreen-btn:hover { background-color: #334155; }
+
+        /* MAIN CONTENT LAYOUT */
+        .main-container {
+            flex: 1; display: flex; flex-direction: column; align-items: center;
+            padding: 20px; z-index: 10; position: relative; height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        /* CLOCKS CONTAINER */
+        .clocks-wrapper {
+            display: flex; justify-content: center; align-items: center; gap: 40px; width: 100%; max-width: 1200px;
+            margin-bottom: 30px; margin-top: 10px;
+        }
+
+        .clock-box {
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+        }
+
+        .clock-title {
+            font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            padding: 5px 15px; border-radius: 6px;
+        }
+        .title-main { color: var(--primary-cyan); background: rgba(14,165,233,0.1); border: 1px solid var(--primary-cyan);}
+        .title-mirror { color: var(--mirror-color); background: rgba(236,72,153,0.1); border: 1px solid var(--mirror-color);}
+        .title-water { color: var(--water-color); background: rgba(139,92,246,0.1); border: 1px solid var(--water-color);}
+
+        .clock-container {
+            width: 100%; max-width: 300px; aspect-ratio: 1; position: relative;
+            background: #000000; border-radius: 50%;
+            border: 4px solid #334155;
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+        }
+        .clock-main { border-color: var(--primary-cyan); box-shadow: 0 0 25px rgba(14,165,233,0.2);}
+        .clock-mirror { border-color: var(--mirror-color); box-shadow: 0 0 25px rgba(236,72,153,0.2);}
+        .clock-water { border-color: var(--water-color); box-shadow: 0 0 25px rgba(139,92,246,0.2);}
+        
+        .clock-svg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        
+        /* Interactive Hands styling */
+        .hand { transform-origin: 50px 50px; }
+        /* Smooth transition removed for the main clock so dragging feels instant */
+        .hand-result { transition: transform 0.3s cubic-bezier(0.4, 2.0, 0.2, 1); } 
+        .center-dot { stroke: #000; stroke-width: 1.5; }
+
+        /* Draggable visual cues */
+        .drag-handle { cursor: grab; stroke-width: 15; stroke: transparent; fill: transparent; }
+        .drag-handle:active { cursor: grabbing; }
+        
+        .digital-time {
+            font-family: monospace; font-size: 1.8rem; font-weight: 800;
+            background: #111; padding: 5px 15px; border-radius: 8px; border: 1px solid #333;
+        }
+
+        /* SLIDERS SECTION */
+        .controls-section {
+            width: 100%; max-width: 800px; background: var(--panel-bg);
+            border: 1px solid #334155; border-radius: 12px; padding: 25px;
+            display: flex; flex-direction: column; gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .slider-row {
+            display: flex; align-items: center; gap: 20px;
+        }
+        
+        .slider-label {
+            font-size: 1.2rem; font-weight: 700; color: var(--text-main); width: 120px;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none; width: 100%; background: transparent; flex: 1;
+        }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 8px; cursor: pointer; background: #334155; border-radius: 4px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px; width: 24px; border-radius: 50%; background: var(--primary-cyan);
+            cursor: pointer; -webkit-appearance: none; margin-top: -8px;
+            box-shadow: 0 0 10px rgba(14,165,233,0.5);
+        }
+        
+        #hour-slider::-webkit-slider-thumb { background: var(--primary-cyan); box-shadow: 0 0 10px rgba(14,165,233,0.5); }
+        #min-slider::-webkit-slider-thumb { background: #f8fafc; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+        .time-value {
+            font-size: 1.4rem; font-weight: 800; color: var(--yellow); width: 60px; text-align: right; font-family: monospace;
+        }
+
+        /* Formulas Box */
+        .formula-info {
+            display: flex; justify-content: center; gap: 30px; margin-top: 10px;
+        }
+        .f-box {
+            background: #000; border: 1px solid #333; padding: 10px 20px; border-radius: 8px;
+            font-size: 1rem; font-weight: 600; text-align: center;
+        }
+        .f-box span { font-family: monospace; font-size: 1.2rem; font-weight: 800;}
+        
+    </style>
+</head>
+<body>
+    <div class="watermark-bg">
+        <span>Rahul Academy</span><span>Rahul Academy</span><span>Rahul Academy</span>
+        <span>Rahul Academy</span><span>Rahul Academy</span><span>Rahul Academy</span>
+        <span>Rahul Academy</span><span>Rahul Academy</span><span>Rahul Academy</span>
+    </div>
+
+    <header>
+        <div class="header-title">
+            <h1>RAHUL SIR</h1>
+            <span class="subtitle">| CLOCKS - MIRROR & WATER SIMULATOR</span>
+        </div>
+        <button class="fullscreen-btn" onclick="toggleFullScreen()">🔳 Full Screen</button>
+    </header>
+
+    <div class="main-container">
+        
+        <div class="clocks-wrapper">
+            <!-- ORIGINAL CLOCK -->
+            <div class="clock-box">
+                <div class="clock-title title-main">Actual Time</div>
+                <div class="clock-container clock-main" id="clock-main-container">
+                    <svg viewBox="0 0 100 100" class="clock-svg" id="clock-main-svg">
+                        <!-- Ticks generated via JS -->
+                        <line id="main-min" class="hand" x1="50" y1="50" x2="50" y2="10" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" style="transform: rotate(0deg);"/>
+                        <line id="main-hr" class="hand" x1="50" y1="50" x2="50" y2="25" stroke="#0ea5e9" stroke-width="4" stroke-linecap="round" style="transform: rotate(90deg);"/>
+                        <!-- Invisible wider lines for dragging -->
+                        <line id="drag-min" class="hand drag-handle" x1="50" y1="50" x2="50" y2="10" style="transform: rotate(0deg);"/>
+                        <line id="drag-hr" class="hand drag-handle" x1="50" y1="50" x2="50" y2="25" style="transform: rotate(90deg);"/>
+                        <circle cx="50" cy="50" r="3.5" class="center-dot" fill="#0ea5e9"/>
+                    </svg>
+                </div>
+                <div class="digital-time" id="dt-main" style="color: var(--primary-cyan);">03:00</div>
+            </div>
+
+            <!-- MIRROR CLOCK -->
+            <div class="clock-box">
+                <div class="clock-title title-mirror">Mirror Image</div>
+                <div class="clock-container clock-mirror">
+                    <svg viewBox="0 0 100 100" class="clock-svg" id="clock-mirror-svg">
+                        <!-- Ticks generated via JS -->
+                        <line id="mirror-min" class="hand hand-result" x1="50" y1="50" x2="50" y2="10" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" style="transform: rotate(0deg);"/>
+                        <line id="mirror-hr" class="hand hand-result" x1="50" y1="50" x2="50" y2="25" stroke="#ec4899" stroke-width="4" stroke-linecap="round" style="transform: rotate(270deg);"/>
+                        <circle cx="50" cy="50" r="3.5" class="center-dot" fill="#ec4899"/>
+                    </svg>
+                </div>
+                <div class="digital-time" id="dt-mirror" style="color: var(--mirror-color);">09:00</div>
+            </div>
+
+            <!-- WATER CLOCK -->
+            <div class="clock-box">
+                <div class="clock-title title-water">Water Image</div>
+                <div class="clock-container clock-water">
+                    <svg viewBox="0 0 100 100" class="clock-svg" id="clock-water-svg">
+                        <!-- Ticks generated via JS -->
+                        <line id="water-min" class="hand hand-result" x1="50" y1="50" x2="50" y2="10" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" style="transform: rotate(180deg);"/>
+                        <line id="water-hr" class="hand hand-result" x1="50" y1="50" x2="50" y2="25" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round" style="transform: rotate(90deg);"/>
+                        <circle cx="50" cy="50" r="3.5" class="center-dot" fill="#8b5cf6"/>
+                    </svg>
+                </div>
+                <div class="digital-time" id="dt-water" style="color: var(--water-color);">03:30</div>
+            </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="controls-section">
+            <div class="slider-row">
+                <div class="slider-label">Hour Hand:</div>
+                <input type="range" id="hour-slider" min="1" max="12" value="3" step="1">
+                <div class="time-value" id="val-hour">03</div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-label">Minute Hand:</div>
+                <input type="range" id="min-slider" min="0" max="59" value="0" step="1">
+                <div class="time-value" id="val-min" style="color:#fff;">00</div>
+            </div>
+            
+            <div class="formula-info">
+                <div class="f-box" style="color: var(--mirror-color); border-color: rgba(236,72,153,0.3);">
+                    Mirror Formula:<br><span id="form-mirror">11:60 - HH:MM</span>
+                </div>
+                <div class="f-box" style="color: var(--water-color); border-color: rgba(139,92,246,0.3);">
+                    Water Formula:<br><span id="form-water">17:30 - HH:MM</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleFullScreen() {
+            var doc = window.document;
+            var docEl = doc.documentElement;
+            var requestFullScreen = docEl.requestFullscreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            var cancelFullScreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            if(!doc.fullscreenElement) { requestFullScreen.call(docEl).catch(err => console.log(err)); } 
+            else { cancelFullScreen.call(doc); }
+        }
+
+        // Draw Clock Backgrounds for all 3 clocks
+        function drawClock(svgId, color) {
+            const svg = document.getElementById(svgId);
+            const refNode = svg.querySelector('.hand'); // Insert before the hands
+            
+            for (let i = 1; i <= 60; i++) {
+                let angle = (i * 6) - 90;
+                let rad = angle * (Math.PI / 180);
+                
+                if(i % 5 !== 0) {
+                    let x1 = 50 + 46 * Math.cos(rad), y1 = 50 + 46 * Math.sin(rad);
+                    let x2 = 50 + 48 * Math.cos(rad), y2 = 50 + 48 * Math.sin(rad);
+                    let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+                    line.setAttribute('stroke', '#334155'); line.setAttribute('stroke-width', '1.5');
+                    svg.insertBefore(line, refNode);
+                } else {
+                    let num = i / 5;
+                    let nx = 50 + 37 * Math.cos(rad), ny = 50 + 37 * Math.sin(rad);
+                    let text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', nx); text.setAttribute('y', ny + 2.5);
+                    text.setAttribute('text-anchor', 'middle'); text.setAttribute('alignment-baseline', 'middle');
+                    text.setAttribute('font-size', '8'); text.setAttribute('font-weight', '700');
+                    text.setAttribute('fill', '#f8fafc'); text.textContent = num;
+                    svg.insertBefore(text, refNode);
+                    
+                    let tx1 = 50 + 43 * Math.cos(rad), ty1 = 50 + 43 * Math.sin(rad);
+                    let tx2 = 50 + 48 * Math.cos(rad), ty2 = 50 + 48 * Math.sin(rad);
+                    let tline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    tline.setAttribute('x1', tx1); tline.setAttribute('y1', ty1);
+                    tline.setAttribute('x2', tx2); tline.setAttribute('y2', ty2);
+                    tline.setAttribute('stroke', color); tline.setAttribute('stroke-width', '3');
+                    svg.insertBefore(tline, refNode);
+                }
+            }
+        }
+
+        drawClock('clock-main-svg', '#0ea5e9');
+        drawClock('clock-mirror-svg', '#ec4899');
+        drawClock('clock-water-svg', '#8b5cf6');
+
+        // State Variables
+        let currentH = 3;
+        let currentM = 0;
+
+        const hrSlider = document.getElementById('hour-slider');
+        const minSlider = document.getElementById('min-slider');
+        
+        const valHour = document.getElementById('val-hour');
+        const valMin = document.getElementById('val-min');
+
+        function formatTime(h, m) {
+            let fh = h === 0 ? 12 : (h > 12 ? h - 12 : h);
+            return `${fh.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+        }
+
+        function updateClocks() {
+            // Update Text Values
+            valHour.innerText = currentH.toString().padStart(2, '0');
+            valMin.innerText = currentM.toString().padStart(2, '0');
+            
+            document.getElementById('dt-main').innerText = formatTime(currentH, currentM);
+
+            // 1. Calculate Main Clock Angles
+            let minAngle = currentM * 6;
+            let hrAngle = (currentH * 30) + (currentM * 0.5);
+
+            document.getElementById('main-min').style.transform = `rotate(${minAngle}deg)`;
+            document.getElementById('main-hr').style.transform = `rotate(${hrAngle}deg)`;
+            document.getElementById('drag-min').style.transform = `rotate(${minAngle}deg)`;
+            document.getElementById('drag-hr').style.transform = `rotate(${hrAngle}deg)`;
+
+            // 2. Calculate Mirror Image
+            // Formula: 11:60 - HH:MM
+            let mirH = 11 - (currentH % 12);
+            let mirM = 60 - currentM;
+            if (mirM === 60) { mirM = 0; mirH += 1; }
+            if (mirH <= 0) mirH += 12;
+
+            document.getElementById('dt-mirror').innerText = formatTime(mirH, mirM);
+            let mirMinAngle = mirM * 6;
+            let mirHrAngle = (mirH * 30) + (mirM * 0.5);
+            document.getElementById('mirror-min').style.transform = `rotate(${mirMinAngle}deg)`;
+            document.getElementById('mirror-hr').style.transform = `rotate(${mirHrAngle}deg)`;
+
+            // 3. Calculate Water Image
+            // Formula: if M<=30 use 17:30-H:M (or 5:30), if M>30 use 17:90-H:M
+            let watH, watM;
+            let formWaterTxt = "";
+            if (currentM <= 30) {
+                watH = 17 - currentH;
+                watM = 30 - currentM;
+                formWaterTxt = "17:30 - HH:MM";
+            } else {
+                watH = 17 - currentH;
+                watM = 90 - currentM;
+                formWaterTxt = "17:90 - HH:MM";
+            }
+            if (watH <= 0) watH += 12;
+            if (watH > 12) watH -= 12;
+
+            document.getElementById('form-water').innerText = formWaterTxt;
+            document.getElementById('dt-water').innerText = formatTime(watH, watM);
+            
+            let watMinAngle = watM * 6;
+            let watHrAngle = (watH * 30) + (watM * 0.5);
+            document.getElementById('water-min').style.transform = `rotate(${watMinAngle}deg)`;
+            document.getElementById('water-hr').style.transform = `rotate(${watHrAngle}deg)`;
+        }
+
+        // SLIDER EVENTS
+        hrSlider.addEventListener('input', (e) => {
+            currentH = parseInt(e.target.value);
+            updateClocks();
+        });
+
+        minSlider.addEventListener('input', (e) => {
+            currentM = parseInt(e.target.value);
+            updateClocks();
+        });
+
+
+        // DRAGGING LOGIC FOR MAIN CLOCK
+        const clockSvg = document.getElementById('clock-main-svg');
+        let isDraggingMin = false;
+        let isDraggingHr = false;
+
+        document.getElementById('drag-min').addEventListener('mousedown', () => isDraggingMin = true);
+        document.getElementById('drag-hr').addEventListener('mousedown', () => isDraggingHr = true);
+        
+        // Touch support
+        document.getElementById('drag-min').addEventListener('touchstart', (e) => { isDraggingMin = true; e.preventDefault(); }, {passive: false});
+        document.getElementById('drag-hr').addEventListener('touchstart', (e) => { isDraggingHr = true; e.preventDefault(); }, {passive: false});
+
+        window.addEventListener('mouseup', () => { isDraggingMin = false; isDraggingHr = false; });
+        window.addEventListener('touchend', () => { isDraggingMin = false; isDraggingHr = false; });
+
+        function handleDrag(clientX, clientY) {
+            if (!isDraggingMin && !isDraggingHr) return;
+
+            const rect = clockSvg.getBoundingClientRect();
+            // Center of the clock in viewport coordinates
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+
+            // Calculate angle from center to mouse/touch position
+            const dx = clientX - cx;
+            const dy = clientY - cy;
+            let angle = Math.atan2(dy, dx) * (180 / Math.PI); // Angle in degrees (-180 to 180)
+            
+            // Adjust angle so 12 o'clock is 0 degrees (atan2 has 0 at 3 o'clock)
+            angle = angle + 90;
+            if (angle < 0) angle += 360;
+
+            if (isDraggingMin) {
+                // Snap to nearest minute (6 degrees per minute)
+                currentM = Math.round(angle / 6);
+                if (currentM === 60) currentM = 0;
+                minSlider.value = currentM;
+            } 
+            else if (isDraggingHr) {
+                // Hour hand angle logic. Note: hr angle includes minutes, but for simple dragging 
+                // we'll just snap to the nearest hour.
+                let rawHr = Math.round(angle / 30);
+                if (rawHr === 0) rawHr = 12;
+                currentH = rawHr;
+                hrSlider.value = currentH;
+            }
+            updateClocks();
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            handleDrag(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isDraggingMin || isDraggingHr) {
+                handleDrag(e.touches[0].clientX, e.touches[0].clientY);
+                e.preventDefault(); // Prevent scrolling while dragging
+            }
+        }, {passive: false});
+
+        // Initial setup
+        updateClocks();
+
+    </script>
+</body>
+</html>

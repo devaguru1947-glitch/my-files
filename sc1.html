@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISRO Space Technology - Comprehensive Mind Map & Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19; --primary: #00d2ff; --secondary: #3a7bd5;
+            --text-light: #e0e0e0; --card-bg: #151b29; --box-shadow: 0 4px 20px rgba(0, 210, 255, 0.2);
+            --correct: #22c55e; --wrong: #ef4444; --selected: #3b82f6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; background: var(--bg-color); color: var(--text-light); overflow-x: hidden;}
+
+        header { text-align: center; padding: 20px; background: linear-gradient(90deg, #151b29, #0b0f19); border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 100;}
+        h1 { color: var(--primary); font-size: 1.8rem; font-weight: 700; letter-spacing: 1px;}
+        .subtitle { font-size: 1rem; color: #aaa; margin-top: 5px; }
+
+        .tabs { display: flex; justify-content: center; gap: 15px; padding: 15px; background: #0b0f19;}
+        .tab-btn { background: #1a233a; border: 1px solid var(--secondary); color: #fff; padding: 10px 25px; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s;}
+        .tab-btn:hover { background: var(--secondary); }
+        .tab-btn.active { background: var(--primary); color: #000; box-shadow: var(--box-shadow);}
+
+        .section { display: none; padding: 20px 40px; }
+        .section.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* MIND MAP */
+        .mindmap-container { display: flex; gap: 30px; height: 78vh; }
+        
+        .mm-left { width: 35%; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 10px;}
+        .mm-node { 
+            background: var(--card-bg); border-left: 4px solid var(--primary); padding: 14px 18px; 
+            border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 1.05rem; font-weight: 600; 
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .mm-node-title { display: flex; align-items: center; gap: 12px; }
+        .mm-node-icon { font-size: 1.35rem; display: inline-flex; align-items: center; justify-content: center; }
+        .mm-node:hover { transform: translateX(5px); background: #1f2937;}
+        .mm-node.active { background: linear-gradient(90deg, #1a233a, #151b29); border-left: 4px solid #ffd700; color: var(--primary); box-shadow: var(--box-shadow);}
+        
+        .mm-right { width: 65%; background: var(--card-bg); border: 1px solid #333; border-radius: 12px; padding: 30px; overflow-y: auto; position: relative;}
+        
+        .detail-title { font-size: 1.6rem; color: var(--primary); margin-bottom: 20px; border-bottom: 2px dashed #333; padding-bottom: 10px; display: flex; align-items: center; gap: 10px;}
+        .detail-content { font-size: 1.05rem; line-height: 1.6; }
+        .detail-content ul { padding-left: 25px; margin-bottom: 15px;}
+        .detail-content li { margin-bottom: 10px;}
+        
+        .highlight { color: #ffd700; font-weight: bold; }
+        
+        .info-reveal-btn { background: #333; border: 1px dashed #ffd700; color: #ffd700; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 0.95rem; margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; font-weight: bold; transition: 0.3s;}
+        .info-reveal-btn:hover { background: #ffd700; color: #000; }
+        
+        .extra-info-box { display: none; margin-top: 15px; padding: 18px; background: #0b0f19; border-radius: 8px; border: 1px solid var(--secondary); text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.4);}
+        .extra-info-box.visible { display: block; animation: fadeIn 0.5s ease; }
+        .extra-info-title { color: var(--primary); font-weight: 700; margin-bottom: 12px; font-size: 1.1rem; border-bottom: 1px dashed #444; padding-bottom: 8px;}
+        .extra-info-list { list-style-type: none; padding-left: 0; color: #e0e0e0; font-size: 0.95rem; line-height: 1.6; }
+        .extra-info-list li { margin-bottom: 10px; position: relative; padding-left: 20px;}
+        .extra-info-list li::before { content: '►'; position: absolute; left: 0; color: #ff9900; font-size: 0.85rem; top: 3px;}
+        .extra-info-list span { color: #ffd700; font-weight: 600; }
+
+        /* QUIZ SECTION */
+        .quiz-container { max-width: 900px; margin: 0 auto; padding-bottom: 50px;}
+        .mcq-card { background: var(--card-bg); padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
+        .q-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; color: #fff; font-family: var(--font-sans);} 
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        
+        .opt-btn { background: #1a233a; border: 1px solid #444; color: #e0e0e0; padding: 12px 20px; border-radius: 8px; text-align: left; font-size: 1.05rem; cursor: pointer; transition: 0.3s; font-family: var(--font-sans);}
+        .opt-btn:hover:not(:disabled) { background: #2a3b5c; }
+        
+        .opt-btn.selected { background: var(--selected); border-color: #60a5fa; color: #fff; font-weight: 600; box-shadow: 0 0 10px rgba(59,130,246,0.5);}
+        .opt-btn.correct { background: rgba(34, 197, 94, 0.2); border-color: var(--correct); color: var(--correct); font-weight: bold;}
+        .opt-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--wrong); color: var(--wrong); }
+        
+        .explanation { display: none; margin-top: 15px; padding: 15px; background: #0b0f19; border-left: 4px solid var(--primary); border-radius: 4px; font-size: 1rem; color: #ccc;}
+        .explanation.visible { display: block; animation: fadeIn 0.4s; }
+
+        /* QUIZ FOOTER */
+        .quiz-footer { text-align: center; margin-top: 40px; padding: 30px; background: var(--card-bg); border-radius: 12px; border: 2px dashed #444;}
+        .score-board { display: none; font-size: 2.2rem; color: #ffd700; font-weight: bold; margin-bottom: 20px;}
+        
+        .action-btn { padding: 15px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.3s; border: none; font-family: var(--font-sans);}
+        .btn-submit { background: var(--correct); color: #000; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);}
+        .btn-submit:hover { transform: scale(1.05); background: #16a34a;}
+        
+        .btn-restart { display: none; background: var(--primary); color: #000; box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);}
+        .btn-restart:hover { transform: scale(1.05); background: #00b4d8;}
+
+    </style>
+</head>
+<body ondblclick="toggleFullScreen()">
+
+    <header>
+        <h1>భారతీయ అంతరిక్ష పరిశోధనా సంస్థ (ISRO) - సంపూర్ణ సమాచారం</h1>
+        <div class="subtitle">Complete Notes & 25 Expected MCQs</div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('mindmap')">🧠 Mind Map</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">📝 Practice MCQs (25)</button>
+    </div>
+
+    <!-- ================= MIND MAP SECTION ================= -->
+    <div id="mindmap" class="section active">
+        <div class="mindmap-container">
+            <div class="mm-left">
+                <div class="mm-node active" onclick="showNodeDetail('isro-intro', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">🏛️</span> 1. ISRO - పరిచయం (Overview)</div>
+                    <span>▶</span>
+                </div>
+                <div class="mm-node" onclick="showNodeDetail('chairpersons', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">👨‍💼</span> 2. ISRO చైర్మన్లు (Chairpersons)</div>
+                    <span>▶</span>
+                </div>
+                <div class="mm-node" onclick="showNodeDetail('chandrayaan', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">🌕</span> 3. చంద్రయాన్ మిషన్లు (Lunar)</div>
+                    <span>▶</span>
+                </div>
+                <div class="mm-node" onclick="showNodeDetail('mangalyaan', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">🔴</span> 4. మంగళయాన్ (MOM) & ☀️ ఆదిత్య-L1</div>
+                    <span>▶</span>
+                </div>
+                <div class="mm-node" onclick="showNodeDetail('gaganyaan', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">👨‍🚀</span> 5. గగన్‌యాన్ (Human Spaceflight)</div>
+                    <span>▶</span>
+                </div>
+                <div class="mm-node" onclick="showNodeDetail('satellites', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">🛰️</span> 6. ఉపగ్రహ వ్యవస్థలు & 📡 NavIC</div>
+                    <span>▶</span>
+                </div>
+                <div class="mm-node" onclick="showNodeDetail('launchers', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">🚀</span> 7. లాంచ్ వెహికల్స్ (Launchers)</div>
+                    <span>▶</span>
+                </div>
+                <div class="mm-node" onclick="showNodeDetail('reforms', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">📈</span> 8. స్పేస్ సంస్కరణలు & 💼 FDI</div>
+                    <span>▶</span>
+                </div>
+                <div class="mm-node" onclick="showNodeDetail('international', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">🌐</span> 9. అంతర్జాతీయ సహకారం</div>
+                    <span>▶</span>
+                </div>
+                <div class="mm-node" onclick="showNodeDetail('recent-updates', this)">
+                    <div class="mm-node-title"><span class="mm-node-icon">🔗</span> 10. SpaDeX & 🌍 NISAR (Updates)</div>
+                    <span>▶</span>
+                </div>
+            </div>
+
+            <div class="mm-right" id="detail-panel">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MCQ QUIZ SECTION ================= -->
+    <div id="quiz" class="section">
+        <div class="quiz-container">
+            <div id="quiz-box">
+                <!-- MCQs injected via JS -->
+            </div>
+            
+            <div class="quiz-footer">
+                <div class="score-board" id="score-board">
+                    🏆 మీ స్కోరు (Your Score): <span id="score-display">0</span> / 25
+                </div>
+                <button class="action-btn btn-submit" id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+                <button class="action-btn btn-restart" id="restart-btn" onclick="restartQuiz()">↺ Restart Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        const mindMapData = {
+            'isro-intro': `
+                <div class="detail-title"><span>🏛️</span> ISRO - పరిచయం (Overview)</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">స్థాపన (Established):</span> 15 ఆగస్టు 1969.</li>
+                        <li><span class="highlight">పూర్వ సంస్థ (Predecessor):</span> INCOSPAR (1962 లో స్థాపించబడింది).</li>
+                        <li><span class="highlight">ప్రధాన కార్యాలయం:</span> బెంగళూరు, కర్ణాటక.</li>
+                        <li><span class="highlight">వ్యవస్థాపకుడు (Founding Father):</span> డా. విక్రమ్ ఎ. సారాభాయ్.</li>
+                        <li><span class="highlight">ప్రస్తుత చైర్మన్:</span> డా. వి. నారాయణన్ (13 జనవరి 2025 నుండి).</li>
+                        <li><span class="highlight">గత చైర్మన్:</span> డా. ఎస్. సోమనాథ్ (జనవరి 2022 - జనవరి 2025).</li>
+                    </ul>
+                    <button class="info-reveal-btn" onclick="toggleInfo('info-isro')">👁️ Show Extra Economy & Policy Info</button>
+                    <div class="extra-info-box" id="info-isro">
+                        <div class="extra-info-title">💡 అదనపు సమాచారం (Economy & Budget):</div>
+                        <ul class="extra-info-list">
+                            <li><span>Parent Body:</span> ISRO అనేది డిపార్ట్‌మెంట్ ఆఫ్ స్పేస్ (DoS) కింద పనిచేస్తుంది.</li>
+                            <li><span>Space Economy Target:</span> 2033 నాటికి భారత అంతరిక్ష ఆర్థిక వ్యవస్థను $44 బిలియన్లకు చేర్చడం లక్ష్యం.</li>
+                            <li><span>Current Economy:</span> ప్రస్తుతం భారత అంతరిక్ష ఆర్థిక వ్యవస్థ విలువ సుమారు ~$8.4 బిలియన్లు (గ్లోబల్ స్పేస్ ఎకానమీలో 2-3%).</li>
+                            <li><span>Budget (2024-25):</span> ఇస్రో బడ్జెట్ సుమారు రూ. 8,235 కోట్లు.</li>
+                        </ul>
+                    </div>
+                </div>
+            `,
+            'chairpersons': `
+                <div class="detail-title"><span>👨‍💼</span> ముఖ్యమైన ISRO చైర్మన్లు (Key Chairpersons)</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">డా. విక్రమ్ సారాభాయ్ (1963-1971):</span> తుంబా రాకెట్ లాంచింగ్ స్టేషన్ స్థాపించారు.</li>
+                        <li><span class="highlight">ప్రొ. సతీష్ ధావన్ (1972-1984):</span> SLV-3 అభివృద్ధి మరియు ISRO వ్యవస్థీకరణ.</li>
+                        <li><span class="highlight">ప్రొ. యు.ఆర్. రావు (1984-1994):</span> INSAT మరియు IRS ఉపగ్రహ కార్యక్రమాలు.</li>
+                        <li><span class="highlight">డా. కె. కస్తూరిరంగన్ (1994-2003):</span> PSLV ఆపరేషనలైజేషన్ మరియు చంద్రయాన్-1 రూపకల్పన.</li>
+                        <li><span class="highlight">జి. మాధవన్ నాయర్ (2003-2009):</span> చంద్రయాన్-1 ప్రయోగం.</li>
+                        <li><span class="highlight">డా. కె. రాధాకృష్ణన్ (2009-2014):</span> మంగళయాన్ (MOM) ప్రయోగం.</li>
+                        <li><span class="highlight">డా. కె. శివన్ (2018-2022):</span> చంద్రయాన్-2 మరియు గగన్‌యాన్ ప్రారంభం.</li>
+                        <li><span class="highlight">డా. ఎస్. సోమనాథ్ (2022-2025):</span> చంద్రయాన్-3 విజయం, ఆదిత్య-L1, LVM3.</li>
+                        <li><span class="highlight">డా. వి. నారాయణన్ (2025-present):</span> గగన్‌యాన్ కొనసాగింపు మరియు భారతీయ అంతరిక్ష కేంద్రం (BAS).</li>
+                    </ul>
+                </div>
+            `,
+            'chandrayaan': `
+                <div class="detail-title"><span>🌕</span> చంద్రయాన్ మిషన్లు (Lunar Missions)</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">చంద్రయాన్-1 (22 అక్టోబర్ 2008):</span> PSLV-C11 ద్వారా ప్రయోగించబడింది. Moon Impact Probe (MIP) ద్వారా చంద్రునిపై నీటి అణువులను కనుగొంది.</li>
+                        <li><span class="highlight">చంద్రయాన్-2 (22 జులై 2019):</span> LVM3 ద్వారా ప్రయోగించారు. ఆర్బిటర్ ఇంకా పనిచేస్తోంది.</li>
+                        <li><span class="highlight">చంద్రయాన్-3 (14 జులై 2023):</span> 23 ఆగస్టు 2023 న చంద్రుని దక్షిణ ధృవం వద్ద సాఫ్ట్ ల్యాండింగ్ సాధించి, ఈ ఘనత సాధించిన తొలి దేశంగా భారత్ నిలిచింది (LVM3-M4).</li>
+                    </ul>
+                    <button class="info-reveal-btn" onclick="toggleInfo('info-ch4')">👁️ Show Chandrayaan-4 Info</button>
+                    <div class="extra-info-box" id="info-ch4">
+                        <div class="extra-info-title">🚀 చంద్రయాన్-4 (Sample Return Mission):</div>
+                        <ul class="extra-info-list">
+                            <li><span>Approval & Target:</span> సెప్టెంబర్ 2024 లో 2,104 కోట్లతో క్యాబినెట్ ఆమోదం పొందింది. టార్గెట్: 2028.</li>
+                            <li><span>Objective:</span> చంద్రుని దక్షిణ ధృవం నుండి 2-4 kg ల మట్టి/రాళ్ల నమూనాలను భూమికి తీసుకురావడం. ఇది సక్సెస్ అయితే అమెరికా, రష్యా, చైనా తర్వాత 4వ దేశంగా భారత్ నిలుస్తుంది.</li>
+                            <li><span>Modules:</span> ఇందులో 5 మాడ్యూల్స్ ఉంటాయి (Ascender, Descender, Transfer, Re-entry, Propulsion).</li>
+                            <li><span>Launch Plan & Engine:</span> రెండు వేర్వేరు LVM3 రాకెట్ల ప్రయోగాలు అవసరం. దీనికోసం అప్‌గ్రేడ్ చేసిన 'SE2000' సెమీ-క్రయోజెనిక్ (కిరోసిన్ + లిక్విడ్ ఆక్సిజన్) ఇంజిన్ వాడుతున్నారు.</li>
+                        </ul>
+                    </div>
+                </div>
+            `,
+            'mangalyaan': `
+                <div class="detail-title"><span>🔴</span> మంగళయాన్ (MOM) & <span>☀️</span> ఆదిత్య-L1</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">మంగళయాన్ లాంచ్:</span> 5 నవంబర్ 2013 (PSLV-C25). అంగారక కక్ష్యలోకి 24 సెప్టెంబర్ 2014 న ప్రవేశించింది.</li>
+                        <li><span class="highlight">మంగళయాన్ ఘనత:</span> ఆసియాలో అంగారక కక్ష్యను చేరుకున్న తొలి దేశం భారత్. 450 కోట్లు ($74M) ఖర్చుతో, తొలి ప్రయత్నంలోనే సాధించింది.</li>
+                        <li><span class="highlight">ఆదిత్య-L1 లాంచ్:</span> 2 సెప్టెంబర్ 2023 (PSLV-C57). 6 జనవరి 2024 న L1 లాగ్రాంజ్ పాయింట్ వద్ద కక్ష్యలోకి చేరింది.</li>
+                        <li><span class="highlight">ఆదిత్య-L1 పేలోడ్స్:</span> మొత్తం 7 స్వదేశీ పేలోడ్స్ (5 ఇస్రో, 2 అకాడమిక్). సూర్యుని కరోనా, సౌర గాలుల అధ్యయనం.</li>
+                    </ul>
+                    <button class="info-reveal-btn" onclick="toggleInfo('info-aditya')">👁️ Show Aditya-L1 Recent Updates</button>
+                    <div class="extra-info-box" id="info-aditya">
+                        <div class="extra-info-title">☀️ ఆదిత్య-L1 తాజా ఫలితాలు (2024-25):</div>
+                        <ul class="extra-info-list">
+                            <li><span>First Data Release:</span> 178 రోజుల్లో తొలి హాలో ఆర్బిట్ పూర్తి చేసి, కచ్చితంగా ఏడాదికి (6 జనవరి 2025) తన మొదటి సైంటిఫిక్ డేటాను విడుదల చేసింది.</li>
+                            <li><span>SUIT Telescope:</span> ఫిబ్రవరి 2024 లో X6.3-class సోలార్ ఫ్లేర్ (Solar Flare) చిత్రాలను SUIT పేలోడ్ బంధించింది.</li>
+                            <li><span>Solar Wind Studies:</span> అక్టోబర్ 2024 లో సోలార్ విండ్ మరియు భూ అయస్కాంత క్షేత్రం (magnetic field) పై అధ్యయనం చేసింది.</li>
+                        </ul>
+                    </div>
+                </div>
+            `,
+            'gaganyaan': `
+                <div class="detail-title"><span>👨‍🚀</span> గగన్‌యాన్ (Gaganyaan)</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">లక్ష్యం:</span> భారతదేశపు తొలి మానవ సహిత అంతరిక్ష విమానయాన మిషన్. లాంచ్ వెహికల్: HLVM3.</li>
+                        <li><span class="highlight">టైమ్‌లైన్:</span> TV-D1 (అక్టోబర్ 2023) సక్సెస్. TV-D2 (Q4 2026), G1 (H2 2026). క్రూడ్ ఫ్లైట్ (2027 లక్ష్యం).</li>
+                        <li><span class="highlight">వ్యోమమిత్ర:</span> G1 అన్‌క్రూడ్ మిషన్ లో వ్యోమమిత్ర (Vyommitra) అనే హాఫ్-హ్యూమనాయిడ్ రోబోట్ ను పంపుతారు. (28 ఏప్రిల్ 2026 న దీని ఇంటెగ్రేషన్ మొదలైంది).</li>
+                    </ul>
+                    <button class="info-reveal-btn" onclick="toggleInfo('info-gagan')">👁️ Show Astronauts & ISS Mission Details</button>
+                    <div class="extra-info-box" id="info-gagan">
+                        <div class="extra-info-title">👨‍🚀 వ్యోమగాములు & Ax-4 మిషన్:</div>
+                        <ul class="extra-info-list">
+                            <li><span>Gaganyaan Crew:</span> నలుగురు IAF పైలట్లు (ప్రశాంత్ బాలకృష్ణన్ నాయర్, అజిత్ కృష్ణన్, అంగద్ ప్రతాప్, శుభాన్షు శుక్లా) రష్యాలో శిక్షణ పొందారు.</li>
+                            <li><span>Ax-4 Mission (ISS):</span> గ్రూప్ కెప్టెన్ శుభాన్షు శుక్లా అంతర్జాతీయ అంతరిక్ష కేంద్రానికి (ISS) వెళ్లారు (25 జూన్ - 15 జులై 2025). రాకేష్ శర్మ తర్వాత స్పేస్ లోకి వెళ్ళిన రెండవ భారతీయుడు మరియు ISS కి వెళ్ళిన తొలి భారతీయుడు ఇతనే.</li>
+                            <li><span>Key Tech:</span> Crew Escape System (CES) మరియు Environmental Control & Life Support System (ECLSS).</li>
+                            <li><span>BAS:</span> భవిష్యత్తులో 2028 నాటికి భారతీయ అంతరిక్ష కేంద్రం (Bharatiya Antariksh Station - BAS) నిర్మాణం లక్ష్యం.</li>
+                        </ul>
+                    </div>
+                </div>
+            `,
+            'satellites': `
+                <div class="detail-title"><span>🛰️</span> ఉపగ్రహ వ్యవస్థలు & <span>📡</span> NavIC</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">INSAT & GSAT:</span> కమ్యూనికేషన్, DTH, టెలి-ఎడ్యుకేషన్ కోసం (GEO orbit).</li>
+                        <li><span class="highlight">IRS:</span> ఎర్త్ అబ్జర్వేషన్ (1988 లో మొదలైంది).</li>
+                        <li><span class="highlight">RISAT & Cartosat:</span> రాడార్ ఇమేజింగ్ (SAR) మరియు మ్యాపింగ్ కోసం.</li>
+                        <li><span class="highlight">NavIC / IRNSS:</span> 7 ఉపగ్రహాల స్వదేశీ నావిగేషన్ వ్యవస్థ. కవరేజ్: ఇండియా + 1500 కి.మీ.</li>
+                    </ul>
+                    <button class="info-reveal-btn" onclick="toggleInfo('info-navic')">👁️ Show NavIC Crisis (2025-26) Info</button>
+                    <div class="extra-info-box" id="info-navic">
+                        <div class="extra-info-title">📡 NavIC సంక్షోభం (Constellation Crisis):</div>
+                        <ul class="extra-info-list">
+                            <li><span>NVS-02 Failure:</span> 29 జనవరి 2025 న GSLV-F15 (ఇస్రో 100వ లాంచ్) రాకెట్ ద్వారా వెళ్లిన NVS-02 లోని 'పైరో వాల్వ్ (Pyro valve)' ఓపెన్ కాకపోవడంతో మిషన్ విఫలమైంది. 25 ఫిబ్రవరి 2026 న ఇస్రో ఈ కారణాన్ని నిర్ధారించింది.</li>
+                            <li><span>Atomic Clock Failure:</span> 10 మార్చి 2026 న IRNSS-1F లోని అటామిక్ క్లాక్ ఫెయిల్ అయ్యింది (10 ఏళ్ల జీవిత కాలం పూర్తయింది).</li>
+                            <li><span>Current Status:</span> ప్రస్తుతం 7 కు గాను కేవలం 3 ఉపగ్రహాలు (IRNSS-1B, 1I, NVS-01) మాత్రమే పూర్తి PVT సేవలు (Position, Velocity, Timing) అందిస్తున్నాయి.</li>
+                            <li><span>Recovery Plan:</span> NVS-03, 04, 05 ఉపగ్రహాలను సెప్టెంబర్ 2027 నాటికి ప్రయోగించనున్నారు. 40 కొత్త రుబీడియం అటామిక్ క్లాక్స్ కొనుగోలు చేశారు.</li>
+                        </ul>
+                    </div>
+                </div>
+            `,
+            'launchers': `
+                <div class="detail-title"><span>🚀</span> లాంచ్ వెహికల్స్ (Launch Vehicles)</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">SLV-3 (1980):</span> మొట్టమొదటి స్వదేశీ లాంచ్ వెహికల్ (40 kg capacity). ASLV (150 kg capacity).</li>
+                        <li><span class="highlight">PSLV:</span> వర్క్‌హార్స్ (1750 kg SSO). చంద్రయాన్-1, మంగళయాన్, ఆదిత్య-L1 ప్రయోగించింది. ఇందులో 4 రకాలు ఉన్నాయి (PSLV-G, CA, XL, DL).</li>
+                        <li><span class="highlight">GSLV:</span> స్వదేశీ క్రయోజెనిక్ అప్పర్ స్టేజ్. కమ్యూనికేషన్ ఉపగ్రహాలకు.</li>
+                        <li><span class="highlight">LVM3 (GSLV Mk III):</span> అత్యంత బరువైన రాకెట్ (4,000 kg GTO). చంద్రయాన్-2, 3 లను ప్రయోగించింది.</li>
+                        <li><span class="highlight">SSLV:</span> చిన్న ఉపగ్రహాలను LEO లోకి పంపేందుకు.</li>
+                    </ul>
+                    <button class="info-reveal-btn" onclick="toggleInfo('info-pslv')">👁️ Show PSLV-C61 Failure Info</button>
+                    <div class="extra-info-box" id="info-pslv">
+                        <div class="extra-info-title">⚠️ PSLV-C61 వైఫల్యం (May 2025):</div>
+                        <ul class="extra-info-list">
+                            <li><span>Failure Date:</span> 18 మే 2025 న PSLV-C61 ప్రయోగం విఫలమైంది. 2017 తర్వాత PSLV ఫెయిల్ అవ్వడం ఇదే తొలిసారి (ఇది 101వ ఆర్బిటల్ లాంచ్ అటెంప్ట్).</li>
+                            <li><span>Reason:</span> రాకెట్ మూడవ దశలో (Third stage) ఛాంబర్ ప్రెజర్ తగ్గిపోవడం వల్ల ఈ వైఫల్యం జరిగింది.</li>
+                            <li><span>Lost Satellite:</span> ఈ మిషన్ లో EOS-09 (RISAT-1B) అనే రాడార్ ఇమేజింగ్ (SAR) ఎర్త్ అబ్జర్వేషన్ శాటిలైట్ ను కోల్పోయింది.</li>
+                        </ul>
+                    </div>
+                </div>
+            `,
+            'reforms': `
+                <div class="detail-title"><span>📈</span> స్పేస్ సంస్కరణలు & <span>💼</span> FDI</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">Indian Space Policy 2023:</span> ప్రైవేట్ రంగ (NGEs) భాగస్వామ్యాన్ని ప్రోత్సహించడం.</li>
+                        <li><span class="highlight">IN-SPACe (జూన్ 2020):</span> ప్రైవేట్ ఆటగాళ్లకు సింగిల్ విండో ఫెసిలిటేటర్ మరియు రెగ్యులేటర్.</li>
+                        <li><span class="highlight">NSIL (మార్చి 2019):</span> NewSpace India Limited. వాణిజ్య విభాగం, టెక్నాలజీ బదిలీ.</li>
+                        <li><span class="highlight">ANTRIX (1992):</span> ఇస్రో ప్రొడక్ట్స్ ని అంతర్జాతీయంగా మార్కెటింగ్ చేసే విభాగం.</li>
+                    </ul>
+                    <button class="info-reveal-btn" onclick="toggleInfo('info-fdi')">👁️ Show FDI & Startups Info</button>
+                    <div class="extra-info-box" id="info-fdi">
+                        <div class="extra-info-title">📈 FDI లిమిట్స్ (2024 సవరణ) & స్టార్టప్స్:</div>
+                        <ul class="extra-info-list">
+                            <li><span>Satellites:</span> శాటిలైట్ తయారీ & ఆపరేషన్స్ లో 74% వరకు FDI (ఆటోమేటిక్ రూట్).</li>
+                            <li><span>Launch Vehicles & Spaceports:</span> లాంచ్ వెహికల్స్ మరియు స్పేస్ పోర్ట్స్ లో 49% వరకు FDI.</li>
+                            <li><span>Components:</span> స్పేస్ కాంపోనెంట్స్ తయారీలో 100% FDI కి అనుమతి.</li>
+                            <li><span>Startups Growth:</span> భారతదేశంలో స్పేస్ స్టార్టప్స్ సంఖ్య 2014 లో కేవలం 1 ఉండగా, 2024 నాటికి 266 కి పెరిగింది.</li>
+                        </ul>
+                    </div>
+                </div>
+            `,
+            'international': `
+                <div class="detail-title"><span>🌐</span> అంతర్జాతీయ సహకారం (International)</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">NASA (USA):</span> NISAR సంయుక్త ఉపగ్రహం మరియు 2023 లో ఇండియా 'Artemis Accords' పై సంతకం చేసింది.</li>
+                        <li><span class="highlight">ESA (Europe):</span> డీప్ స్పేస్ ట్రాకింగ్ సపోర్ట్.</li>
+                        <li><span class="highlight">CNES (France):</span> జాయింట్ శాటిలైట్ మిషన్లు.</li>
+                        <li><span class="highlight">Roscosmos (Russia):</span> గగన్‌యాన్ వ్యోమగాముల శిక్షణ.</li>
+                        <li><span class="highlight">JAXA (Japan):</span> Lunar Polar Exploration Mission (LUPEX) జాయింట్ మిషన్.</li>
+                        <li><span class="highlight">BRICS/SCO:</span> డేటా షేరింగ్ కోఆపరేషన్.</li>
+                    </ul>
+                </div>
+            `,
+            'recent-updates': `
+                <div class="detail-title"><span>🔗</span> SpaDeX & <span>🌍</span> NISAR (Updates)</div>
+                <div class="detail-content">
+                    <ul>
+                        <li><span class="highlight">NISAR లాంచ్ (జూలై 2025):</span> NASA-ISRO Synthetic Aperture Radar (NISAR) ని 30 జులై 2025 న GSLV-F16 ద్వారా ప్రయోగించారు. బరువు 2,392 kg. 12 రోజులకు ఒకసారి భూమిని స్కాన్ చేస్తుంది. జనవరి 2026 లో పూర్తి ఆపరేషనల్ అయింది.</li>
+                    </ul>
+                    <button class="info-reveal-btn" onclick="toggleInfo('info-spadex')">👁️ Show SpaDeX Mission Details</button>
+                    <div class="extra-info-box" id="info-spadex">
+                        <div class="extra-info-title">🔗 SpaDeX (Space Docking) మిషన్:</div>
+                        <ul class="extra-info-list">
+                            <li><span>Achievement:</span> 16 జనవరి 2025 న ఇస్రో రెండు ఉపగ్రహాలను అంతరిక్షంలో విజయవంతంగా అనుసంధానించింది. అమెరికా, రష్యా, చైనా తర్వాత ఈ ఘనత సాధించిన 4వ దేశం భారత్.</li>
+                            <li><span>Launch:</span> 30 డిసెంబర్ 2024 న PSLV-C60 ద్వారా SDX01 (Chaser) & SDX02 (Target) ఉపగ్రహాలను ప్రయోగించారు.</li>
+                            <li><span>Timeline:</span> అన్‌డాకింగ్ (13 మార్చి 2025), రెండవ డాకింగ్ (20 ఏప్రిల్ 2025). ప్రైమరీ మిషన్ 23 మే 2025 న ముగిసింది. ఖర్చు: 124 కోట్లు.</li>
+                            <li><span>Future Use:</span> ఈ టెక్నాలజీ భవిష్యత్తులో చంద్రయాన్-4 (Sample Return) మరియు BAS (Space Station) కి చాలా కీలకం.</li>
+                        </ul>
+                    </div>
+                </div>
+            `
+        };
+
+        document.getElementById('detail-panel').innerHTML = mindMapData['isro-intro'];
+
+        function showNodeDetail(key, btnElement) {
+            document.querySelectorAll('.mm-node').forEach(node => node.classList.remove('active'));
+            btnElement.classList.add('active');
+            
+            const panel = document.getElementById('detail-panel');
+            panel.style.opacity = 0;
+            setTimeout(() => {
+                panel.innerHTML = mindMapData[key];
+                panel.style.opacity = 1;
+            }, 200);
+        }
+
+        function toggleInfo(id) {
+            const infoBox = document.getElementById(id);
+            infoBox.classList.toggle('visible');
+        }
+
+        // --- MCQ QUIZ LOGIC WITH SCORING (25 Questions) ---
+        const quizData = [
+            { q: "1. ISRO యొక్క 100వ శ్రీహరికోట ప్రయోగమైన (GSLV-F15) జనవరి 2025లో ఏ ఉపగ్రహాన్ని మోసుకెళ్లింది?", opts: ["NVS-01", "EOS-09", "NVS-02", "IRNSS-1G"], ans: 2, exp: "29 జనవరి 2025 న ఇస్రో తన 100వ లాంచ్ ద్వారా NVS-02 ఉపగ్రహాన్ని ప్రయోగించింది, అయితే పైరో వాల్వ్ ఓపెన్ కాకపోవడంతో అది విఫలమైంది." },
+            { q: "2. జనవరి 2025 లో ISRO కొత్త చైర్మన్ గా ఎవరు బాధ్యతలు స్వీకరించారు?", opts: ["డా. ఎస్. సోమనాథ్", "డా. వి. నారాయణన్", "డా. కె. శివన్", "డా. కె. రాధాకృష్ణన్"], ans: 1, exp: "13 జనవరి 2025 న డా. వి. నారాయణన్ ISRO చైర్మన్ గా బాధ్యతలు స్వీకరించారు." },
+            { q: "3. అంతరిక్ష అనుసంధానం (Space Docking) సామర్థ్యాన్ని ప్రదర్శించిన ఎన్నో దేశంగా భారత్ (16 జనవరి 2025న) నిలిచింది?", opts: ["2వ", "3వ", "4వ", "5వ"], ans: 2, exp: "SpaDeX మిషన్ సక్సెస్ తో అమెరికా, రష్యా, చైనా తర్వాత డాకింగ్ సాధించిన 4వ దేశంగా భారత్ నిలిచింది." },
+            { q: "4. SpaDeX (Space Docking Experiment) మిషన్ కు సుమారు ఎంత ఖర్చు అయ్యింది?", opts: ["124 కోట్లు", "450 కోట్లు", "2104 కోట్లు", "8235 కోట్లు"], ans: 0, exp: "SpaDeX కు కేవలం 124 కోట్లు ఖర్చయ్యింది, ఇది ప్రపంచంలోనే అత్యంత తక్కువ ఖర్చుతో చేసిన డాకింగ్ ప్రయోగం." },
+            { q: "5. SpaDeX ప్రయోగానికి ఉపయోగించిన రాకెట్ మరియు ప్రయోగ తేదీ ఏది?", opts: ["PSLV-C60 (30 Dec 2024)", "GSLV-F15 (29 Jan 2025)", "PSLV-C61 (18 May 2025)", "LVM3-M4 (14 Jul 2023)"], ans: 0, exp: "30 డిసెంబర్ 2024 న PSLV-C60 ద్వారా SDX01 మరియు SDX02 ఉపగ్రహాలను ప్రయోగించారు." },
+            { q: "6. ఆదిత్య-L1 మిషన్ కచ్చితంగా ఏడాది తర్వాత ఏ తేదీన తన మొదటి సైంటిఫిక్ డేటాను విడుదల చేసింది?", opts: ["2 సెప్టెంబర్ 2024", "6 జనవరి 2025", "15 ఆగస్టు 2025", "23 మే 2025"], ans: 1, exp: "6 జనవరి 2024 న L1 ఆర్బిట్ లోకి చేరిన ఆదిత్య-L1, కచ్చితంగా ఏడాదికి అంటే 6 జనవరి 2025 న తన డేటాను విడుదల చేసింది." },
+            { q: "7. Axiom Space Mission 4 (Ax-4) ద్వారా ఇంటర్నేషనల్ స్పేస్ స్టేషన్ (ISS) కు పైలట్ గా వెళ్ళిన తొలి భారతీయ వ్యోమగామి ఎవరు?", opts: ["ప్రశాంత్ బాలకృష్ణన్ నాయర్", "అజిత్ కృష్ణన్", "రాకేష్ శర్మ", "శుభాన్షు శుక్లా"], ans: 3, exp: "25 జూన్ 2025 న లాంచ్ అయిన Ax-4 మిషన్ ద్వారా గ్రూప్ కెప్టెన్ శుభాన్షు శుక్లా ISS కు వెళ్ళారు." },
+            { q: "8. మే 18, 2025 న రాకెట్ మూడవ దశలో ప్రెజర్ తగ్గడం వల్ల విఫలమైన PSLV మిషన్ (ఇది 101వ ఆర్బిటల్ లాంచ్ అటెంప్ట్) ఏది?", opts: ["PSLV-C57", "PSLV-C60", "PSLV-C61", "GSLV-F16"], ans: 2, exp: "18 మే 2025 న PSLV-C61 మిషన్ (EOS-09 శాటిలైట్) విఫలమైంది. 2017 తర్వాత PSLV ఫెయిల్ అవ్వడం ఇదే తొలిసారి." },
+            { q: "9. నావిక్ (NavIC) సంక్షోభంలో, ఏ అటామిక్ క్లాక్ 10 మార్చి 2026 న చెడిపోవడంతో పూర్తి PVT సేవలు అందించే ఉపగ్రహాల సంఖ్య 3 కి పడిపోయింది?", opts: ["NVS-01", "IRNSS-1B", "IRNSS-1F", "IRNSS-1I"], ans: 2, exp: "10 మార్చి 2026 న IRNSS-1F లోని అటామిక్ క్లాక్ తన 10 ఏళ్ల జీవితకాలాన్ని ముగించుకుని ఫెయిల్ అయ్యింది." },
+            { q: "10. నావిక్ (NavIC) నెట్‌వర్క్ సంక్షోభాన్ని అధిగమించడానికి NVS-03, NVS-04, NVS-05 ఉపగ్రహాలను ఎప్పటిలోగా ప్రయోగించాలని ఇస్రో లక్ష్యంగా పెట్టుకుంది?", opts: ["Q4 2026", "సెప్టెంబర్ 2027", "2028", "2030"], ans: 1, exp: "నావిక్ సేవలను పునరుద్ధరించడానికి NVS-03, 04, 05 లను సెప్టెంబర్ 2027 నాటికి ప్రయోగించనున్నారు." },
+            { q: "11. జులై 30, 2025 న GSLV-F16 ద్వారా ప్రయోగించిన NISAR ఉపగ్రహంలో నాసా (NASA) మరియు ఇస్రో (ISRO) ఏయే రాడార్లను అందించాయి?", opts: ["NASA: S-Band, ISRO: X-Band", "NASA: L-Band, ISRO: S-Band", "NASA: Ku-Band, ISRO: Ka-Band", "NASA: L-Band, ISRO: X-Band"], ans: 1, exp: "NISAR లో NASA L-Band రాడార్ ను, ISRO S-Band రాడార్ ను అందించాయి (దీనిని డ్యూయల్ ఫ్రీక్వెన్సీ SAR అంటారు)." },
+            { q: "12. NISAR ఉపగ్రహం ఎప్పటిలోగా పూర్తి ఆపరేషనల్ (Fully Operational) గా మారింది?", opts: ["15 ఆగస్టు 2025", "7 నవంబర్ 2025", "జనవరి 2026", "ఫిబ్రవరి 2026"], ans: 2, exp: "7 నవంబర్ 2025 న కమీషన్ చేయబడి, జనవరి 2026 నాటికి NISAR పూర్తి స్థాయిలో ఆపరేషనల్ అయ్యింది." },
+            { q: "13. గగన్‌యాన్ ప్రాజెక్ట్ కింద వ్యోమమిత్ర (Vyommitra) రోబోట్ తో మొదటి అన్‌క్రూడ్ ఫ్లైట్ (G1) ఎప్పుడు ప్రయోగించాలని లక్ష్యంగా పెట్టుకున్నారు?", opts: ["Q4 2025", "H1 2026", "H2 2026", "2027"], ans: 2, exp: "వ్యోమమిత్ర తో కూడిన మొదటి అన్‌క్రూడ్ మిషన్ (G1) H2 2026 లో ప్రయోగించనున్నారు." },
+            { q: "14. చంద్రయాన్-4 (Sample Return Mission) కు క్యాబినెట్ ఆమోదించిన బడ్జెట్ ఎంత?", opts: ["450 కోట్లు", "124 కోట్లు", "2104 కోట్లు", "8235 కోట్లు"], ans: 2, exp: "సెప్టెంబర్ 2024 లో చంద్రయాన్-4 కోసం కేంద్ర క్యాబినెట్ 2,104 కోట్లను ఆమోదించింది." },
+            { q: "15. ఫిబ్రవరి 2024 లో X6.3-class సోలార్ ఫ్లేర్ (Solar Flare) చిత్రాలను ఆదిత్య-L1 లోని ఏ పేలోడ్ బంధించింది?", opts: ["VELC", "SUIT", "SoLEXS", "PAPA"], ans: 1, exp: "SUIT (Solar Ultra-violet Imaging Telescope) సోలార్ ఫ్లేర్ చిత్రాలను అత్యంత స్పష్టంగా బంధించింది." },
+            { q: "16. చంద్రయాన్-4 మిషన్ కోసం ఇస్రో ఏ కొత్త సెమీ-క్రయోజెనిక్ ఇంజిన్‌ను ఉపయోగిస్తోంది?", opts: ["CE-20", "Vikas Engine", "SE2000", "L110"], ans: 2, exp: "చంద్రయాన్-4 కోసం కిరోసిన్ + లిక్విడ్ ఆక్సిజన్ తో పనిచేసే SE2000 సెమీ-క్రయోజెనిక్ ఇంజిన్‌ను వాడుతున్నారు." },
+            { q: "17. ఆసియాలో తొలి ప్రయత్నంలోనే అంగారక కక్ష్యను చేరుకున్న దేశం ఏది?", opts: ["చైనా", "జపాన్", "భారత్", "దక్షిణ కొరియా"], ans: 2, exp: "మంగళయాన్ ద్వారా భారత్ తొలి ప్రయత్నంలోనే ఈ ఘనత సాధించి, ఆసియాలో మొదటి దేశంగా నిలిచింది." },
+            { q: "18. భారత స్పేస్ పాలసీ 2023 ప్రకారం, 2033 నాటికి అంతరిక్ష ఆర్థిక వ్యవస్థను ఎంతకు చేర్చాలని లక్ష్యంగా పెట్టుకున్నారు?", opts: ["$8.4 బిలియన్లు", "$20 బిలియన్లు", "$44 బిలియన్లు", "$100 బిలియన్లు"], ans: 2, exp: "2033 నాటికి భారత అంతరిక్ష ఆర్థిక వ్యవస్థను $44 బిలియన్లకు చేర్చడం లక్ష్యం." },
+            { q: "19. జపాన్ (JAXA) మరియు భారత్ (ISRO) సంయుక్తంగా చేపట్టనున్న చంద్ర మిషన్ పేరు ఏమిటి?", opts: ["Artemis", "LUPEX", "SpaDeX", "NISAR"], ans: 1, exp: "Lunar Polar Exploration Mission (LUPEX) అనేది జపాన్ మరియు భారత్ ల జాయింట్ మిషన్." },
+            { q: "20. చంద్రయాన్-1 ప్రయోగానికి ఏ లాంచ్ వెహికల్ ఉపయోగించారు?", opts: ["PSLV-C25", "PSLV-C11", "GSLV Mk III", "LVM3-M4"], ans: 1, exp: "చంద్రయాన్-1 (2008) మిషన్ కు PSLV-C11 రాకెట్ ను ఉపయోగించారు." },
+            { q: "21. ISRO యొక్క ఏ లాంచ్ వెహికల్ ని 'వర్క్‌హార్స్ (Workhorse)' అని పిలుస్తారు?", opts: ["SLV-3", "GSLV", "PSLV", "SSLV"], ans: 2, exp: "PSLV ని ఇస్రో యొక్క వర్క్‌హార్స్ అని పిలుస్తారు. దీనిలో 4 వేరియంట్స్ (G, CA, XL, DL) ఉన్నాయి." },
+            { q: "22. చంద్రయాన్-4 మిషన్ కోసం మొత్తం ఎన్ని మాడ్యూల్స్ డిజైన్ చేయబడ్డాయి?", opts: ["3", "4", "5", "6"], ans: 2, exp: "చంద్రయాన్-4 లో మొత్తం 5 మాడ్యూల్స్ (Ascender, Descender, Transfer, Re-entry, Propulsion) ఉంటాయి." },
+            { q: "23. NISAR ఉపగ్రహం ప్రతి ఎన్ని రోజులకు ఒకసారి భూమి మొత్తాన్ని (Land & Ice) స్కాన్ చేస్తుంది?", opts: ["5 రోజులు", "12 రోజులు", "24 రోజులు", "30 రోజులు"], ans: 1, exp: "NISAR ఉపగ్రహం ప్రతి 12 రోజులకు ఒకసారి భూమి మొత్తాన్ని కవర్ చేస్తుంది." },
+            { q: "24. భారతదేశంలో స్పేస్ స్టార్టప్స్ సంఖ్య 2014 లో 1 ఉండగా, 2024 నాటికి సుమారుగా ఎంతకు చేరింది?", opts: ["50", "120", "266", "500"], ans: 2, exp: "స్పేస్ పాలసీ సంస్కరణల వల్ల 2024 నాటికి స్టార్టప్స్ సంఖ్య 266 కి పెరిగింది." },
+            { q: "25. చంద్రయాన్-3 ప్రయోగానికి ఉపయోగించిన రాకెట్ ఏది?", opts: ["PSLV-XL", "LVM3-M4", "GSLV-F16", "SSLV-D2"], ans: 1, exp: "14 జులై 2023 న LVM3-M4 రాకెట్ ద్వారా చంద్రయాన్-3 ని ప్రయోగించారు." }
+        ];
+
+        let userAnswers = new Array(quizData.length).fill(null);
+        let quizSubmitted = false;
+
+        const quizContainer = document.getElementById('quiz-box');
+        
+        // Render Questions
+        quizData.forEach((item, index) => {
+            let optionsHTML = '';
+            item.opts.forEach((opt, optIdx) => {
+                optionsHTML += `<button class="opt-btn" onclick="selectOption(${index}, ${optIdx}, this)">${String.fromCharCode(65 + optIdx)}. ${opt}</button>`;
+            });
+
+            quizContainer.innerHTML += `
+                <div class="mcq-card" id="q-card-${index}">
+                    <div class="q-text">${item.q}</div>
+                    <div class="options-grid" id="opts-grid-${index}">${optionsHTML}</div>
+                    <div class="explanation" id="exp-${index}">
+                        <strong>వివరణ (Explanation):</strong> ${item.exp}
+                    </div>
+                </div>
+            `;
+        });
+
+        function selectOption(qIndex, optIdx, btn) {
+            if(quizSubmitted) return;
+            
+            userAnswers[qIndex] = optIdx;
+            
+            const parent = document.getElementById(`opts-grid-${qIndex}`);
+            parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+            
+            btn.classList.add('selected');
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            quizSubmitted = true;
+            
+            quizData.forEach((item, index) => {
+                const parent = document.getElementById(`opts-grid-${index}`);
+                const buttons = parent.querySelectorAll('.opt-btn');
+                const userAns = userAnswers[index];
+                
+                buttons[item.ans].classList.add('correct');
+                
+                if (userAns !== null) {
+                    if (userAns === item.ans) {
+                        score++;
+                    } else {
+                        buttons[userAns].classList.add('wrong');
+                    }
+                }
+                
+                document.getElementById(`exp-${index}`).classList.add('visible');
+                
+                buttons.forEach(b => {
+                    b.disabled = true;
+                    b.style.cursor = 'not-allowed';
+                });
+            });
+            
+            document.getElementById('score-display').innerText = score;
+            document.getElementById('score-board').style.display = 'block';
+            
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('restart-btn').style.display = 'inline-block';
+            
+            setTimeout(() => {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 300);
+        }
+
+        function restartQuiz() {
+            userAnswers.fill(null);
+            quizSubmitted = false;
+            
+            quizData.forEach((item, index) => {
+                const parent = document.getElementById(`opts-grid-${index}`);
+                const buttons = parent.querySelectorAll('.opt-btn');
+                
+                buttons.forEach(b => {
+                    b.classList.remove('selected', 'correct', 'wrong');
+                    b.disabled = false;
+                    b.style.cursor = 'pointer';
+                });
+                
+                document.getElementById(`exp-${index}`).classList.remove('visible');
+            });
+            
+            document.getElementById('score-board').style.display = 'none';
+            document.getElementById('submit-btn').style.display = 'inline-block';
+            document.getElementById('restart-btn').style.display = 'none';
+            
+            document.getElementById('quiz').scrollIntoView({behavior: "smooth"});
+        }
+
+    </script>
+</body>
+</html>

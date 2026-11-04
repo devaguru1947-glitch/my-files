@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="utf-8">
+    <title>RAHUL ACADEMY - 3D Coins Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Noto+Sans+Telugu:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000; --cyan: #38bdf8; --pink: #ec4899; 
+            --yellow: #facc15; --green: #22c55e; --gray: #334155; --text: #f8fafc;
+        }
+
+        body { 
+            background: var(--bg); color: var(--text); font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            margin: 0; padding: 15px; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            user-select: none;
+        }
+        
+        /* HEADER */
+        .header { text-align: center; margin-bottom: 10px; z-index: 10; position: relative;}
+        .header h1 { color: var(--cyan); margin: 0; font-size: 2rem; letter-spacing: 2px; font-weight: 900;}
+        .header p { color: var(--yellow); margin: 5px 0 0 0; font-weight: 800; font-size: 1rem;}
+        
+        /* MAIN LAYOUT */
+        .main { display: flex; gap: 20px; flex: 1; overflow: hidden; z-index: 10; position: relative;}
+        .col { flex: 1; background: #0f0f0f; padding: 15px; border-radius: 15px; border: 1px solid #1f2937; overflow-y: auto; display: flex; flex-direction: column; align-items: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.8);}
+        
+        /* TOGGLE BUTTONS */
+        .tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; width: 100%; flex-wrap: wrap;}
+        .tab-btn {
+            background: #1e293b; color: #94a3b8; padding: 8px 15px; border-radius: 8px; font-weight: 800; 
+            border: 1px solid var(--gray); cursor: pointer; font-size: 0.95rem; transition: 0.3s;
+        }
+        .tab-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); box-shadow: 0 0 15px rgba(56,189,248,0.4);}
+
+        /* 3D COIN ANIMATION */
+        .coin-stage { display: flex; gap: 15px; margin-bottom: 15px; height: 100px; align-items: center; justify-content: center; width: 100%; flex-wrap: wrap; perspective: 800px;}
+        .coin { width: 70px; height: 70px; position: relative; transform-style: preserve-3d; transition: transform 2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        
+        .coin-face { 
+            position: absolute; width: 100%; height: 100%; border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            font-size: 35px; font-weight: 900; backface-visibility: hidden; border: 3px solid #b48608;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .coin-front { background: radial-gradient(circle, #facc15, #b48608); color: #000; }
+        .coin-back { background: radial-gradient(circle, #94a3b8, #475569); color: #fff; transform: rotateX(180deg); border-color: #475569;}
+        
+        .toss-btn {
+            background: var(--pink); color: #fff; border: none; padding: 10px 30px;
+            font-size: 1.1rem; font-weight: 900; border-radius: 8px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); transition: 0.2s; margin-bottom: 10px;
+        }
+        .toss-btn:active { transform: scale(0.95); }
+        .result-display { font-size: 1.4rem; font-weight: bold; color: var(--yellow); margin-bottom: 20px; letter-spacing: 2px;}
+
+        /* PASCAL'S TRIANGLE SHORTCUT */
+        .sc-box { background: #000; padding: 20px; border: 2px dashed #475569; border-radius: 12px; width: 100%; max-width: 450px; text-align: center;}
+        .sc-title { color: var(--pink); margin-top: 0; font-size: 1.2rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase;}
+        .pascal-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 10px;}
+        .p-node { background: #1e293b; border: 1px solid var(--cyan); color: var(--text); padding: 8px 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; display: flex; flex-direction: column; align-items: center;}
+        .p-head { font-size: 0.75rem; color: var(--cyan); margin-bottom: 3px; text-transform: uppercase;}
+        .p-val { color: var(--yellow); font-size: 1.3rem;}
+        
+        /* 3D CARDS DECK */
+        .deck { width: 100%; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-content: flex-start; padding-bottom: 20px;}
+        .card { width: calc(50% - 10px); height: 280px; perspective: 1500px; cursor: pointer; }
+        .inner { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
+        .card.flip .inner { transform: rotateY(180deg); }
+        
+        .face { 
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; 
+            border: 2px solid #475569; padding: 15px; display: flex; flex-direction: column; justify-content: center; 
+            box-sizing: border-box; box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
+        }
+        .front { background: linear-gradient(145deg, #1e293b, #0f172a); }
+        .front:hover { border-color: var(--cyan); box-shadow: 0 0 15px rgba(56,189,248,0.3);}
+        .back { background: linear-gradient(145deg, #022c22, #064e3b); border-color: var(--green); transform: rotateY(180deg); color: #f8fafc; }
+        
+        /* CARD CORNERS & SUITS */
+        .corner { position: absolute; font-weight: 900; font-size: 18px; text-align: center;}
+        .corner span { font-size: 28px; display: block; line-height: 1;}
+        .tl { top: 10px; left: 10px; color: var(--cyan); }
+        .br { bottom: 10px; right: 10px; color: var(--cyan); transform: rotate(180deg); }
+        .back .corner { color: #f8fafc; }
+        .suit-red { color: #ef4444 !important; }
+        
+        /* CARD TEXT */
+        .q-en { font-size: 1.15rem; font-weight: 800; text-align: center; margin-bottom: 10px; color: #fff; padding: 0 25px;}
+        .q-te { font-size: 0.95rem; font-weight: 600; text-align: center; color: #94a3b8; padding: 0 15px;}
+        .sol-title { color: var(--yellow); font-size: 1.3rem; font-weight: 900; margin-bottom: 10px; text-align: center; border-bottom: 2px dashed var(--green); padding-bottom: 5px;}
+        .sol-text { font-size: 1.05rem; line-height: 1.5; text-align: center; font-weight: 600;}
+
+        /* FRACTIONS & VISUAL COINS */
+        .frac { display: inline-block; text-align: center; vertical-align: middle; color: var(--yellow); font-weight: 900; margin: 0 4px; font-size: 1.2rem;}
+        .frac span { display: block; padding: 0.1em; }
+        .frac .top { border-bottom: 2px solid var(--yellow); }
+        
+        .ans-coin { font-size: 1rem; font-weight: 900; color: #000; background: var(--yellow); border-radius: 50%; width: 22px; height: 22px; display: inline-flex; justify-content: center; align-items: center; margin: 0 2px;}
+        .ans-coin.t { background: #94a3b8; color: #fff;}
+        .coin-group { background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 8px; display: inline-block; margin: 4px; border: 1px solid #333;}
+    </style>
+</head>
+<body>
+    
+    <div class="header">
+        <h1>RAHUL SIR</h1>
+        <p>| 3D COINS PROBABILITY - CASINO CARDS |</p>
+    </div>
+    
+    <div class="main">
+        <!-- LEFT PANEL : 3D COINS VISUALIZER -->
+        <div class="col">
+            <div class="tabs">
+                <button onclick="setMode(2)" id="btn-2c" class="tab-btn active">2 COINS</button>
+                <button onclick="setMode(3)" id="btn-3c" class="tab-btn">3 COINS</button>
+                <button onclick="setMode(4)" id="btn-4c" class="tab-btn">4 COINS</button>
+                <button onclick="setMode(5)" id="btn-5c" class="tab-btn">5 COINS</button>
+                <button onclick="setMode(6)" id="btn-6c" class="tab-btn">6 COINS</button>
+            </div>
+
+            <!-- 3D COIN STAGE -->
+            <div class="coin-stage" id="coin-stage"></div>
+            
+            <button class="toss-btn" onclick="tossCoins()">TOSS COINS</button>
+            <div class="result-display" id="result-display">Result: ?</div>
+            
+            <!-- SHORTCUT BOX (PASCAL'S TRIANGLE) -->
+            <div class="sc-box">
+                <div class="sc-title">♠ <span id="sc-coin-count">2</span> Coins Shortcut (Total = <span id="sc-total">4</span>) ♠</div>
+                <div style="color:#94a3b8; font-size:0.9rem; margin-bottom:5px;">(Based on Pascal's Triangle)</div>
+                <div class="pascal-grid" id="pascal-grid">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- RIGHT PANEL : CARDS DECK -->
+        <div class="col" style="align-items: flex-start;">
+            <div class="deck" id="deck"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 2;
+        let coinElements = [];
+        const stage = document.getElementById('coin-stage');
+
+        // Pascal's Triangle values for n coins
+        const pascalData = {
+            2: [1, 2, 1],
+            3: [1, 3, 3, 1],
+            4: [1, 4, 6, 4, 1],
+            5: [1, 5, 10, 10, 5, 1],
+            6: [1, 6, 15, 20, 15, 6, 1]
+        };
+
+        function createCoin() {
+            let coin = document.createElement('div');
+            coin.className = 'coin';
+            
+            let front = document.createElement('div');
+            front.className = 'coin-face coin-front';
+            front.innerText = 'H';
+            
+            let back = document.createElement('div');
+            back.className = 'coin-face coin-back';
+            back.innerText = 'T';
+            
+            coin.appendChild(front);
+            coin.appendChild(back);
+            return coin;
+        }
+
+        function tossCoins() {
+            document.getElementById('result-display').innerText = `Tossing...`;
+            let results = [];
+            
+            coinElements.forEach((coin) => {
+                // Randomly decide Head (0) or Tail (1)
+                let isTail = Math.random() > 0.5;
+                results.push(isTail ? 'T' : 'H');
+                
+                // Add spin (multiple of 360) + extra 180 if Tail
+                let spins = (Math.floor(Math.random() * 5) + 3) * 360; 
+                let finalRotation = isTail ? spins + 180 : spins;
+                
+                coin.style.transform = `rotateX(${finalRotation}deg)`;
+            });
+            
+            setTimeout(() => {
+                document.getElementById('result-display').innerText = `Result: ${results.join(' ')}`;
+            }, 2100);
+        }
+
+        // Helper to draw visual coins in explanations
+        function drawCoins(str) {
+            let html = '<div class="coin-group">';
+            for(let char of str) {
+                if(char === 'H') html += '<span class="ans-coin h">H</span>';
+                else if(char === 'T') html += '<span class="ans-coin t">T</span>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        // Questions Array
+        const q = [
+            // 2 COINS
+            {m:2, n:"Q1", s:"♠", c:"suit-black", e:"2 coins are tossed. Probability of exactly 1 Head?", t:"సరిగ్గా 1 బొమ్మ (Head) పడే సంభావ్యత?", x:`Favorable: ${drawCoins('HT')} ${drawCoins('TH')} = 2 ways.<br>Total Outcomes = 2² = 4.<br>Prob = <div class='frac'><span class='top'>2</span><span>4</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>1/2</b>`},
+            {m:2, n:"Q2", s:"♥", c:"suit-red", e:"2 coins are tossed. Probability of at least 1 Tail?", t:"కనీసం 1 బొరుసు (Tail) పడే సంభావ్యత?", x:`Favorable: ${drawCoins('HT')} ${drawCoins('TH')} ${drawCoins('TT')} = 3 ways.<br>Total = 4.<br>Prob = <div class='frac'><span class='top'>3</span><span>4</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>3/4</b>`},
+            
+            // 3 COINS
+            {m:3, n:"Q3", s:"♣", c:"suit-black", e:"3 coins are tossed. Probability of exactly 2 Heads?", t:"సరిగ్గా 2 బొమ్మలు పడే సంభావ్యత?", x:`Favorable: ${drawCoins('HHT')} ${drawCoins('HTH')} ${drawCoins('THH')} = 3 ways.<br>Total = 2³ = 8.<br>Prob = <div class='frac'><span class='top'>3</span><span>8</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>3/8</b>`},
+            {m:3, n:"Q4", s:"♦", c:"suit-red", e:"3 coins are tossed. Probability of all Tails?", t:"మూడూ బొరుసులు (Tails) పడే సంభావ్యత?", x:`Favorable: ${drawCoins('TTT')} = 1 way.<br>Total = 8.<br>Prob = <div class='frac'><span class='top'>1</span><span>8</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>1/8</b>`},
+            {m:3, n:"Q5", s:"♠", c:"suit-black", e:"3 coins are tossed. Probability of at most 2 Heads?", t:"గరిష్టంగా 2 బొమ్మలు (0, 1, or 2 H) పడే సంభావ్యత?", x:`Everything except all 3 Heads.<br>Total ways - (HHH) = 8 - 1 = 7 ways.<br>Prob = <div class='frac'><span class='top'>7</span><span>8</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>7/8</b>`},
+            
+            // 4 COINS
+            {m:4, n:"Q6", s:"♥", c:"suit-red", e:"4 coins are tossed. Probability of exactly 2 Heads & 2 Tails?", t:"సరిగ్గా 2 బొమ్మలు మరియు 2 బొరుసులు పడే సంభావ్యత?", x:`From Shortcut: 2 Heads row = 6 ways.<br>Total = 2⁴ = 16.<br>Prob = <div class='frac'><span class='top'>6</span><span>16</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>3/8</b>`},
+            {m:4, n:"Q7", s:"♣", c:"suit-black", e:"4 coins are tossed. Probability of at least 1 Head?", t:"కనీసం 1 బొమ్మ పడే సంభావ్యత?", x:`Total ways - (No Heads / All Tails).<br>16 - 1 = 15 ways.<br>Prob = <div class='frac'><span class='top'>15</span><span>16</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>15/16</b>`},
+            
+            // 5 COINS
+            {m:5, n:"Q8", s:"♦", c:"suit-red", e:"5 coins are tossed. Probability of exactly 3 Heads?", t:"సరిగ్గా 3 బొమ్మలు పడే సంభావ్యత?", x:`From Pascal's Shortcut: 3 Heads = 10 ways.<br>Total = 2⁵ = 32.<br>Prob = <div class='frac'><span class='top'>10</span><span>32</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>5/16</b>`},
+            
+            // 6 COINS
+            {m:6, n:"Q9", s:"♠", c:"suit-black", e:"6 coins are tossed. Probability of exactly 4 Tails?", t:"సరిగ్గా 4 బొరుసులు పడే సంభావ్యత?", x:`4 Tails means 2 Heads. From Shortcut: 2 Heads = 15 ways.<br>Total = 2⁶ = 64.<br>Prob = <div class='frac'><span class='top'>15</span><span>64</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>15/64</b>`}
+        ];
+
+        function setMode(mode) {
+            currentMode = mode;
+            // Update Buttons
+            for(let i=2; i<=6; i++) {
+                document.getElementById(`btn-${i}c`).classList.remove('active');
+            }
+            document.getElementById(`btn-${mode}c`).classList.add('active');
+
+            // Setup 3D Stage
+            stage.innerHTML = '';
+            coinElements = [];
+            for(let i=0; i<mode; i++){
+                let c = createCoin();
+                stage.appendChild(c);
+                coinElements.push(c);
+            }
+
+            // Update Pascal's Shortcut
+            document.getElementById('sc-coin-count').innerText = mode;
+            document.getElementById('sc-total').innerText = Math.pow(2, mode);
+            let pGrid = document.getElementById('pascal-grid');
+            pGrid.innerHTML = '';
+            pascalData[mode].forEach((val, index) => {
+                pGrid.innerHTML += `
+                    <div class="p-node">
+                        <span class="p-head">${index} Head(s)</span>
+                        <span class="p-val">${val}</span>
+                    </div>
+                `;
+            });
+            
+            // Build Deck
+            const deck = document.getElementById('deck');
+            deck.innerHTML = '';
+            
+            q.filter(x => x.m === mode).forEach(item => {
+                let d = document.createElement('div');
+                d.className = 'card';
+                d.innerHTML = `
+                    <div class="inner">
+                        <div class="face front">
+                            <div class="corner tl ${item.c}">${item.n}<br><span>${item.s}</span></div>
+                            <div class="q-en">${item.e}</div>
+                            <div class="q-te">${item.t}</div>
+                            <div class="corner br ${item.c}">${item.n}<br><span>${item.s}</span></div>
+                        </div>
+                        <div class="face back">
+                            <div class="corner tl">${item.n}<br><span>${item.s}</span></div>
+                            <div class="sol-title">💡 Solution</div>
+                            <div class="sol-text">${item.x}</div>
+                            <div class="corner br">${item.n}<br><span>${item.s}</span></div>
+                        </div>
+                    </div>`;
+                
+                d.onclick = function() {
+                    let isFlipped = this.classList.contains('flip');
+                    document.querySelectorAll('.card').forEach(c => c.classList.remove('flip'));
+                    if(!isFlipped) {
+                        this.classList.add('flip');
+                    }
+                };
+                deck.appendChild(d);
+            });
+
+            // Initial Toss on tab change
+            setTimeout(tossCoins, 100);
+        }
+        
+        // Initialize App
+        setMode(2);
+    </script>
+</body>
+</html>

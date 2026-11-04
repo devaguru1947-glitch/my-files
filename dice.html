@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="utf-8">
+    <title>RAHUL ACADEMY - 3D Dice Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Noto+Sans+Telugu:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000; --cyan: #38bdf8; --pink: #ec4899; 
+            --yellow: #facc15; --green: #22c55e; --gray: #334155; --text: #f8fafc;
+        }
+
+        body { 
+            background: var(--bg); color: var(--text); font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            margin: 0; padding: 15px; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            user-select: none;
+        }
+        
+        /* HEADER */
+        .header { text-align: center; margin-bottom: 10px; z-index: 10; position: relative;}
+        .header h1 { color: var(--cyan); margin: 0; font-size: 2rem; letter-spacing: 2px; font-weight: 900;}
+        .header p { color: var(--yellow); margin: 5px 0 0 0; font-weight: 800; font-size: 1rem;}
+        
+        /* MAIN LAYOUT */
+        .main { display: flex; gap: 20px; flex: 1; overflow: hidden; z-index: 10; position: relative;}
+        .col { flex: 1; background: #0f0f0f; padding: 15px; border-radius: 15px; border: 1px solid #1f2937; overflow-y: auto; display: flex; flex-direction: column; align-items: center;}
+        
+        /* TOGGLE BUTTONS */
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; width: 100%;}
+        .tab-btn {
+            background: #1e293b; color: #94a3b8; padding: 10px 15px; border-radius: 8px; font-weight: 800; 
+            border: 1px solid var(--gray); cursor: pointer; font-size: 1rem; transition: 0.3s;
+        }
+        .tab-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); box-shadow: 0 0 15px rgba(56,189,248,0.4);}
+
+        /* 3D DICE ANIMATION */
+        .dice-stage { display: flex; gap: 15px; margin-bottom: 10px; height: 90px; align-items: center; justify-content: center; width: 100%; flex-wrap: wrap;}
+        .scene { width: 60px; height: 60px; perspective: 600px; }
+        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .cube-face { 
+            position: absolute; width: 60px; height: 60px; background: #1e293b; border: 2px solid #000; 
+            border-radius: 10px; display: flex; justify-content: center; align-items: center; 
+            font-size: 45px; color: var(--cyan); box-shadow: inset 0 0 10px rgba(0,0,0,0.8); line-height: 1;
+        }
+        .cf-1 { transform: rotateY(0deg) translateZ(30px); }
+        .cf-2 { transform: rotateY(90deg) translateZ(30px); }
+        .cf-3 { transform: rotateX(90deg) translateZ(30px); }
+        .cf-4 { transform: rotateX(-90deg) translateZ(30px); }
+        .cf-5 { transform: rotateY(-90deg) translateZ(30px); }
+        .cf-6 { transform: rotateY(180deg) translateZ(30px); }
+        
+        .roll-btn {
+            background: var(--pink); color: #fff; border: none; padding: 10px 30px;
+            font-size: 1.1rem; font-weight: 900; border-radius: 8px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); transition: 0.2s; margin-bottom: 5px;
+        }
+        .roll-btn:active { transform: scale(0.95); }
+        .sum-display { font-size: 1.2rem; font-weight: bold; color: var(--yellow); margin-bottom: 15px;}
+
+        /* 2 DICE GRID */
+        .dice-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; width: 100%; max-width: 420px; }
+        .cell { 
+            background: #1e293b; border: 2px solid #334155; text-align: center; padding: 10px 2px; 
+            border-radius: 6px; cursor: pointer; font-size: 28px; transition: 0.3s; color: #cbd5e1; 
+            display: flex; justify-content: center; align-items: center; line-height: 1;
+        }
+        .cell.active { background: var(--cyan); color: #000; transform: scale(1.15); box-shadow: 0 0 15px var(--cyan); border-color: #fff; z-index: 5;}
+        .doublet { border-color: #9d174d; color: #f472b6; }
+        .doublet.active { background: var(--pink); color: #fff; box-shadow: 0 0 15px var(--pink);}
+        
+        /* 3 & 4 DICE SHORTCUT TABLES */
+        .sc-box { background: #000; padding: 15px; border: 2px dashed #475569; border-radius: 12px; width: 100%; max-width: 450px;}
+        .sc-title { color: var(--pink); text-align: center; margin-top: 0; font-size: 1.2rem; font-weight: 900; margin-bottom: 15px;}
+        .sc-layout { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; padding: 0 10px;}
+        .sc-col { line-height: 2; }
+        .hl-sum { color: var(--cyan); }
+        .hl-way { color: var(--yellow); background: #111; padding: 2px 8px; border-radius: 5px; border: 1px solid #333;}
+        
+        /* 3D CARDS DECK */
+        .deck { width: 100%; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-content: flex-start; padding-bottom: 20px;}
+        .card { width: calc(50% - 10px); height: 300px; perspective: 1500px; cursor: pointer; }
+        .inner { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
+        .card.flip .inner { transform: rotateY(180deg); }
+        
+        .face { 
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; 
+            border: 2px solid #475569; padding: 15px; display: flex; flex-direction: column; justify-content: center; 
+            box-sizing: border-box; box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
+        }
+        .front { background: linear-gradient(145deg, #1e293b, #0f172a); }
+        .front:hover { border-color: var(--cyan); box-shadow: 0 0 15px rgba(56,189,248,0.3);}
+        .back { background: linear-gradient(145deg, #022c22, #064e3b); border-color: var(--green); transform: rotateY(180deg); color: #f8fafc; }
+        
+        /* CARD CORNERS & SUITS */
+        .corner { position: absolute; font-weight: 900; font-size: 18px; text-align: center;}
+        .corner span { font-size: 28px; display: block; line-height: 1;}
+        .tl { top: 10px; left: 10px; color: var(--cyan); }
+        .br { bottom: 10px; right: 10px; color: var(--cyan); transform: rotate(180deg); }
+        .back .corner { color: #f8fafc; }
+        .suit-red { color: #ef4444 !important; }
+        
+        /* CARD TEXT */
+        .q-en { font-size: 1.15rem; font-weight: 800; text-align: center; margin-bottom: 10px; color: #fff; padding: 0 25px;}
+        .q-te { font-size: 1rem; font-weight: 600; text-align: center; color: #94a3b8; padding: 0 15px;}
+        .sol-title { color: var(--yellow); font-size: 1.3rem; font-weight: 900; margin-bottom: 10px; text-align: center; border-bottom: 2px dashed var(--green); padding-bottom: 5px;}
+        .sol-text { font-size: 1.05rem; line-height: 1.5; text-align: center; font-weight: 600;}
+
+        /* FRACTIONS & VISUAL DICE */
+        .frac { display: inline-block; text-align: center; vertical-align: middle; color: var(--yellow); font-weight: 900; margin: 0 4px; font-size: 1.2rem;}
+        .frac span { display: block; padding: 0.1em; }
+        .frac .top { border-bottom: 2px solid var(--yellow); }
+        
+        .ans-dice { font-size: 1.5rem; letter-spacing: 2px; color: #f8fafc; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 6px; display: inline-block; margin: 5px 0;}
+    </style>
+</head>
+<body>
+    
+    <div class="header">
+        <h1>RAHUL SIR</h1>
+        <p>| 3D DICE MASTER (2, 3 & 4 DICE) |</p>
+    </div>
+    
+    <div class="main">
+        <!-- LEFT PANEL : 3D DICE VISUALIZER -->
+        <div class="col">
+            <div class="tabs">
+                <button onclick="setMode(2)" id="btn-2d" class="tab-btn active">2 DICE (36)</button>
+                <button onclick="setMode(3)" id="btn-3d" class="tab-btn">3 DICE (216)</button>
+                <button onclick="setMode(4)" id="btn-4d" class="tab-btn">4 DICE (1296)</button>
+            </div>
+
+            <!-- 3D DICE STAGE -->
+            <div class="dice-stage" id="dice-stage"></div>
+            
+            <button class="roll-btn" onclick="rollDice()">ROLL DICE 🎲</button>
+            <div class="sum-display" id="sum-display">Sum: ?</div>
+            
+            <!-- 2 DICE VIEW -->
+            <div id="view-2d" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <div style="color:var(--yellow); font-weight:800; font-size:1.1rem; margin-bottom: 10px;">2 Dice Casino Grid</div>
+                <div class="dice-grid" id="grid"></div>
+            </div>
+            
+            <!-- 3 DICE VIEW -->
+            <div id="view-3d" class="sc-box" style="display:none; width: 100%;">
+                <div class="sc-title">♠ 3 Dice Sum Shortcut ♠</div>
+                <div class="sc-layout">
+                    <div class="sc-col">
+                        <div><span class="hl-sum">S: 3, 18</span> ➔ <span class="hl-way">1 Way</span></div>
+                        <div><span class="hl-sum">S: 4, 17</span> ➔ <span class="hl-way">3 Ways</span></div>
+                        <div><span class="hl-sum">S: 5, 16</span> ➔ <span class="hl-way">6 Ways</span></div>
+                        <div><span class="hl-sum">S: 6, 15</span> ➔ <span class="hl-way">10 Ways</span></div>
+                    </div>
+                    <div class="sc-col">
+                        <div><span class="hl-sum">S: 7, 14</span> ➔ <span class="hl-way">15 Ways</span></div>
+                        <div><span class="hl-sum">S: 8, 13</span> ➔ <span class="hl-way">21 Ways</span></div>
+                        <div><span class="hl-sum">S: 9, 12</span> ➔ <span class="hl-way">25 Ways</span></div>
+                        <div><span class="hl-sum">S: 10, 11</span> ➔ <span class="hl-way">27 Ways</span></div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: var(--gray); font-weight: bold; margin-top: 15px; font-size: 0.9rem;">(Total Outcomes = 216)</div>
+            </div>
+
+            <!-- 4 DICE VIEW -->
+            <div id="view-4d" class="sc-box" style="display:none; width: 100%; max-width: 480px;">
+                <div class="sc-title">♣ 4 Dice Sum Shortcut ♣</div>
+                <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 800; padding: 0 5px;">
+                    <div class="sc-col">
+                        <div><span class="hl-sum">S: 4, 24</span> ➔ <span class="hl-way">1</span></div>
+                        <div><span class="hl-sum">S: 5, 23</span> ➔ <span class="hl-way">4</span></div>
+                        <div><span class="hl-sum">S: 6, 22</span> ➔ <span class="hl-way">10</span></div>
+                        <div><span class="hl-sum">S: 7, 21</span> ➔ <span class="hl-way">20</span></div>
+                    </div>
+                    <div class="sc-col">
+                        <div><span class="hl-sum">S: 8, 20</span> ➔ <span class="hl-way">35</span></div>
+                        <div><span class="hl-sum">S: 9, 19</span> ➔ <span class="hl-way">56</span></div>
+                        <div><span class="hl-sum">S: 10, 18</span> ➔ <span class="hl-way">80</span></div>
+                        <div><span class="hl-sum">S: 11, 17</span> ➔ <span class="hl-way">104</span></div>
+                    </div>
+                    <div class="sc-col">
+                        <div><span class="hl-sum">S: 12, 16</span> ➔ <span class="hl-way">125</span></div>
+                        <div><span class="hl-sum">S: 13, 15</span> ➔ <span class="hl-way">140</span></div>
+                        <div><span class="hl-sum">S: 14</span> ➔ <span class="hl-way">146</span></div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: var(--gray); font-weight: bold; margin-top: 15px; font-size: 0.9rem;">(Total Outcomes = 6⁴ = 1296)</div>
+            </div>
+        </div>
+        
+        <!-- RIGHT PANEL : CARDS DECK -->
+        <div class="col" style="align-items: flex-start;">
+            <div class="deck" id="deck"></div>
+        </div>
+    </div>
+
+    <script>
+        // Dice faces (Unicode characters)
+        const faces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+        
+        // Generate the 6x6 grid
+        const grid = document.getElementById('grid');
+        for(let i=1; i<=6; i++){
+            for(let j=1; j<=6; j++){
+                let d = document.createElement('div');
+                d.className = 'cell' + (i === j ? ' doublet' : '');
+                d.dataset.s = i + j;
+                d.innerHTML = faces[i-1] + faces[j-1];
+                grid.appendChild(d);
+            }
+        }
+        
+        // 3D Dice Setup
+        let currentMode = 2;
+        let diceElements = [];
+        const stage = document.getElementById('dice-stage');
+
+        function createDie() {
+            let scene = document.createElement('div');
+            scene.className = 'scene';
+            let cube = document.createElement('div');
+            cube.className = 'cube';
+            
+            const faceClasses = ['cf-1', 'cf-2', 'cf-3', 'cf-4', 'cf-5', 'cf-6'];
+            const faceVals = [1, 2, 3, 4, 5, 6]; 
+            
+            faceClasses.forEach((fc, index) => {
+                let face = document.createElement('div');
+                face.className = `cube-face ${fc}`;
+                face.innerHTML = faces[faceVals[index]-1];
+                cube.appendChild(face);
+            });
+            
+            scene.appendChild(cube);
+            return cube;
+        }
+
+        const rotations = {
+            1: 'rotateX(0deg) rotateY(0deg)',
+            2: 'rotateX(0deg) rotateY(-90deg)',
+            3: 'rotateX(-90deg) rotateY(0deg)',
+            4: 'rotateX(90deg) rotateY(0deg)',
+            5: 'rotateX(0deg) rotateY(90deg)',
+            6: 'rotateX(0deg) rotateY(180deg)'
+        };
+
+        function rollDice() {
+            let sum = 0;
+            document.getElementById('sum-display').innerText = `Rolling...`;
+            
+            diceElements.forEach((cube) => {
+                let face = Math.floor(Math.random() * 6) + 1;
+                sum += face;
+                let rx = (Math.floor(Math.random() * 3) + 1) * 360;
+                let ry = (Math.floor(Math.random() * 3) + 1) * 360;
+                cube.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) ${rotations[face]}`;
+            });
+            
+            setTimeout(() => {
+                document.getElementById('sum-display').innerText = `Sum: ${sum}`;
+            }, 1200);
+        }
+
+        // Questions Array with Visual Dice in explanations
+        const q = [
+            {m:2, n:"Q1", s:"♠", c:"suit-black", e:"Probability of getting a sum of 9?", t:"రెండు పాచికల మొత్తం 9 అయ్యే సంభావ్యత?", x:"Favorable Outcomes:<br><span class='ans-dice'>[⚂ ⚅] [⚃ ⚄] [⚄ ⚃] [⚅ ⚂]</span><br>= 4 ways.<br>Prob = <div class='frac'><span class='top'>4</span><span>36</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>1/9</b>", h:'sum', v:[9]},
+            {m:2, n:"Q2", s:"♥", c:"suit-red", e:"Probability of getting a doublet?", t:"ఒకే సంఖ్య (Doublet) వచ్చే సంభావ్యత?", x:"Doublets:<br><span class='ans-dice'>[⚀ ⚀] [⚁ ⚁] [⚂ ⚂] <br> [⚃ ⚃] [⚄ ⚄] [⚅ ⚅]</span><br>= 6 ways.<br>Prob = <div class='frac'><span class='top'>6</span><span>36</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>1/6</b>", h:'dbl', v:[]},
+            {m:2, n:"Q3", s:"♣", c:"suit-black", e:"Probability that the sum is at least 10?", t:"మొత్తం కనీసం 10 అయ్యే సంభావ్యత?", x:"Sum 10 (3 ways), Sum 11 (2 ways), Sum 12 (1 way).<br><span class='ans-dice'>[⚃ ⚅] [⚄ ⚄] [⚅ ⚃]<br>[⚄ ⚅] [⚅ ⚄] [⚅ ⚅]</span><br>= 6 ways total.<br>Prob = <div class='frac'><span class='top'>6</span><span>36</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>1/6</b>", h:'sum', v:[10,11,12]},
+            
+            {m:3, n:"Q4", s:"♦", c:"suit-red", e:"Probability of exactly sum 16? (3 Dice)", t:"సంఖ్యల మొత్తం కచ్చితంగా 16 అయ్యే సంభావ్యత?", x:"From Shortcut Table: Sum 16 has exactly 6 ways.<br><span class='ans-dice'>[⚄ ⚄ ⚅] [⚄ ⚅ ⚄] [⚅ ⚄ ⚄]<br>[⚃ ⚅ ⚅] [⚅ ⚃ ⚅] [⚅ ⚅ ⚃]</span><br>Prob = <div class='frac'><span class='top'>6</span><span>216</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>1/36</b>", h:'', v:[]},
+            {m:3, n:"Q5", s:"♠", c:"suit-black", e:"Probability of getting Triplets? (3 Dice)", t:"మూడింటిపై ఒకే సంఖ్య వచ్చే సంభావ్యత?", x:"Triplets:<br><span class='ans-dice'>[⚀ ⚀ ⚀] to [⚅ ⚅ ⚅]</span><br>= 6 ways.<br>Total Outcomes = 216.<br>Prob = <div class='frac'><span class='top'>6</span><span>216</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>1/36</b>", h:'', v:[]},
+            {m:3, n:"Q6", s:"♥", c:"suit-red", e:"Probability of exactly sum 10? (3 Dice)", t:"సంఖ్యల మొత్తం కచ్చితంగా 10 అయ్యే సంభావ్యత?", x:"From Shortcut Table: Sum 10 has exactly 27 ways.<br>Ex: <span class='ans-dice'>[⚀ ⚂ ⚅] [⚁ ⚃ ⚃]...</span><br>Prob = <div class='frac'><span class='top'>27</span><span>216</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>1/8</b>", h:'', v:[]},
+            
+            {m:4, n:"Q7", s:"♣", c:"suit-black", e:"Probability of sum 4? (4 Dice)", t:"నాలుగు పాచికల మొత్తం 4 అయ్యే సంభావ్యత?", x:"For sum = 4, there is only ONE way.<br><span class='ans-dice'>[⚀ ⚀ ⚀ ⚀]</span><br>Total Outcomes = 6⁴ = 1296.<br>Prob = <div class='frac'><span class='top'>1</span><span>1296</span></div>", h:'', v:[]},
+            {m:4, n:"Q8", s:"♦", c:"suit-red", e:"Probability of getting exactly sum 14? (4 Dice)", t:"నాలుగు పాచికల మొత్తం కచ్చితంగా 14 అయ్యే సంభావ్యత?", x:"From 4-Dice Shortcut Table:<br>Sum 14 has highest outcomes = 146 ways.<br>Ex: <span class='ans-dice'>[⚃ ⚃ ⚂ ⚂] [⚄ ⚄ ⚁ ⚁]...</span><br>Prob = <div class='frac'><span class='top'>146</span><span>1296</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>73/648</b>", h:'', v:[]},
+            {m:4, n:"Q9", s:"♠", c:"suit-black", e:"Probability of getting same number on all 4 dice?", t:"నాలుగింటిపై ఒకే సంఖ్య వచ్చే సంభావ్యత?", x:"Identical faces (Quadruplets):<br><span class='ans-dice'>[⚀ ⚀ ⚀ ⚀] to [⚅ ⚅ ⚅ ⚅]</span><br>= 6 ways.<br>Prob = <div class='frac'><span class='top'>6</span><span>1296</span></div> = <b style='color:var(--yellow); font-size:1.6rem;'>1/216</b>", h:'', v:[]}
+        ];
+
+        function setMode(mode) {
+            currentMode = mode;
+            let b2 = document.getElementById('btn-2d');
+            let b3 = document.getElementById('btn-3d');
+            let b4 = document.getElementById('btn-4d');
+            
+            // Reset buttons
+            [b2, b3, b4].forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${mode}d`).classList.add('active');
+            
+            // Reset Views
+            document.getElementById('view-2d').style.display = (mode === 2) ? 'flex' : 'none';
+            document.getElementById('view-3d').style.display = (mode === 3) ? 'block' : 'none';
+            document.getElementById('view-4d').style.display = (mode === 4) ? 'block' : 'none';
+
+            // Setup 3D Stage
+            const stage = document.getElementById('dice-stage');
+            stage.innerHTML = '';
+            diceElements = [];
+            for(let i=0; i<mode; i++){
+                let d = createDie();
+                stage.appendChild(d.parentElement);
+                diceElements.push(d);
+            }
+            
+            // Build Deck
+            const deck = document.getElementById('deck');
+            deck.innerHTML = '';
+            
+            q.filter(x => x.m === mode).forEach(item => {
+                let d = document.createElement('div');
+                d.className = 'card';
+                d.innerHTML = `
+                    <div class="inner">
+                        <div class="face front">
+                            <div class="corner tl ${item.c}">${item.n}<br><span>${item.s}</span></div>
+                            <div class="q-en">${item.e}</div>
+                            <div class="q-te">${item.t}</div>
+                            <div class="corner br ${item.c}">${item.n}<br><span>${item.s}</span></div>
+                        </div>
+                        <div class="face back">
+                            <div class="corner tl">${item.n}<br><span>${item.s}</span></div>
+                            <div class="sol-title">💡 Solution</div>
+                            <div class="sol-text">${item.x}</div>
+                            <div class="corner br">${item.n}<br><span>${item.s}</span></div>
+                        </div>
+                    </div>`;
+                
+                d.onclick = function() {
+                    let isFlipped = this.classList.contains('flip');
+                    
+                    document.querySelectorAll('.card').forEach(c => c.classList.remove('flip'));
+                    document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
+                    
+                    if(!isFlipped) {
+                        this.classList.add('flip');
+                        
+                        if(item.h === 'sum') {
+                            document.querySelectorAll('.cell').forEach(c => {
+                                if(item.v.includes(parseInt(c.dataset.s))) c.classList.add('active');
+                            });
+                        } else if(item.h === 'dbl') {
+                            document.querySelectorAll('.doublet').forEach(c => c.classList.add('active'));
+                        }
+                    }
+                };
+                deck.appendChild(d);
+            });
+
+            // Initial Roll on tab change
+            setTimeout(rollDice, 100);
+        }
+        
+        // Initialize App
+        setMode(2);
+    </script>
+</body>
+</html>

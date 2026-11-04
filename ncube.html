@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="utf-8">
+    <title>RAHUL ACADEMY - Painted Cube Master (N-Cubes)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Noto+Sans+Telugu:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000; --cyan: #38bdf8; --pink: #ec4899; 
+            --yellow: #facc15; --green: #22c55e; --gray: #334155; --text: #f8fafc;
+        }
+        body { 
+            background: var(--bg); color: var(--text); font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; 
+            margin: 0; padding: 20px; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            user-select: none;
+        }
+        .header { text-align: center; margin-bottom: 20px; z-index: 10;}
+        .header h1 { color: var(--cyan); margin: 0; font-size: 2.2rem; letter-spacing: 3px; font-weight: 900;}
+        .header p { color: var(--yellow); margin: 5px 0 0 0; font-weight: 800; font-size: 1.1rem; text-transform: uppercase;}
+        
+        .main { display: flex; gap: 20px; flex: 1; overflow: hidden; }
+        
+        /* 3D CUBE VISUALIZER */
+        .col-left { 
+            flex: 1.2; background: #0f0f0f; border-radius: 15px; border: 2px solid #1f2937; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.9); position: relative;
+        }
+        
+        .click-hint {
+            position: absolute; top: 20px; color: var(--green); font-size: 1.2rem; font-weight: 800;
+            background: rgba(34, 197, 94, 0.15); padding: 8px 15px; border-radius: 8px; border: 1px dashed var(--green);
+            animation: pulse 2s infinite; pointer-events: none;
+        }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
+
+        .scene { 
+            width: 320px; height: 320px; perspective: 1500px; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; /* Makes it clear it is clickable */
+        }
+        .cube-wrapper { 
+            width: 0; height: 0; position: relative; transform-style: preserve-3d; 
+            animation: spin 15s infinite linear; 
+            will-change: transform;
+        }
+        @keyframes spin {
+            0% { transform: rotateX(-20deg) rotateY(0deg); }
+            100% { transform: rotateX(-20deg) rotateY(360deg); }
+        }
+        .cube-wrapper.paused { animation-play-state: paused; }
+        
+        .mini-cube { position: absolute; transform-style: preserve-3d; transition: 0.5s; }
+        .m-face { position: absolute; border: 1px solid #000; box-sizing: border-box; box-shadow: inset 0 0 10px rgba(0,0,0,0.6); opacity: 0.95;}
+        
+        /* Painted Colors */
+        .m-front { background: #ef4444; } /* Red */
+        .m-back { background: #f97316; } /* Orange */
+        .m-right { background: #3b82f6; } /* Blue */
+        .m-left { background: #a855f7; } /* Purple */
+        .m-top { background: #22c55e; } /* Green */
+        .m-bottom { background: #eab308; } /* Yellow */
+        
+        /* Unpainted Inner Faces */
+        .m-face.unpainted { background: #1e293b !important; border-color: #0f172a; opacity: 1;}
+        
+        /* Highlighting Logic - Make non-active transparent */
+        .cube-wrapper.filter-corner .mini-cube:not(.corner) { opacity: 0.08; filter: grayscale(1); }
+        .cube-wrapper.filter-edge .mini-cube:not(.edge) { opacity: 0.08; filter: grayscale(1); }
+        .cube-wrapper.filter-center .mini-cube:not(.center) { opacity: 0.08; filter: grayscale(1); }
+        .cube-wrapper.filter-core .mini-cube:not(.core) { opacity: 0.05; filter: grayscale(1); }
+        
+        /* Glow the active ones */
+        .cube-wrapper.filter-corner .mini-cube.corner .m-face:not(.unpainted) { box-shadow: 0 0 20px var(--pink); border-color: #fff; }
+        .cube-wrapper.filter-edge .mini-cube.edge .m-face:not(.unpainted) { box-shadow: 0 0 20px var(--cyan); border-color: #fff; }
+        .cube-wrapper.filter-center .mini-cube.center .m-face:not(.unpainted) { box-shadow: 0 0 20px var(--green); border-color: #fff; }
+        
+        /* Core logic (Inner cubes) - They have no painted faces, so we glow the unpainted ones */
+        .cube-wrapper.filter-core .mini-cube.core .m-face.unpainted { background: var(--pink) !important; opacity: 1; box-shadow: 0 0 20px var(--pink); border-color:#fff;}
+
+        /* RIGHT PANEL: TABS & BUTTONS */
+        .col-right { flex: 0.8; display: flex; flex-direction: column; gap: 15px; padding-right: 10px;}
+        
+        .tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;}
+        .tab-btn {
+            background: #1e293b; color: #94a3b8; padding: 10px 18px; border-radius: 8px; font-weight: 900; 
+            border: 1px solid var(--gray); cursor: pointer; font-size: 1.1rem; transition: 0.3s;
+        }
+        .tab-btn.active { background: var(--yellow); color: #000; border-color: var(--yellow); box-shadow: 0 0 15px rgba(250,204,21,0.4);}
+
+        .info-box { background: #111; border: 2px dashed #334155; padding: 25px; border-radius: 12px; height: 100%; display: flex; flex-direction: column;}
+        .info-title { color: var(--pink); font-size: 1.5rem; font-weight: 900; text-align: center; margin-bottom: 25px; letter-spacing: 1px;}
+        
+        .btn-group { display: flex; flex-direction: column; gap: 15px; flex: 1;}
+        .hl-btn { 
+            background: #000; border: 2px solid #334155; padding: 18px 25px; border-radius: 10px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center; transition: 0.3s;
+        }
+        .hl-btn:hover { border-color: var(--cyan); background: #0f172a;}
+        .hl-btn.active { background: var(--cyan); border-color: #fff; transform: scale(1.03); box-shadow: 0 0 20px rgba(56,189,248,0.5);}
+        .hl-btn.active .btn-title, .hl-btn.active .btn-form, .hl-btn.active .btn-te { color: #000 !important; }
+        .hl-btn.active .btn-form { background: rgba(255,255,255,0.4); }
+        
+        .btn-left { display: flex; flex-direction: column; gap: 5px; text-align: left;}
+        .btn-title { color: #fff; font-size: 1.35rem; font-weight: 900;}
+        .btn-te { color: #94a3b8; font-size: 1.05rem; font-weight: 600;}
+        
+        .btn-right { text-align: right;}
+        .btn-form { color: var(--yellow); font-size: 1.8rem; font-family: monospace; font-weight: 900; background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 6px; transition: 0.3s;}
+        
+        .total-box { margin-top: auto; background: #022c22; border: 2px solid var(--green); padding: 15px; border-radius: 10px; text-align: center;}
+        .total-text { color: var(--green); font-size: 1.5rem; font-weight: 900;}
+        .total-val { color: #fff; font-size: 2rem; font-weight: 900; font-family: monospace; margin-left: 10px;}
+        
+        .controls { display: flex; justify-content: center; margin-top: 15px;}
+        .ctrl-btn { background: #1e293b; color: #fff; border: 1px solid #475569; padding: 12px 30px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 1.2rem; transition: 0.2s;}
+        .ctrl-btn:hover { background: var(--pink); border-color: var(--pink);}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RAHUL SIR</h1>
+        <p>| PAINTED CUBE - 3D X-RAY VISUALIZER |</p>
+    </div>
+    
+    <div class="main">
+        <!-- 3D SIMULATOR -->
+        <div class="col-left">
+            <div class="click-hint" id="click-hint">👆 Tap Cube to Play/Pause 👆</div>
+            
+            <div class="scene" onclick="toggleSpin()">
+                <div class="cube-wrapper" id="cube-wrapper">
+                    <!-- JS injects N^3 mini cubes here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- CONTROLS & FORMULAS -->
+        <div class="col-right">
+            <!-- N Selection Tabs -->
+            <div class="tabs">
+                <button class="tab-btn" onclick="buildCube(3)" id="tab-3">n = 3</button>
+                <button class="tab-btn" onclick="buildCube(4)" id="tab-4">n = 4</button>
+                <button class="tab-btn" onclick="buildCube(5)" id="tab-5">n = 5</button>
+                <button class="tab-btn" onclick="buildCube(6)" id="tab-6">n = 6</button>
+                <button class="tab-btn" onclick="buildCube(7)" id="tab-7">n = 7</button>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">Interactive Formulas (n = <span id="n-val-title">3</span>)</div>
+                <div class="btn-group">
+                    <button class="hl-btn" onclick="highlight('corner', this)">
+                        <div class="btn-left">
+                            <span class="btn-title">3 Faces Painted</span>
+                            <span class="btn-te">(Corners / మూలలు)</span>
+                        </div>
+                        <div class="btn-right"><span class="btn-form" id="val-3">8</span></div>
+                    </button>
+                    <button class="hl-btn" onclick="highlight('edge', this)">
+                        <div class="btn-left">
+                            <span class="btn-title">2 Faces Painted</span>
+                            <span class="btn-te">(Edges / అంచులు)</span>
+                        </div>
+                        <div class="btn-right"><span class="btn-form" id="val-2">12</span></div>
+                    </button>
+                    <button class="hl-btn" onclick="highlight('center', this)">
+                        <div class="btn-left">
+                            <span class="btn-title">1 Face Painted</span>
+                            <span class="btn-te">(Centers / మధ్యలో)</span>
+                        </div>
+                        <div class="btn-right"><span class="btn-form" id="val-1">6</span></div>
+                    </button>
+                    <button class="hl-btn" onclick="highlight('core', this)">
+                        <div class="btn-left">
+                            <span class="btn-title">0 Faces Painted</span>
+                            <span class="btn-te">(Inner / రంగులేనివి)</span>
+                        </div>
+                        <div class="btn-right"><span class="btn-form" id="val-0">1</span></div>
+                    </button>
+                </div>
+                
+                <div class="total-box">
+                    <span class="total-text">Total Cubes (n³): </span>
+                    <span class="total-val" id="val-tot">27</span>
+                </div>
+                
+                <div class="controls">
+                    <button class="ctrl-btn" onclick="resetView()">🔄 Show All Cubes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const wrapper = document.getElementById('cube-wrapper');
+        let isSpinning = true;
+        
+        function buildCube(n) {
+            // Update tabs
+            for(let i=3; i<=7; i++) {
+                document.getElementById(`tab-${i}`).classList.remove('active');
+            }
+            document.getElementById(`tab-${n}`).classList.add('active');
+            
+            // Update Title
+            document.getElementById('n-val-title').innerText = n;
+
+            // Clear wrapper and reset view
+            wrapper.innerHTML = '';
+            resetView();
+            
+            // Fixed container size for the cube (e.g. 260px)
+            const cubeSize = 260; 
+            const miniSize = cubeSize / n; 
+            
+            // Build the N^3 cubes
+            for(let x=0; x<n; x++) {
+                for(let y=0; y<n; y++) {
+                    for(let z=0; z<n; z++) {
+                        
+                        // Determine boundaries to find type
+                        let bounds = 0;
+                        if(x === 0 || x === n-1) bounds++;
+                        if(y === 0 || y === n-1) bounds++;
+                        if(z === 0 || z === n-1) bounds++;
+                        
+                        let type = '';
+                        if(bounds === 3) type = 'corner';
+                        else if(bounds === 2) type = 'edge';
+                        else if(bounds === 1) type = 'center';
+                        else type = 'core';
+                        
+                        let mini = document.createElement('div');
+                        mini.className = `mini-cube ${type}`;
+                        
+                        // Calculate position centered around 0,0,0
+                        let tx = (x - (n-1)/2) * miniSize;
+                        let ty = (y - (n-1)/2) * miniSize;
+                        let tz = (z - (n-1)/2) * miniSize;
+                        
+                        mini.style.transform = `translate3d(${tx}px, ${ty}px, ${tz}px)`;
+                        mini.style.width = `${miniSize}px`;
+                        mini.style.height = `${miniSize}px`;
+                        
+                        // Determine outer faces to paint
+                        const faceData = [
+                            { f: 'front', rot: 'rotateY(0deg)', paint: z === n-1 },
+                            { f: 'back', rot: 'rotateY(180deg)', paint: z === 0 },
+                            { f: 'right', rot: 'rotateY(90deg)', paint: x === n-1 },
+                            { f: 'left', rot: 'rotateY(-90deg)', paint: x === 0 },
+                            { f: 'bottom', rot: 'rotateX(-90deg)', paint: y === n-1 },
+                            { f: 'top', rot: 'rotateX(90deg)', paint: y === 0 }
+                        ];
+                        
+                        faceData.forEach(fd => {
+                            let face = document.createElement('div');
+                            face.className = `m-face m-${fd.f}`;
+                            if(!fd.paint) face.classList.add('unpainted');
+                            
+                            let transZ = miniSize / 2;
+                            face.style.transform = `${fd.rot} translateZ(${transZ}px)`;
+                            face.style.width = `${miniSize}px`;
+                            face.style.height = `${miniSize}px`;
+                            
+                            mini.appendChild(face);
+                        });
+                        
+                        wrapper.appendChild(mini);
+                    }
+                }
+            }
+
+            // Update Formula Results
+            document.getElementById('val-3').innerText = 8;
+            document.getElementById('val-2').innerText = 12 * (n - 2);
+            document.getElementById('val-1').innerText = 6 * Math.pow(n - 2, 2);
+            document.getElementById('val-0').innerText = Math.pow(n - 2, 3);
+            document.getElementById('val-tot').innerText = Math.pow(n, 3);
+        }
+
+        function highlight(type, btn) {
+            // Reset buttons
+            document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Hide click hint once they interact
+            document.getElementById('click-hint').style.display = 'none';
+
+            // Set classes on wrapper
+            wrapper.className = 'cube-wrapper'; // reset
+            if(!isSpinning) wrapper.classList.add('paused');
+            
+            wrapper.classList.add(`filter-${type}`);
+        }
+
+        function resetView() {
+            document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
+            wrapper.className = 'cube-wrapper';
+            if(!isSpinning) wrapper.classList.add('paused');
+        }
+
+        function toggleSpin() {
+            const hint = document.getElementById('click-hint');
+            if(isSpinning) {
+                wrapper.classList.add('paused');
+                isSpinning = false;
+                hint.innerText = "▶ Paused. Tap again to Spin.";
+                hint.style.color = "var(--yellow)";
+                hint.style.border = "1px dashed var(--yellow)";
+                hint.style.background = "rgba(250, 204, 21, 0.15)";
+            } else {
+                wrapper.classList.remove('paused');
+                isSpinning = true;
+                hint.innerText = "👆 Tap Cube to Pause";
+                hint.style.color = "var(--green)";
+                hint.style.border = "1px dashed var(--green)";
+                hint.style.background = "rgba(34, 197, 94, 0.15)";
+            }
+        }
+
+        // Initialize with N=3
+        buildCube(3);
+    </script>
+</body>
+</html>

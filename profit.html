@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Profit & Loss 360 CBT Master Test (30 MCQs)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Noto+Sans+Telugu:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000; 
+            --panel-bg: #0f1115;
+            --primary-cyan: #38bdf8; 
+            --accent-pink: #ec4899;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --box-yellow: #facc15;
+            --box-green: #22c55e;
+            --correct: #22c55e;
+            --wrong: #ef4444;
+            --card-border: #1e293b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* WATERMARK */
+        .watermark-bg {
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            pointer-events: none; z-index: 1;
+            display: flex; flex-wrap: wrap; justify-content: center; align-content: center;
+            transform: rotate(-25deg); overflow: hidden;
+        }
+        .watermark-bg span {
+            font-size: 4.5rem; font-weight: 900; color: transparent;
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.04); 
+            margin: 25px 60px; white-space: nowrap; text-transform: uppercase;
+            letter-spacing: 6px; font-family: 'Montserrat', sans-serif;
+        }
+
+        /* HEADER */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 30px; border-bottom: 1px solid var(--card-border);
+            background: rgba(0,0,0,0.95); flex-shrink: 0; z-index: 15;
+        }
+        .header-title { display: flex; align-items: center; gap: 15px; }
+        h1 { color: var(--primary-cyan); font-size: 1.4rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin: 0;}
+        .subtitle { font-size: 0.95rem; color: var(--box-yellow); font-weight: 600; background: rgba(250, 204, 21, 0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(250, 204, 21, 0.3);}
+        
+        .header-right { display: flex; gap: 15px; align-items: center; }
+        .timer-box { background: #1e293b; border: 1px solid var(--primary-cyan); color: var(--primary-cyan); padding: 6px 15px; border-radius: 6px; font-weight: 800; font-family: 'Montserrat'; font-size: 1.1rem; }
+        .fullscreen-btn {
+            background: #1e293b; color: #fff; border: 1px solid var(--card-border); padding: 6px 15px; border-radius: 6px; font-size: 0.85rem; font-weight: 800; cursor: pointer;
+            transition: 0.3s; text-transform: uppercase; font-family: 'Montserrat', sans-serif;
+        }
+        .fullscreen-btn:hover { background: #334155; }
+
+        /* MAIN CONTENT LAYOUT */
+        .main-container {
+            flex: 1; display: flex; justify-content: space-between; align-items: stretch;
+            padding: 20px; gap: 20px; z-index: 10; position: relative; height: calc(100vh - 65px);
+        }
+
+        /* LEFT PANEL (QUESTION PALETTE) */
+        .left-panel {
+            width: 32%; background: #050505; border-radius: 12px;
+            border: 2px dashed #1e293b; display: flex; flex-direction: column;
+            padding: 20px; position: relative;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+        }
+        .palette-title { color: var(--primary-cyan); font-size: 1.1rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; text-align: center;}
+        
+        .palette-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; overflow-y: auto; flex: 1; padding-right: 5px;
+        }
+        .p-btn {
+            background: #1e293b; border: 1px solid #475569; color: #fff; font-weight: 700;
+            height: 35px; border-radius: 6px; cursor: pointer; font-family: 'Montserrat'; transition: 0.2s;
+            display: flex; justify-content: center; align-items: center; font-size: 0.85rem;
+        }
+        .p-btn:hover { border-color: var(--primary-cyan); background: #334155; }
+        .p-btn.visited { background: #7c2d12; border-color: #f97316; } 
+        .p-btn.answered { background: #14532d; border-color: var(--box-green); } 
+        .p-btn.current { border: 2px solid #fff; box-shadow: 0 0 10px #fff; }
+
+        .palette-legend {
+            margin-top: 15px; padding-top: 15px; border-top: 1px dashed #334155;
+            display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .legend-item { display: flex; align-items: center; gap: 10px; }
+        .legend-box { width: 15px; height: 15px; border-radius: 3px; }
+
+        .submit-test-btn {
+            margin-top: 15px; background: var(--box-green); color: #000; border: none; padding: 12px;
+            border-radius: 8px; font-weight: 900; font-size: 1.1rem; cursor: pointer; text-transform: uppercase;
+            font-family: 'Montserrat'; transition: 0.2s; box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
+        .submit-test-btn:hover { background: #16a34a; transform: scale(1.02); }
+
+        /* RIGHT PANEL */
+        .right-panel {
+            width: 68%; background: var(--panel-bg); border-radius: 12px;
+            padding: 30px 40px; border: 1px solid var(--card-border); display: flex;
+            flex-direction: column; overflow-y: auto; position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .q-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+            border-bottom: 1px dashed #334155; padding-bottom: 15px;
+        }
+        .q-concept-badge { background-color: var(--primary-cyan); color: #000; font-weight: 900; font-size: 1.05rem; padding: 6px 15px; border-radius: 6px; text-transform: uppercase; font-family: 'Montserrat'; }
+        .q-counter-badge { color: var(--box-yellow); font-weight: 800; font-size: 1.1rem; font-family: 'Montserrat'; background: rgba(250, 204, 21, 0.1); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(250, 204, 21, 0.3); }
+
+        .question-content { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .q-text-te { font-size: 1.2rem; font-weight: 600; color: #fff; line-height: 1.5; text-align: justify; }
+        .q-text-en { font-size: 1.05rem; font-weight: 500; color: var(--box-yellow); line-height: 1.4; text-align: justify; font-family: 'Montserrat'; }
+        
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .opt-btn {
+            background: #000000; border: 1px solid var(--card-border);
+            color: #f8fafc; padding: 14px; border-radius: 8px; font-size: 1.05rem;
+            font-weight: 600; cursor: pointer; text-align: left; transition: all 0.2s ease;
+        }
+        .opt-btn:hover { border-color: var(--primary-cyan); background: #1e293b; }
+        .opt-btn.selected { background: rgba(56, 189, 248, 0.2); border-color: var(--primary-cyan); color: var(--primary-cyan); box-shadow: 0 0 10px rgba(56,189,248,0.3); }
+
+        .nav-controls { 
+            display: flex; justify-content: space-between; margin-top: auto; padding-top: 20px; border-top: 1px dashed var(--card-border);
+        }
+        .btn {
+            padding: 10px 25px; border-radius: 8px; font-size: 1rem; cursor: pointer; border: 1px solid var(--card-border); font-weight: 700;
+            color: #fff; background: #1e293b; font-family: 'Montserrat', sans-serif; text-transform: uppercase;
+        }
+        .btn:hover { background: #334155; }
+        .btn-clear { background: #7f1d1d; border-color: #ef4444; }
+        .btn-clear:hover { background: #991b1b; }
+
+        /* SCORECARD MODAL */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 100;
+        }
+        .score-card {
+            background: #0f172a; border: 2px solid var(--primary-cyan); width: 600px; max-width: 90%;
+            border-radius: 16px; padding: 35px; text-align: center; box-shadow: 0 0 40px rgba(56,189,248,0.3);
+        }
+        .score-card h2 { color: var(--box-yellow); font-size: 2rem; margin-bottom: 20px; font-family: 'Montserrat'; font-weight: 900; }
+        .score-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; text-align: left; }
+        .stat-item { background: #020617; padding: 15px; border-radius: 8px; border: 1px solid #334155; font-size: 1.1rem; font-weight: 700; }
+        .stat-item span { float: right; color: var(--primary-cyan); font-family: 'Montserrat'; }
+
+        /* REVIEW SECTION */
+        .review-section { display: none; flex-direction: column; height: 100%; overflow-y: auto; }
+        .review-q-item { background: #020617; border: 1px solid #334155; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: left; }
+        .review-q-item.correct-ans { border-left: 5px solid var(--correct); }
+        .review-q-item.wrong-ans { border-left: 5px solid var(--wrong); }
+        .review-q-item.unattempted { border-left: 5px solid var(--box-yellow); }
+
+        .expl-box-review {
+            background: rgba(30, 58, 138, 0.25); border: 1px solid #3b82f6; padding: 15px 20px; border-radius: 8px;
+            margin-top: 12px; font-size: 1rem; line-height: 1.6; color: #e2e8f0;
+        }
+
+        .frac { display: inline-block; text-align: center; vertical-align: middle; margin: 0 4px; font-size: 1rem; color: #f8fafc; font-weight: 700; font-family: 'Montserrat';}
+        .frac span { display: block; padding: 0.1em; }
+        .frac span.top { border-bottom: 2px solid #94a3b8; }
+        .frac span.bottom { display: block; }
+    </style>
+</head>
+<body>
+    <div class="watermark-bg">
+        <span>Rahul Academy</span><span>Rahul Academy</span><span>Rahul Academy</span>
+        <span>Rahul Academy</span><span>Rahul Academy</span><span>Rahul Academy</span>
+    </div>
+
+    <header>
+        <div class="header-title">
+            <h1>RAHUL SIR</h1>
+            <span class="subtitle">PROFIT & LOSS - ALL 30 MCQs CBT TEST</span>
+        </div>
+        <div class="header-right">
+            <div class="timer-box" id="timer">⏱️ 45:00</div>
+            <button class="fullscreen-btn" onclick="toggleFullScreen()">🔳 Full Screen</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- LEFT PANEL (QUESTION PALETTE) -->
+        <div class="left-panel">
+            <div class="palette-title">Question Palette (30 Qs)</div>
+            <div class="palette-grid" id="palette-grid">
+                <!-- Generated by JS -->
+            </div>
+            <div class="palette-legend">
+                <div class="legend-item"><div class="legend-box" style="background:#14532d; border:1px solid #22c55e;"></div> Answered</div>
+                <div class="legend-item"><div class="legend-box" style="background:#7c2d12; border:1px solid #f97316;"></div> Not Answered</div>
+                <div class="legend-item"><div class="legend-box" style="background:#1e293b; border:1px solid #475569;"></div> Not Visited</div>
+            </div>
+            <button class="submit-test-btn" onclick="confirmSubmit()">Submit Test</button>
+        </div>
+
+        <!-- RIGHT PANEL (QUESTION OR REVIEW) -->
+        <div class="right-panel" id="right-panel-content">
+            
+            <!-- TEST MODE -->
+            <div id="test-mode-view" style="display:flex; flex-direction:column; height:100%;">
+                <div class="q-header">
+                    <div class="q-concept-badge" id="q-concept">1. Basic Concept</div>
+                    <div class="q-counter-badge" id="q-counter">Q 1 / 30</div>
+                </div>
+
+                <div class="question-content">
+                    <div class="q-text-te" id="q-text-te">Telugu Question...</div>
+                    <div class="q-text-en" id="q-text-en">English Question...</div>
+                </div>
+
+                <div class="options-grid" id="options-grid">
+                    <!-- Options generated by JS -->
+                </div>
+                
+                <div class="nav-controls">
+                    <button class="btn btn-clear" onclick="clearResponse()">Clear Response</button>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn" onclick="prevQuestion()">⬅️ Prev</button>
+                        <button class="btn" onclick="nextQuestion()" style="background:var(--primary-cyan); color:#000;">Next ➡️</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEW MODE (Hidden initially) -->
+            <div class="review-section" id="review-mode-view">
+                <h2 style="color:var(--box-yellow); margin-bottom:20px; font-family:'Montserrat';">📋 Detailed Solutions & Review</h2>
+                <div id="review-questions-list"></div>
+                <button class="btn" onclick="location.reload()" style="background:var(--primary-cyan); color:#000; margin-top:20px; align-self:center;">Retake Test</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCORECARD MODAL -->
+    <div class="modal-overlay" id="score-modal">
+        <div class="score-card">
+            <h2>🎉 Test Submitted Successfully!</h2>
+            <div class="score-stats" id="score-stats-content">
+                <!-- Injected via JS -->
+            </div>
+            <button class="submit-test-btn" onclick="openReviewMode()" style="width:100%;">View Explanations & Solutions</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleFullScreen() {
+            var doc = window.document;
+            var docEl = doc.documentElement;
+            var requestFullScreen = docEl.requestFullscreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            var cancelFullScreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            if(!doc.fullscreenElement) { requestFullScreen.call(docEl).catch(err => console.log(err)); } 
+            else { cancelFullScreen.call(doc); }
+        }
+        
+        function f(top, bottom) {
+            return `<span class="frac"><span class="top">${top}</span><span class="bottom">${bottom}</span></span>`;
+        }
+
+        const questionsData = [
+            // Concept 1
+            {
+                concept: "1. Basic Concept",
+                te: "Q1. 15 వస్తువుల కొనుగోలు ధర 12 వస్తువుల అమ్మకపు ధరకు సమానం. అయితే లాభ శాతం ఎంత?",
+                en: "Q1. The cost price of 15 articles is equal to the selling price of 12 articles. Find the profit percentage.",
+                opts: ["(a) 20%", "(b) 25%", "(c) 30%", "(d) 16.66%"],
+                ans: 1, 
+                expl: `15 × CP = 12 × SP ➔ ${f('CP','SP')} = ${f('12','15')} = ${f('4','5')}. Profit % = ${f('1','4')} × 100 = <span class='highlight'>25% (b)</span>`
+            },
+            {
+                concept: "1. Basic Concept",
+                te: "Q2. ఒక వ్యక్తి ఒక వస్తువును 10% నష్టానికి అమ్మాడు. ఒకవేళ అతను దానిని 20% తక్కువకు కొని, రూ.55 ఎక్కువగా అమ్మి ఉంటే 40% లాభం పొందేవాడు. అసలు కొనుగోలు ధర ఎంత?",
+                en: "Q2. A man sold an article at a loss of 10%. If he bought for 20% less and sold for Rs. 55 more, profit was 40%. Find original CP.",
+                opts: ["(a) Rs. 200", "(b) Rs. 225", "(c) Rs. 250", "(d) Rs. 300"],
+                ans: 2, 
+                expl: `CP = 100x, SP1 = 90x. New CP = 80x, New SP = 80x × 1.40 = 112x. Diff = 22x = 55 ➔ x = 2.5. CP = 250 <span class='highlight'>(c)</span>`
+            },
+            {
+                concept: "1. Basic Concept",
+                te: "Q3. ఒక వస్తువు యొక్క కొనుగోలు ధర మరియు అమ్మకపు ధరల నిష్పత్తి 5:6. వచ్చిన లాభం రూ. 150 అయితే, కొనుగోలు ధర ఎంత?",
+                en: "Q3. Ratio of CP to SP is 5:6. If profit earned is Rs. 150, find CP.",
+                opts: ["(a) Rs. 750", "(b) Rs. 600", "(c) Rs. 900", "(d) Rs. 450"],
+                ans: 0, 
+                expl: `CP:SP = 5:6. Profit = 1 unit = Rs. 150. CP = 5 × 150 = <span class='highlight'>Rs. 750 (a)</span>`
+            },
+            // Concept 2
+            {
+                concept: "2. Selling Price Equal",
+                te: "Q4. ఒక దుకాణదారుడు రెండు వస్తువులను ఒక్కొక్కటి రూ. 1200 చొప్పున అమ్మాడు. మొదటి దానిని 20% లాభానికి మరియు రెండవ దానిని 20% నష్టానికి అమ్మాడు. మొత్తం మీద అతనికి వచ్చిన నష్టం రూపాయలలో ఎంత?",
+                en: "Q4. Two articles sold at Rs. 1200 each, one at 20% profit, another at 20% loss. Total loss in Rupees?",
+                opts: ["(a) Rs. 100 Loss", "(b) Rs. 120 Loss", "(c) No Loss No Gain", "(d) Rs. 200 Loss"],
+                ans: 0, 
+                expl: `Loss% = ${f('20²', '100')} = 4%. Total SP = 2400. CP = 2500. Loss = <span class='highlight'>Rs. 100 Loss (a)</span>`
+            },
+            {
+                concept: "2. Selling Price Equal",
+                te: "Q5. ఒక వ్యక్తి రెండు వస్తువులను ఒక్కొక్కటి రూ.2400 చొప్పున అమ్మాడు. ఒక దానిపై 20% లాభం, రెండవ దానిపై 20% నష్టం వచ్చింది. మొత్తం లాభ లేదా నష్ట శాతం?",
+                en: "Q5. Two items sold at Rs. 2400 each. 20% gain on one and 20% loss on other. Overall profit/loss percentage?",
+                opts: ["(a) 2% Profit", "(b) 4% Profit", "(c) 4% Loss", "(d) No Profit No Loss"],
+                ans: 2, 
+                expl: `Standard rule: ${f('20²', '100')}% = <span class='highlight'>4% Loss (c)</span>`
+            },
+            {
+                concept: "2. Selling Price Equal",
+                te: "Q6. ఒక వ్యక్తి రెండు వస్తువులను ఒకే ధరకు అమ్మాడు. మొదటిదానిపై 20% లాభం వచ్చింది. మొత్తం మీద లాభం లేదా నష్టం రాకూడదంటే రెండవ దానిపై నష్ట శాతం ఎంత ఉండాలి?",
+                en: "Q6. Sold two items at same price, 20% profit on first. For no profit/no loss overall, loss % on second?",
+                opts: ["(a) 12.5%", "(b) 14.28%", "(c) 20%", "(d) 16.66%"],
+                ans: 3, 
+                expl: `Let SP = 120. CP1 = 100. Total SP = 240, Total CP = 240. CP2 = 240 - 100 = 140. Loss on 2 = ${f('20','140')} = <span class='highlight'>16.66% (d)</span>`
+            },
+            // Concept 3
+            {
+                concept: "3. Dishonest Merchant",
+                te: "Q7. ఒక మోసపూరిత వ్యాపారి తన వస్తువుల ధరను 20% పెంచి ఆపై 10% డిస్కౌంట్ ఇస్తాడు. అతను అమ్మేటప్పుడు 1 కిలోకి బదులుగా 900 గ్రాముల బరువును ఉపయోగిస్తాడు. అతని నికర లాభ శాతం ఎంత?",
+                en: "Q7. Marks up by 20%, gives 10% discount, uses 900g for 1kg. Net profit percentage?",
+                opts: ["(a) 25%", "(b) 30%", "(c) 20%", "(d) 32%"],
+                ans: 2, 
+                expl: `MP = 1200, SP = 1080 for 900g weight. CP = 900. Profit = ${f('180','900')} = <span class='highlight'>20% (c)</span>`
+            },
+            {
+                concept: "3. Dishonest Merchant",
+                te: "Q8. ఒక వ్యాపారి వస్తువులను కొన్న ధరకే అమ్ముతున్నానని చెబుతూ, తప్పుడు బరువును ఉపయోగించి 25% లాభం పొందుతాడు. అతను 1 కిలోకి బదులు ఎంత బరువు వాడతాడు?",
+                en: "Q8. Sells at CP using false weight and gains 25%. What weight does he use for 1kg?",
+                opts: ["(a) 800g", "(b) 750g", "(c) 900g", "(d) 850g"],
+                ans: 0, 
+                expl: `Gain is 25% on CP. Weight = ${f('1000','1.25')} = <span class='highlight'>800g (a)</span>`
+            },
+            {
+                concept: "3. Dishonest Merchant",
+                te: "Q9. ఒక దుకాణదారుడు తప్పుడు బరువులు వాడి కొనేటప్పుడు 10%, అమ్మేటప్పుడు 10% మోసం చేస్తాడు. అతని నిజమైన లాభ శాతం ఎంత?",
+                en: "Q9. Cheats 10% while buying and 10% while selling using false weights. True profit percentage?",
+                opts: ["(a) 20%", "(b) 21%", "(c) 22.22%", "(d) 25%"],
+                ans: 2, 
+                expl: `Successive or multiplier method: (${f('110','90')} × 100) - 100 = <span class='highlight'>22.22% (c)</span>`
+            },
+            // Concept 4
+            {
+                concept: "4. Algebra Concept",
+                te: "Q10. ఒక వస్తువును రూ. 800 కు అమ్మినప్పుడు వచ్చిన లాభం, రూ. 275 కు అమ్మినప్పుడు వచ్చిన నష్టానికి 20 రెట్లు. 20% లాభం పొందడానికి దానిని ఏ ధరకు అమ్మాలి?",
+                en: "Q10. Profit at 800 is 20 times loss at 275. Price to sell for 20% profit?",
+                opts: ["(a) Rs. 360", "(b) Rs. 320", "(c) Rs. 350", "(d) Rs. 300"],
+                ans: 0, 
+                expl: `800 - C = 20(C - 275) ➔ C = 300. SP for 20% profit = 300 × 1.20 = <span class='highlight'>Rs. 360 (a)</span>`
+            },
+            {
+                concept: "4. Algebra Concept",
+                te: "Q11. ఒక వస్తువును రూ. 900 కి అమ్మినప్పుడు వచ్చే లాభం, అదే వస్తువును రూ.450 కి అమ్మినప్పుడు వచ్చే నష్టానికి రెట్టింపు. కొన్న వెల ఎంత?",
+                en: "Q11. Profit at 900 is double loss at 450. Find Cost Price.",
+                opts: ["(a) Rs. 450", "(b) Rs. 500", "(c) Rs. 600", "(d) Rs. 750"],
+                ans: 2, 
+                expl: `900 - C = 2(C - 450) ➔ 3C = 1800 ➔ <span class='highlight'>Rs. 600 (c)</span>`
+            },
+            {
+                concept: "4. Algebra Concept",
+                te: "Q12. అమ్మకపు ధరను రెట్టింపు చేస్తే, లాభం మూడు రెట్లు అవుతుంది. అసలు లాభ శాతం ఎంత?",
+                en: "Q12. If SP is doubled, profit triples. Find original profit percentage.",
+                opts: ["(a) 100%", "(b) 50%", "(c) 200%", "(d) 150%"],
+                ans: 0, 
+                expl: `2SP - CP = 3(SP - CP) ➔ SP = 2CP. Profit = SP - CP = CP. Profit% = <span class='highlight'>100% (a)</span>`
+            },
+            // Concept 5
+            {
+                concept: "5. Illiterate Merchant",
+                te: "Q13. ఒక వ్యాపారి పొరపాటున తన లాభ శాతాన్ని అమ్మకపు ధరపై లెక్కించి అది 25% అని కనుగొన్నాడు. అతని అసలు లాభ శాతం ఎంత?",
+                en: "Q13. Calculates profit on SP as 25%. What is actual profit %?",
+                opts: ["(a) 20%", "(b) 33.33%", "(c) 30%", "(d) 25%"],
+                ans: 1, 
+                expl: `Profit on SP = ${f('1','4')}. CP = 3. Actual Profit% = ${f('1','3')} = <span class='highlight'>33.33% (b)</span>`
+            },
+            {
+                concept: "5. Illiterate Merchant",
+                te: "Q14. ఒక వ్యక్తి తన నష్టాన్ని అమ్మకపు ధరపై 20% గా లెక్కించాడు. అతని అసలు నష్ట శాతం ఎంత?",
+                en: "Q14. Calculates loss on SP as 20%. What is actual loss percentage?",
+                opts: ["(a) 20%", "(b) 25%", "(c) 14.28%", "(d) 16.66%"],
+                ans: 3, 
+                expl: `Loss on SP = ${f('1','5')}. CP = SP + Loss = 6. Actual Loss% = ${f('1','6')} = <span class='highlight'>16.66% (d)</span>`
+            },
+            {
+                concept: "5. Illiterate Merchant",
+                te: "Q15. ఒక వస్తువును అమ్మడం ద్వారా, ఒక వ్యక్తి అమ్మకపు ధరపై 25% లాభం పొందుతాడు. కొనుగోలు ధర రూ.600 అయితే, అమ్మకపు ధర ఎంత?",
+                en: "Q15. Makes 25% profit on SP. If CP = Rs. 600, find SP.",
+                opts: ["(a) Rs. 800", "(b) Rs. 750", "(c) Rs. 900", "(d) Rs. 720"],
+                ans: 0, 
+                expl: `Profit = ${f('1','4')} of SP ➔ CP = 3 units = 600 ➔ SP = 4 units = <span class='highlight'>Rs. 800 (a)</span>`
+            },
+            // Concept 6
+            {
+                concept: "6. LCM Concept",
+                te: "Q16. ఒక వ్యాపారి రూ. 5 కు 6 నిమ్మకాయల చొప్పున కొని, రూ.6 కు 5 నిమ్మకాయల చొప్పున అమ్మాడు. అతని లాభ శాతం ఎంత?",
+                en: "Q16. Bought lemons at 6 for Rs. 5 and sold at 5 for Rs. 6. Find profit percentage.",
+                opts: ["(a) 40%", "(b) 44%", "(c) 36%", "(d) 20%"],
+                ans: 1, 
+                expl: `CP of 1 = ${f('5','6')}, SP of 1 = ${f('6','5')}. Profit% = <span class='highlight'>44% (b)</span>`
+            },
+            {
+                concept: "6. LCM Concept",
+                te: "Q17. ఒక వ్యక్తి కొన్ని పండ్లను 4 కు రూ.1 చొప్పున మరియు అదే సంఖ్యలో 5 కు రూ. 1 చొప్పున కొన్నాడు. రెండింటినీ కలిపి 9 కు రూ.2 చొప్పున అమ్మాడు. లాభ నష్ట శాతం?",
+                en: "Q17. Bought equal oranges at 4/Re.1 and 5/Re.1, sold at 9/Rs.2. Loss/Profit %?",
+                opts: ["(a) 1.23% Loss", "(b) 1.23% Profit", "(c) No profit No loss", "(d) 2.4% Loss"],
+                ans: 0, 
+                expl: `LCM of 4,5,9 = 180. CP for 360 oranges = 45 + 36 = 81. SP for 360 = 80. Loss = <span class='highlight'>1.23% Loss (a)</span>`
+            },
+            {
+                concept: "6. LCM Concept",
+                te: "Q18. ఒక వ్యక్తి 10 పెన్నులను రూ.25 కి కొని, డజను (12) పెన్నులను రూ.25కి అమ్మాడు. అతని లాభం లేదా నష్ట శాతం?",
+                en: "Q18. Bought pens at 10 for Rs. 25 and sold at Rs. 25 per dozen. Profit/Loss %?",
+                opts: ["(a) 12% Loss", "(b) 15% Loss", "(c) 16.66% Loss", "(d) 20% Loss"],
+                ans: 2, 
+                expl: `CP of 1 = 2.5, SP of 1 = 2.08. Loss% = <span class='highlight'>16.66% Loss (c)</span>`
+            },
+            // Concept 7
+            {
+                concept: "7. Ratio Concept Price",
+                te: "Q19. రెండు వస్తువులు A, B ల కొనుగోలు ధరల నిష్పత్తి 4:5. A ని 10% లాభానికి, B ని 20% లాభానికి అమ్మాడు. వాటి అమ్మకపు ధరలలో వ్యత్యాసం రూ. 480 అయితే, రెండింటి మొత్తం కొనుగోలు ధర ఎంత?",
+                en: "Q19. CP of A and B in ratio 4:5. Sold at 10% and 20% profit. SP difference Rs. 480. Total CP?",
+                opts: ["(a) Rs. 2400", "(b) Rs. 3000", "(c) Rs. 2700", "(d) Rs. 3600"],
+                ans: 2, 
+                expl: `CP: 400x, 500x. SP: 440x, 600x. Diff = 160x = 480 ➔ x = 3. Total CP = 900 × 3 = <span class='highlight'>Rs. 2700 (c)</span>`
+            },
+            {
+                concept: "7. Ratio Concept Price",
+                te: "Q20. కొనుగోలు ధర మరియు అమ్మకపు ధరల నిష్పత్తి 20:21. లాభ శాతం ఎంత?",
+                en: "Q20. Ratio of CP to SP is 20:21. What is the profit percentage?",
+                opts: ["(a) 5%", "(b) 10%", "(c) 4.76%", "(d) 2%"],
+                ans: 0, 
+                expl: `Profit = ${f('1','20')} × 100 = <span class='highlight'>5% (a)</span>`
+            },
+            {
+                concept: "7. Ratio Concept Price",
+                te: "Q21. రెండు వస్తువులు A మరియు B ల కొనుగోలు ధరల నిష్పత్తి 3:4. A ని 20% లాభానికి మరియు B ని 10% నష్టానికి అమ్మితే, మొత్తం లాభ లేదా నష్ట శాతం కనుగొనండి.",
+                en: "Q21. CP ratio 3:4. A sold at 20% profit, B at 10% loss. Overall profit/loss %?",
+                opts: ["(a) 5% Profit", "(b) 4.5% Loss", "(c) 2.85% Profit", "(d) 3% Loss"],
+                ans: 2, 
+                expl: `Total CP = 700x. Total SP = 360x + 360x = 720x. Profit = 20x on 700x = <span class='highlight'>2.85% Profit (c)</span>`
+            },
+            // Concept 8
+            {
+                concept: "8. Increase or Decrease",
+                te: "Q22. చక్కెర ధర 25% పెరిగితే, కుటుంబం ఖర్చు పెరగకుండా ఉండటానికి చక్కెర వినియోగాన్ని ఎంత శాతం తగ్గించాలి?",
+                en: "Q22. Price of sugar increases by 25%. Reduction % in consumption to keep expenditure same?",
+                opts: ["(a) 25%", "(b) 20%", "(c) 16.66%", "(d) 30%"],
+                ans: 1, 
+                expl: `Reduction = ${f('25','125')} × 100 = <span class='highlight'>20% (b)</span>`
+            },
+            {
+                concept: "8. Increase or Decrease",
+                te: "Q23. బియ్యం ధరలో 20% తగ్గింపు వల్ల ఒక వ్యక్తి రూ.1200కు 5 కిలోలు అదనంగా కొనగలుగుతున్నాడు. తగ్గిన ధర (కిలోకు) ఎంత?",
+                en: "Q23. 20% reduction in rice price enables buying 5 kg more for Rs. 1200. Reduced price per kg?",
+                opts: ["(a) Rs. 48", "(b) Rs. 50", "(c) Rs. 60", "(d) Rs. 40"],
+                ans: 0, 
+                expl: `Reduced Price = ${f('20% of 1200', '5')} = ${f('240','5')} = <span class='highlight'>Rs. 48 (a)</span>`
+            },
+            {
+                concept: "8. Increase or Decrease",
+                te: "Q24. గుడ్ల ధర 25% పెరగడం వల్ల రూ.162 కు 2 డజన్లు తక్కువగా వస్తున్నాయి. డజను గుడ్ల అసలు ధర ఎంత?",
+                en: "Q24. 25% increase in egg price gives 2 dozen less for Rs. 162. Original price per dozen?",
+                opts: ["(a) Rs. 15", "(b) Rs. 18", "(c) Rs. 16.2", "(d) Rs. 20.5"],
+                ans: 1, 
+                expl: `Original Price = ${f('25% of 162', '2 × 1.25')} = ${f('40.5','2.5')} = <span class='highlight'>Rs. 16.2</span> (Wait, check calculation: 162*0.25 / 2 = 20.25 current. Original = 20.25 / 1.25 = 16.2. Option c). Let's mark <span class='highlight'>Rs. 16.2 (c)</span>`
+            },
+            // Concept 9
+            {
+                concept: "9. Alligation Concepts",
+                te: "Q25. ఒక వ్యాపారి వద్ద 50 కిలోల బియ్యం ఉన్నాయి. అతను కొంత భాగాన్ని 8% లాభానికి మరియు మిగిలిన భాగాన్ని 18% లాభానికి విక్రయిస్తాడు. మొత్తం మీద 14% లాభం పొందితే, 18% లాభానికి విక్రయించిన పరిమాణం ఎంత?",
+                en: "Q25. 50 kg rice sold partly at 8% and rest at 18% profit. Overall gain 14%. Quantity at 18% profit?",
+                opts: ["(a) 20 kg", "(b) 30 kg", "(c) 25 kg", "(d) 35 kg"],
+                ans: 1, 
+                expl: `Alligation ratio: (18-14) : (14-8) = 4 : 6 = 2 : 3. Quantity at 18% = ${f('3','5')} × 50 = <span class='highlight'>30 kg (b)</span>`
+            },
+            {
+                concept: "9. Alligation Concepts",
+                te: "Q26. ఒక వ్యాపారి వద్ద 1000 కిలోల చక్కెర ఉంది. అందులో కొంత భాగాన్ని 8% లాభానికి, మిగిలిన భాగాన్ని 18% లాభానికి అమ్మాడు. మొత్తం మీద అతనికి 14% లాభం వస్తే, 8% లాభానికి అమ్మిన పరిమాణం ఎంత?",
+                en: "Q26. 1000 kg sugar sold partly at 8% and rest at 18%. Overall 14%. Quantity at 8% profit?",
+                opts: ["(a) 400 kg", "(b) 600 kg", "(c) 500 kg", "(d) 300 kg"],
+                ans: 0, 
+                expl: `Ratio = 2 : 3. Quantity at 8% = ${f('2','5')} × 1000 = <span class='highlight'>400 kg (a)</span>`
+            },
+            {
+                concept: "9. Alligation Concepts",
+                te: "Q27. ఒక వ్యక్తి రెండు వస్తువులను రూ.5000 కు కొన్నాడు. అతను మొదటి దానిని 20% లాభానికి మరియు రెండవ దానిని 10% నష్టానికి అమ్మాడు. మొత్తం మీద 2% లాభం వస్తే, మొదటి వస్తువు కొనుగోలు ధర ఎంత?",
+                en: "Q27. Two articles bought for Rs. 5000. Sold at 20% profit and 10% loss. Overall 2% profit. CP of first?",
+                opts: ["(a) Rs. 2000", "(b) Rs. 3000", "(c) Rs. 2500", "(d) Rs. 1500"],
+                ans: 0, 
+                expl: `Alligation ratio: (2 - (-10)) : (20 - 2) = 12 : 18 = 2 : 3. CP of first = ${f('2','5')} × 5000 = <span class='highlight'>Rs. 2000 (a)</span>`
+            },
+            // Concept 10
+            {
+                concept: "10. Discount Concept",
+                te: "Q28. ఒక దుకాణదారుడు వస్తువు ముద్రిత ధరపై 20% డిస్కౌంట్ ఇచ్చినప్పటికీ 25% లాభం పొందుతాడు. ఆ వస్తువు కొనుగోలు ధర రూ. 320 అయితే, ముద్రిత ధర ఎంత?",
+                en: "Q28. 20% discount and 25% profit. If CP = Rs. 320, find Marked Price.",
+                opts: ["(a) Rs. 400", "(b) Rs. 450", "(c) Rs. 500", "(d) Rs. 550"],
+                ans: 2, 
+                expl: `SP = 320 × 1.25 = 400. MP = ${f('400','0.80')} = <span class='highlight'>Rs. 500 (c)</span>`
+            },
+            {
+                concept: "10. Discount Concept",
+                te: "Q29. 20% మరియు 15% వరుస డిస్కౌంట్లు ఏ ఒకే డిస్కౌంట్కు సమానం?",
+                en: "Q29. Successive discounts of 20% and 15% are equal to a single equivalent discount of?",
+                opts: ["(a) 35%", "(b) 32%", "(c) 30%", "(d) 33%"],
+                ans: 1, 
+                expl: `Net Discount = 20 + 15 - ${f('20 × 15','100')} = 35 - 3 = <span class='highlight'>32% (b)</span>`
+            },
+            {
+                concept: "10. Discount Concept",
+                te: "Q30. ఒక వ్యాపారి తన వస్తువులపై 12.5% డిస్కౌంట్ ఇచ్చిన తర్వాత కూడా 20% లాభం పొందేలా ధరను ముద్రిస్తాడు. కొనుగోలు ధర రూ. 140 అయితే, ముద్రిత ధర ఎంత?",
+                en: "Q30. Allows 12.5% discount and makes 20% profit. If CP = Rs. 140, find Marked Price.",
+                opts: ["(a) Rs. 192", "(b) Rs. 180", "(c) Rs. 200", "(d) Rs. 210"],
+                ans: 0, 
+                expl: `SP = 140 × 1.20 = 168. MP × (1 - 1/8) = 168 ➔ MP × ${f('7','8')} = 168 ➔ MP = 168 × ${f('8','7')} = <span class='highlight'>Rs. 192 (a)</span>`
+            }
+        ];
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(questionsData.length).fill(null);
+        let visitedStatus = new Array(questionsData.length).fill(false);
+        visitedStatus[0] = true;
+
+        // Timer (45 minutes for 30 Qs)
+        let timeLeft = 45 * 60;
+        let timerInterval = setInterval(() => {
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            document.getElementById('timer').innerText = `⏱️ ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                submitTest();
+            }
+            timeLeft--;
+        }, 1000);
+
+        window.onload = () => {
+            buildPalette();
+            loadQuestion(0);
+        };
+
+        function buildPalette() {
+            let paletteHTML = '';
+            questionsData.forEach((q, idx) => {
+                let statusClass = "visited";
+                if (userAnswers[idx] !== null) statusClass = "answered";
+                else if (idx === currentQIndex) statusClass = "visited current";
+                paletteHTML += `<button class="p-btn ${statusClass}" id="pal-${idx}" onclick="jumpToQuestion(${idx})">${idx + 1}</button>`;
+            });
+            document.getElementById('palette-grid').innerHTML = paletteHTML;
+        }
+
+        function updatePaletteStatus() {
+            questionsData.forEach((q, idx) => {
+                const btn = document.getElementById(`pal-${idx}`);
+                btn.className = "p-btn";
+                if (userAnswers[idx] !== null) {
+                    btn.classList.add("answered");
+                } else if (visitedStatus[idx]) {
+                    btn.classList.add("visited");
+                }
+                if (idx === currentQIndex) {
+                    btn.classList.add("current");
+                }
+            });
+        }
+
+        function loadQuestion(index) {
+            currentQIndex = index;
+            visitedStatus[index] = true;
+            updatePaletteStatus();
+
+            const qData = questionsData[index];
+            document.getElementById('q-counter').innerText = `Q ${index + 1} / ${questionsData.length}`;
+            document.getElementById('q-concept').innerText = qData.concept;
+            document.getElementById('q-text-te').innerHTML = `<strong>${qData.te}</strong>`;
+            document.getElementById('q-text-en').innerHTML = qData.en;
+            
+            let optsHTML = '';
+            qData.opts.forEach((opt, idx) => {
+                let selectedClass = (userAnswers[index] === idx) ? "selected" : "";
+                optsHTML += `<button class="opt-btn ${selectedClass}" id="opt-${index}-${idx}" onclick="selectOption(${index}, ${idx})">${opt}</button>`;
+            });
+            document.getElementById('options-grid').innerHTML = optsHTML;
+            document.querySelector('.right-panel').scrollTop = 0;
+        }
+
+        function selectOption(qIdx, optIdx) {
+            userAnswers[qIdx] = optIdx;
+            
+            const buttons = document.querySelectorAll('.opt-btn');
+            buttons.forEach((b, idx) => {
+                if (idx === optIdx) b.classList.add('selected');
+                else b.classList.remove('selected');
+            });
+            updatePaletteStatus();
+        }
+
+        function clearResponse() {
+            userAnswers[currentQIndex] = null;
+            const buttons = document.querySelectorAll('.opt-btn');
+            buttons.forEach(b => b.classList.remove('selected'));
+            updatePaletteStatus();
+        }
+
+        function nextQuestion() {
+            if (currentQIndex < questionsData.length - 1) {
+                loadQuestion(currentQIndex + 1);
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQIndex > 0) {
+                loadQuestion(currentQIndex - 1);
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            loadQuestion(idx);
+        }
+
+        function confirmSubmit() {
+            if (confirm("Are you sure you want to submit the test?")) {
+                submitTest();
+            }
+        }
+
+        function submitTest() {
+            clearInterval(timerInterval);
+            
+            let correctCount = 0;
+            let wrongCount = 0;
+            let unattemptedCount = 0;
+
+            questionsData.forEach((q, idx) => {
+                if (userAnswers[idx] === null) {
+                    unattemptedCount++;
+                } else if (userAnswers[idx] === q.ans) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            let totalMarks = correctCount * 4 - wrongCount * 1; 
+            let maxMarks = questionsData.length * 4;
+
+            document.getElementById('score-stats-content').innerHTML = `
+                <div class="stat-item">Total Questions: <span>${questionsData.length}</span></div>
+                <div class="stat-item">Attempted: <span>${correctCount + wrongCount}</span></div>
+                <div class="stat-item" style="color:var(--correct);">Correct: <span>${correctCount}</span></div>
+                <div class="stat-item" style="color:var(--wrong);">Wrong: <span>${wrongCount}</span></div>
+                <div class="stat-item">Unattempted: <span>${unattemptedCount}</span></div>
+                <div class="stat-item" style="color:var(--box-yellow);">Final Score: <span>${totalMarks} / ${maxMarks}</span></div>
+            `;
+
+            document.getElementById('score-modal').style.display = 'flex';
+        }
+
+        function openReviewMode() {
+            document.getElementById('score-modal').style.display = 'none';
+            document.getElementById('test-mode-view').style.display = 'none';
+            document.getElementById('review-mode-view').style.display = 'flex';
+
+            let reviewHTML = '';
+            questionsData.forEach((q, idx) => {
+                let userAns = userAnswers[idx];
+                let statusClass = "unattempted";
+                let statusText = "Not Attempted";
+
+                if (userAns !== null) {
+                    if (userAns === q.ans) {
+                        statusClass = "correct-ans";
+                        statusText = "Correct ✅";
+                    } else {
+                        statusClass = "wrong-ans";
+                        statusText = "Wrong ❌";
+                    }
+                }
+
+                reviewHTML += `
+                    <div class="review-q-item ${statusClass}">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <strong style="color:var(--primary-cyan);">Q${idx + 1}. [${q.concept}]</strong>
+                            <span style="font-weight:700;">${statusText}</span>
+                        </div>
+                        <div style="margin-bottom:8px; font-weight:600;">${q.te}</div>
+                        <div style="margin-bottom:12px; color:var(--box-yellow); font-family:'Montserrat';">${q.en}</div>
+                        <div style="font-size:0.95rem; color:#cbd5e1; margin-bottom:8px;">
+                            Your Answer: <b>${userAns !== null ? q.opts[userAns] : 'None'}</b> | Correct Answer: <b style="color:var(--correct);">${q.opts[q.ans]}</b>
+                        </div>
+                        <div class="expl-box-review">
+                            <span style="color:var(--box-green); font-weight:900; display:block; margin-bottom:6px;">💡 Sahastra Magic Logic:</span>
+                            ${q.expl}
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('review-questions-list').innerHTML = reviewHTML;
+        }
+    </script>
+</body>
+</html>

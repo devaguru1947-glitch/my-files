@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Aptitude Master CBT Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000; 
+            --panel-bg: #050505;
+            --right-panel-bg: #0f1115;
+            --primary-cyan: #38bdf8; 
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --box-yellow: #facc15;
+            --box-green: #22c55e;
+            --correct: #22c55e;
+            --wrong: #ef4444;
+            --card-border: #1e293b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+            /* REMOVED font-weight: 400; */
+        }
+
+        /* HEADER */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 30px; border-bottom: 1px solid var(--card-border);
+            background: rgba(0,0,0,0.95); flex-shrink: 0; z-index: 15;
+        }
+        .header-title { display: flex; align-items: center; gap: 15px; }
+        h1 { color: var(--primary-cyan); font-size: 1.3rem; letter-spacing: 1px; text-transform: uppercase; margin: 0;}
+        .subtitle { font-size: 0.9rem; color: var(--box-yellow); background: rgba(250, 204, 21, 0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(250, 204, 21, 0.3);}
+        
+        .header-right { display: flex; gap: 15px; align-items: center; }
+        
+        /* Language Toggle Button */
+        .lang-toggle {
+            display: flex;
+            background: #1e293b;
+            border: 1px solid var(--primary-cyan);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .lang-btn.active {
+            background: var(--primary-cyan);
+            color: #000;
+        }
+
+        .timer-box { background: #1e293b; border: 1px solid var(--primary-cyan); color: var(--primary-cyan); padding: 6px 15px; border-radius: 6px; font-family: 'Montserrat'; font-size: 1.1rem; }
+        
+        .fullscreen-btn {
+            background: #1e293b; color: #fff; border: 1px solid var(--card-border); padding: 6px 15px; border-radius: 6px; font-size: 0.85rem; cursor: pointer;
+            transition: 0.3s; text-transform: uppercase; font-family: 'Montserrat', sans-serif;
+        }
+        .fullscreen-btn:hover { background: #334155; }
+
+        /* MAIN CONTENT LAYOUT */
+        .main-container {
+            flex: 1; display: flex; justify-content: space-between; align-items: stretch;
+            padding: 20px; gap: 20px; z-index: 10; position: relative; height: calc(100vh - 65px);
+        }
+
+        /* LEFT PANEL (QUESTION PALETTE) */
+        .left-panel {
+            width: 32%; background: var(--panel-bg); border-radius: 12px;
+            border: 2px dashed #1e293b; display: flex; flex-direction: column;
+            padding: 20px; position: relative;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+        }
+        .palette-title { color: var(--primary-cyan); font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; text-align: center;}
+        
+        .palette-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; overflow-y: auto; flex: 1; padding-right: 5px;
+        }
+        .p-btn {
+            background: #1e293b; border: 1px solid #475569; color: #fff;
+            height: 32px; border-radius: 6px; cursor: pointer; font-family: 'Montserrat'; transition: 0.2s;
+            display: flex; justify-content: center; align-items: center; font-size: 0.8rem;
+        }
+        .p-btn:hover { border-color: var(--primary-cyan); background: #334155; }
+        .p-btn.visited { background: #7c2d12; border-color: #f97316; } 
+        .p-btn.answered { background: #14532d; border-color: var(--box-green); } 
+        .p-btn.current { border: 2px solid #fff; box-shadow: 0 0 10px #fff; }
+
+        .palette-legend {
+            margin-top: 15px; padding-top: 15px; border-top: 1px dashed #334155;
+            display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .legend-item { display: flex; align-items: center; gap: 10px; }
+        .legend-box { width: 15px; height: 15px; border-radius: 3px; }
+
+        .submit-test-btn {
+            margin-top: 15px; background: var(--box-green); color: #000; border: none; padding: 12px;
+            border-radius: 8px; font-size: 1rem; cursor: pointer; text-transform: uppercase;
+            font-family: 'Montserrat'; transition: 0.2s; box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
+        .submit-test-btn:hover { background: #16a34a; transform: scale(1.02); }
+
+        /* RIGHT PANEL */
+        .right-panel {
+            width: 68%; background: var(--right-panel-bg); border-radius: 12px;
+            padding: 30px 40px; border: 1px solid var(--card-border); display: flex;
+            flex-direction: column; overflow-y: auto; position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .q-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+            border-bottom: 1px dashed #334155; padding-bottom: 15px;
+        }
+        .q-concept-badge { background-color: var(--primary-cyan); color: #000; font-size: 0.95rem; padding: 6px 15px; border-radius: 6px; text-transform: uppercase; font-family: 'Montserrat'; }
+        .q-counter-badge { color: var(--box-yellow); font-size: 1rem; font-family: 'Montserrat'; background: rgba(250, 204, 21, 0.1); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(250, 204, 21, 0.3); }
+
+        .question-content { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .q-text-disp { font-size: 1.3rem; color: #fff; line-height: 1.8; text-align: justify; font-family: 'Montserrat'; } /* INCREASED FONT SIZE */
+        
+        .options-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .opt-btn {
+            display: flex; align-items: center;
+            background: #000000; border: 1px solid var(--card-border);
+            color: #f8fafc; padding: 15px; border-radius: 8px; font-size: 1.15rem; /* INCREASED FONT SIZE */
+            cursor: pointer; text-align: left; transition: all 0.2s ease;
+        }
+        .opt-btn:hover { border-color: var(--primary-cyan); background: #1e293b; }
+        .opt-btn.selected { background: rgba(56, 189, 248, 0.2); border-color: var(--primary-cyan); color: var(--primary-cyan); box-shadow: 0 0 10px rgba(56,189,248,0.3); }
+        
+        .opt-indicator {
+            width: 20px; height: 20px; border: 2px solid var(--text-muted);
+            border-radius: 50%; margin-right: 15px; display: flex;
+            justify-content: center; align-items: center; flex-shrink: 0;
+        }
+        .opt-btn.selected .opt-indicator { border-color: var(--primary-cyan); }
+        .opt-btn.selected .opt-indicator::after { content: ''; width: 10px; height: 10px; background: var(--primary-cyan); border-radius: 50%; }
+
+        .nav-controls { 
+            display: flex; justify-content: space-between; margin-top: auto; padding-top: 15px; border-top: 1px dashed var(--card-border);
+        }
+        .btn {
+            padding: 10px 25px; border-radius: 8px; font-size: 0.95rem; cursor: pointer; border: 1px solid var(--card-border);
+            color: #fff; background: #1e293b; font-family: 'Montserrat', sans-serif; text-transform: uppercase;
+        }
+        .btn:hover { background: #334155; }
+        .btn-clear { background: #7f1d1d; border-color: #ef4444; }
+        .btn-clear:hover { background: #991b1b; }
+
+        /* SCORECARD MODAL */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 100;
+        }
+        .score-card {
+            background: #0f172a; border: 2px solid var(--primary-cyan); width: 600px; max-width: 90%;
+            border-radius: 16px; padding: 35px; text-align: center; box-shadow: 0 0 40px rgba(56,189,248,0.3);
+        }
+        .score-card h2 { color: var(--box-yellow); font-size: 1.8rem; margin-bottom: 20px; font-family: 'Montserrat'; }
+        .score-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; text-align: left; }
+        .stat-item { background: #020617; padding: 15px; border-radius: 8px; border: 1px solid #334155; font-size: 0.95rem; }
+        .stat-item span { float: right; color: var(--primary-cyan); font-family: 'Montserrat'; }
+
+        /* REVIEW SECTION */
+        .review-section { display: none; flex-direction: column; height: 100%; overflow-y: auto; }
+        .review-q-item { background: #020617; border: 1px solid #334155; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: left; }
+        .review-q-item.correct-ans { border-left: 5px solid var(--correct); }
+        .review-q-item.wrong-ans { border-left: 5px solid var(--wrong); }
+        .review-q-item.unattempted { border-left: 5px solid var(--box-yellow); }
+
+        .expl-box-review {
+            background: rgba(30, 58, 138, 0.25); border: 1px solid #3b82f6; padding: 15px 20px; border-radius: 8px;
+            margin-top: 12px; font-size: 1.05rem; line-height: 1.6; color: #e2e8f0; /* INCREASED FONT SIZE */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>RAHUL ACADEMY</h1>
+            <span class="subtitle">Aptitude (Averages) Master Test (20 Qs)</span>
+        </div>
+        <div class="header-right">
+            <!-- Native Language Toggle -->
+            <div class="lang-toggle">
+                <button class="lang-btn active" id="lang-en" onclick="switchLang('en')">ENGLISH</button>
+                <button class="lang-btn" id="lang-te" onclick="switchLang('te')">TELUGU</button>
+            </div>
+
+            <div class="timer-box" id="timer">⏱️ 60:00</div>
+            <button class="fullscreen-btn" onclick="toggleFullScreen()">🔳 Full Screen</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- LEFT PANEL (QUESTION PALETTE) -->
+        <div class="left-panel">
+            <div class="palette-title">Question Palette (20 Qs)</div>
+            <div class="palette-grid" id="palette-grid"></div>
+            <div class="palette-legend">
+                <div class="legend-item"><div class="legend-box" style="background:#14532d; border:1px solid #22c55e;"></div> Answered</div>
+                <div class="legend-item"><div class="legend-box" style="background:#7c2d12; border:1px solid #f97316;"></div> Not Answered</div>
+                <div class="legend-item"><div class="legend-box" style="background:#1e293b; border:1px solid #475569;"></div> Not Visited</div>
+            </div>
+            <button class="submit-test-btn" onclick="confirmSubmit()">Submit Test</button>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="right-panel" id="right-panel-content">
+            
+            <!-- TEST MODE -->
+            <div id="test-mode-view" style="display:flex; flex-direction:column; height:100%;">
+                <div class="q-header">
+                    <div class="q-concept-badge" id="q-concept">Aptitude - Averages</div>
+                    <div class="q-counter-badge" id="q-counter">Q 1 / 20</div>
+                </div>
+
+                <div class="question-content">
+                    <div class="q-text-disp" id="q-text-disp">Loading...</div>
+                </div>
+
+                <div class="options-grid" id="options-grid"></div>
+                
+                <div class="nav-controls">
+                    <button class="btn btn-clear" onclick="clearResponse()">Clear Response</button>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn" onclick="prevQuestion()">⬅️ Prev</button>
+                        <button class="btn" onclick="nextQuestion()" style="background:var(--primary-cyan); color:#000;">Next ➡️</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEW MODE -->
+            <div class="review-section" id="review-mode-view">
+                <h2 style="color:var(--box-yellow); margin-bottom:20px; font-family:'Montserrat';">📋 Detailed Solutions & Review</h2>
+                <div id="review-questions-list"></div>
+                <button class="btn" onclick="location.reload()" style="background:var(--primary-cyan); color:#000; margin-top:20px; align-self:center;">Retake Test</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCORECARD MODAL -->
+    <div class="modal-overlay" id="score-modal">
+        <div class="score-card">
+            <h2>🎉 Test Submitted Successfully!</h2>
+            <div class="score-stats" id="score-stats-content"></div>
+            <button class="submit-test-btn" onclick="openReviewMode()" style="width:100%;">View Explanations & Solutions</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleFullScreen() {
+            var doc = window.document;
+            var docEl = doc.documentElement;
+            var requestFullScreen = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+            var cancelFullScreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            if(!doc.fullscreenElement) { requestFullScreen.call(docEl).catch(err => console.log(err)); } 
+            else { cancelFullScreen.call(doc); }
+        }
+
+        const questionsData = [{"concept": "Aptitude - Averages", "en": "Q1. Neo is going to NDLS from PNBE by his car at a speed of 40 km/h. While coming back, he returns with a speed of x km/h. What should be the value of x so that his average speed during the entire journey is 80 km/h?", "te": "Q1. \u0c28\u0c3f\u0c2f\u0c4b \u0c24\u0c28 \u0c15\u0c3e\u0c30\u0c41\u0c32\u0c4b PNBE \u0c28\u0c41\u0c02\u0c21\u0c3f NDLS \u0c15\u0c41 40 \u0c15\u0c3f.\u0c2e\u0c40/\u0c17\u0c02 \u0c35\u0c47\u0c17\u0c02\u0c24\u0c4b \u0c35\u0c46\u0c33\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c21\u0c41. \u0c24\u0c3f\u0c30\u0c3f\u0c17\u0c3f \u0c35\u0c1a\u0c4d\u0c1a\u0c47\u0c1f\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 x \u0c15\u0c3f.\u0c2e\u0c40/\u0c17\u0c02 \u0c35\u0c47\u0c17\u0c02\u0c24\u0c4b \u0c35\u0c38\u0c4d\u0c24\u0c3e\u0c21\u0c41. \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c2a\u0c4d\u0c30\u0c2f\u0c3e\u0c23\u0c02\u0c32\u0c4b \u0c05\u0c24\u0c28\u0c3f \u0c38\u0c17\u0c1f\u0c41 \u0c35\u0c47\u0c17\u0c02 80 \u0c15\u0c3f.\u0c2e\u0c40/\u0c17\u0c02 \u0c05\u0c2f\u0c3f\u0c24\u0c47, x \u0c35\u0c3f\u0c32\u0c41\u0c35 \u0c0e\u0c02\u0c24?", "opts_en": ["a) 160 km/h", "b) 40 km/h", "c) 120 km/h", "d) It is not possible"], "opts_te": ["a) 160 \u0c15\u0c3f.\u0c2e\u0c40/\u0c17\u0c02", "b) 40 \u0c15\u0c3f.\u0c2e\u0c40/\u0c17\u0c02", "c) 120 \u0c15\u0c3f.\u0c2e\u0c40/\u0c17\u0c02", "d) \u0c38\u0c3e\u0c27\u0c4d\u0c2f\u0c02 \u0c15\u0c3e\u0c26\u0c41"], "ans": 3, "expl_en": "\ud83d\udca1 <br><br>Average speed for equal distances is given by 2xy/(x+y).<br>Here, 2(40)(x)/(40+x) = 80<br>=> 80x = 80(40+x)<br>=> 80x = 3200 + 80x<br>This gives 0 = 3200, which is an absurd result. Hence, it is not possible.", "expl_te": "\ud83d\udca1 <br><br>\u0c38\u0c2e\u0c3e\u0c28 \u0c26\u0c42\u0c30\u0c3e\u0c32\u0c15\u0c41 \u0c38\u0c17\u0c1f\u0c41 \u0c35\u0c47\u0c17\u0c02 \u0c2b\u0c3e\u0c30\u0c4d\u0c2e\u0c41\u0c32\u0c3e 2xy/(x+y).<br>\u0c07\u0c15\u0c4d\u0c15\u0c21 2(40)(x)/(40+x) = 80<br>=> 80x = 80(40+x)<br>=> 80x = 3200 + 80x<br>\u0c26\u0c40\u0c28\u0c3f\u0c28\u0c3f \u0c38\u0c3e\u0c27\u0c3f\u0c38\u0c4d\u0c24\u0c47 0 = 3200 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f, \u0c07\u0c26\u0c3f \u0c38\u0c3e\u0c27\u0c4d\u0c2f\u0c02 \u0c15\u0c3e\u0c26\u0c41."}, {"concept": "Aptitude - Averages", "en": "Q2. There are 125 middle level employees in Due North Inc. The average monthly salary of the middle level employees is Rs 5,500 and that of the senior level employees is Rs 14,000. If the average monthly salary of all these employees is Rs 8,687.5, find the total number of employees in the company, if middle and senior level employees of Due North Inc form 80% of their total employees.", "te": "Q2. \u0c21\u0c4d\u0c2f\u0c42 \u0c28\u0c3e\u0c30\u0c4d\u0c24\u0c4d \u0c07\u0c02\u0c15\u0c4d.\u0c32\u0c4b 125 \u0c2e\u0c02\u0c26\u0c3f \u0c2e\u0c3f\u0c21\u0c3f\u0c32\u0c4d \u0c32\u0c46\u0c35\u0c32\u0c4d \u0c09\u0c26\u0c4d\u0c2f\u0c4b\u0c17\u0c41\u0c32\u0c41 \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c30\u0c41. \u0c2e\u0c3f\u0c21\u0c3f\u0c32\u0c4d \u0c32\u0c46\u0c35\u0c32\u0c4d \u0c09\u0c26\u0c4d\u0c2f\u0c4b\u0c17\u0c41\u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c28\u0c46\u0c32\u0c35\u0c3e\u0c30\u0c40 \u0c1c\u0c40\u0c24\u0c02 \u0c30\u0c42.5,500 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c38\u0c40\u0c28\u0c3f\u0c2f\u0c30\u0c4d \u0c32\u0c46\u0c35\u0c32\u0c4d \u0c09\u0c26\u0c4d\u0c2f\u0c4b\u0c17\u0c41\u0c32 \u0c1c\u0c40\u0c24\u0c02 \u0c30\u0c42.14,000. \u0c35\u0c40\u0c30\u0c02\u0c26\u0c30\u0c3f \u0c38\u0c17\u0c1f\u0c41 \u0c1c\u0c40\u0c24\u0c02 \u0c30\u0c42.8,687.5 \u0c05\u0c2f\u0c3f\u0c24\u0c47, \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c09\u0c26\u0c4d\u0c2f\u0c4b\u0c17\u0c41\u0c32 \u0c38\u0c02\u0c16\u0c4d\u0c2f \u0c0e\u0c02\u0c24? (\u0c2e\u0c3f\u0c21\u0c3f\u0c32\u0c4d, \u0c38\u0c40\u0c28\u0c3f\u0c2f\u0c30\u0c4d \u0c09\u0c26\u0c4d\u0c2f\u0c4b\u0c17\u0c41\u0c32\u0c41 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c09\u0c26\u0c4d\u0c2f\u0c4b\u0c17\u0c41\u0c32\u0c4d\u0c32\u0c4b 80% \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c30\u0c41)", "opts_en": ["a) 175", "b) 200", "c) 220", "d) 250"], "opts_te": ["a) 175", "b) 200", "c) 220", "d) 250"], "ans": 3, "expl_en": "\ud83d\udca1 <br><br>Using alligation, Ratio of Middle to Senior = (14000 - 8687.5) : (8687.5 - 5500) = 5312.5 : 3187.5 = 5 : 3.<br>Given Middle = 125 (which is 5 parts).<br>So Senior = 3 parts = 75.<br>Total middle+senior = 200. These 200 form 80% of total.<br>Total employees = 200 / 0.8 = 250.", "expl_te": "\ud83d\udca1 <br><br>\u0c05\u0c32\u0c3f\u0c17\u0c47\u0c37\u0c28\u0c4d \u0c2a\u0c26\u0c4d\u0c27\u0c24\u0c3f \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c28\u0c3f\u0c37\u0c4d\u0c2a\u0c24\u0c4d\u0c24\u0c3f 5:3 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f.<br>\u0c2e\u0c3f\u0c21\u0c3f\u0c32\u0c4d \u0c32\u0c46\u0c35\u0c32\u0c4d (5 \u0c2d\u0c3e\u0c17\u0c3e\u0c32\u0c41) = 125 \u0c05\u0c2f\u0c3f\u0c24\u0c47, \u0c38\u0c40\u0c28\u0c3f\u0c2f\u0c30\u0c4d \u0c32\u0c46\u0c35\u0c32\u0c4d (3 \u0c2d\u0c3e\u0c17\u0c3e\u0c32\u0c41) = 75.<br>\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = 200.<br>\u0c07\u0c26\u0c3f 80%\u0c15\u0c3f \u0c38\u0c2e\u0c3e\u0c28\u0c02 \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f, \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c09\u0c26\u0c4d\u0c2f\u0c4b\u0c17\u0c41\u0c32\u0c41 = 200 / 0.8 = 250."}, {"concept": "Aptitude - Averages", "en": "Q3. I went to a hotel along with 12 friends. I paid Rs 145 and all the others paid an equal amount. In the end, we did some calculations and found that the average sum paid by all of us was Rs 5 more than what was originally paid by each of my friends. How much money did each of my friends pay?", "te": "Q3. \u0c28\u0c47\u0c28\u0c41 12 \u0c2e\u0c02\u0c26\u0c3f \u0c38\u0c4d\u0c28\u0c47\u0c39\u0c3f\u0c24\u0c41\u0c32\u0c24\u0c4b \u0c15\u0c32\u0c3f\u0c38\u0c3f \u0c12\u0c15 \u0c39\u0c4b\u0c1f\u0c32\u0c4d\u200c\u0c15\u0c3f \u0c35\u0c46\u0c33\u0c4d\u0c32\u0c3e\u0c28\u0c41. \u0c28\u0c47\u0c28\u0c41 \u0c30\u0c42.145 \u0c1a\u0c46\u0c32\u0c4d\u0c32\u0c3f\u0c02\u0c1a\u0c3e\u0c28\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c2e\u0c3f\u0c17\u0c24\u0c3e \u0c35\u0c3e\u0c30\u0c02\u0c26\u0c30\u0c42 \u0c38\u0c2e\u0c3e\u0c28 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c3e\u0c28\u0c4d\u0c28\u0c3f \u0c1a\u0c46\u0c32\u0c4d\u0c32\u0c3f\u0c02\u0c1a\u0c3e\u0c30\u0c41. \u0c1a\u0c3f\u0c35\u0c30\u0c3f\u0c15\u0c3f, \u0c2e\u0c47\u0c2e\u0c02\u0c26\u0c30\u0c02 \u0c1a\u0c46\u0c32\u0c4d\u0c32\u0c3f\u0c02\u0c1a\u0c3f\u0c28 \u0c38\u0c17\u0c1f\u0c41 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c28\u0c3e \u0c38\u0c4d\u0c28\u0c47\u0c39\u0c3f\u0c24\u0c41\u0c32\u0c41 \u0c1a\u0c46\u0c32\u0c4d\u0c32\u0c3f\u0c02\u0c1a\u0c3f\u0c28 \u0c26\u0c3e\u0c28\u0c3f\u0c15\u0c02\u0c1f\u0c47 \u0c30\u0c42.5 \u0c0e\u0c15\u0c4d\u0c15\u0c41\u0c35 \u0c05\u0c28\u0c3f \u0c17\u0c41\u0c30\u0c4d\u0c24\u0c3f\u0c02\u0c1a\u0c3e\u0c2e\u0c41. \u0c28\u0c3e \u0c38\u0c4d\u0c28\u0c47\u0c39\u0c3f\u0c24\u0c41\u0c32\u0c41 \u0c12\u0c15\u0c4d\u0c15\u0c4a\u0c15\u0c4d\u0c15\u0c30\u0c41 \u0c0e\u0c02\u0c24 \u0c1a\u0c46\u0c32\u0c4d\u0c32\u0c3f\u0c02\u0c1a\u0c3e\u0c30\u0c41?", "opts_en": ["a) Rs 120", "b) Rs 100", "c) Rs 80", "d) Rs 70"], "opts_te": ["a) \u0c30\u0c42.120", "b) \u0c30\u0c42.100", "c) \u0c30\u0c42.80", "d) \u0c30\u0c42.70"], "ans": 2, "expl_en": "\ud83d\udca1 <br><br>Let each of the 12 friends pay Rs x.<br>Total paid = 145 + 12x. Total people = 13.<br>Average = (145 + 12x)/13.<br>Given, Average = x + 5.<br>So, 145 + 12x = 13(x + 5) => 145 + 12x = 13x + 65 => x = 80.", "expl_te": "\ud83d\udca1 <br><br>\u0c38\u0c4d\u0c28\u0c47\u0c39\u0c3f\u0c24\u0c41\u0c32\u0c41 \u0c12\u0c15\u0c4d\u0c15\u0c4a\u0c15\u0c4d\u0c15\u0c30\u0c41 \u0c30\u0c42.x \u0c1a\u0c46\u0c32\u0c4d\u0c32\u0c3f\u0c02\u0c1a\u0c3e\u0c30\u0c28\u0c41\u0c15\u0c41\u0c02\u0c26\u0c3e\u0c02.<br>\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 13 \u0c2e\u0c02\u0c26\u0c3f. \u0c38\u0c17\u0c1f\u0c41 = (145 + 12x)/13.<br>\u0c32\u0c46\u0c15\u0c4d\u0c15 \u0c2a\u0c4d\u0c30\u0c15\u0c3e\u0c30\u0c02 \u0c38\u0c17\u0c1f\u0c41 = x + 5.<br>(145 + 12x)/13 = x + 5 \u0c38\u0c3e\u0c27\u0c3f\u0c38\u0c4d\u0c24\u0c47 x = 80 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f."}, {"concept": "Aptitude - Averages", "en": "Q4. Saketprakash married ten years ago at the age of 27 years. His wife was 23 years old then. Six years after their marriage, the average age of Saketprakash, his wife and their son was 22 years. After how many years of Saketprakash's marriage was his son born?", "te": "Q4. \u0c38\u0c3e\u0c15\u0c47\u0c24\u0c4d\u200c\u0c2a\u0c4d\u0c30\u0c15\u0c3e\u0c37\u0c4d \u0c2a\u0c26\u0c47\u0c33\u0c4d\u0c32 \u0c15\u0c4d\u0c30\u0c3f\u0c24\u0c02 27 \u0c0f\u0c33\u0c4d\u0c32 \u0c35\u0c2f\u0c38\u0c41\u0c32\u0c4b \u0c35\u0c3f\u0c35\u0c3e\u0c39\u0c02 \u0c1a\u0c47\u0c38\u0c41\u0c15\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c21\u0c41. \u0c05\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u0c05\u0c24\u0c28\u0c3f \u0c2d\u0c3e\u0c30\u0c4d\u0c2f \u0c35\u0c2f\u0c38\u0c41 23 \u0c0f\u0c33\u0c4d\u0c32\u0c41. \u0c35\u0c3e\u0c30\u0c3f \u0c35\u0c3f\u0c35\u0c3e\u0c39\u0c2e\u0c48\u0c28 \u0c06\u0c30\u0c47\u0c33\u0c4d\u0c32 \u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24 \u0c38\u0c3e\u0c15\u0c47\u0c24\u0c4d\u200c\u0c2a\u0c4d\u0c30\u0c15\u0c3e\u0c37\u0c4d, \u0c05\u0c24\u0c28\u0c3f \u0c2d\u0c3e\u0c30\u0c4d\u0c2f, \u0c15\u0c4a\u0c21\u0c41\u0c15\u0c41\u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c35\u0c2f\u0c38\u0c41 22 \u0c0f\u0c33\u0c4d\u0c32\u0c41. \u0c38\u0c3e\u0c15\u0c47\u0c24\u0c4d\u200c\u0c2a\u0c4d\u0c30\u0c15\u0c3e\u0c37\u0c4d \u0c35\u0c3f\u0c35\u0c3e\u0c39\u0c2e\u0c48\u0c28 \u0c0e\u0c28\u0c4d\u0c28\u0c3f \u0c38\u0c02\u0c35\u0c24\u0c4d\u0c38\u0c30\u0c3e\u0c32\u0c15\u0c41 \u0c05\u0c24\u0c28\u0c3f \u0c15\u0c4a\u0c21\u0c41\u0c15\u0c41 \u0c1c\u0c28\u0c4d\u0c2e\u0c3f\u0c02\u0c1a\u0c3e\u0c21\u0c41?", "opts_en": ["a) 6 years", "b) 3 years", "c) 2 years", "d) 4 years"], "opts_te": ["a) 6 \u0c0f\u0c33\u0c4d\u0c32\u0c41", "b) 3 \u0c0f\u0c33\u0c4d\u0c32\u0c41", "c) 2 \u0c0f\u0c33\u0c4d\u0c32\u0c41", "d) 4 \u0c0f\u0c33\u0c4d\u0c32\u0c41"], "ans": 1, "expl_en": "\ud83d\udca1 <br><br>At marriage: Saket = 27, Wife = 23.<br>After 6 years: Saket = 33, Wife = 29. Sum of their ages = 62.<br>Given average of 3 members = 22 => Sum = 66.<br>Age of son after 6 years of marriage = 66 - 62 = 4 years.<br>So, son was born 6 - 4 = 2 years after marriage.", "expl_te": "\ud83d\udca1 <br><br>\u0c35\u0c3f\u0c35\u0c3e\u0c39 \u0c38\u0c2e\u0c2f\u0c02\u0c32\u0c4b \u0c38\u0c3e\u0c15\u0c47\u0c24\u0c4d = 27, \u0c2d\u0c3e\u0c30\u0c4d\u0c2f = 23.<br>6 \u0c0f\u0c33\u0c4d\u0c32 \u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24: \u0c38\u0c3e\u0c15\u0c47\u0c24\u0c4d = 33, \u0c2d\u0c3e\u0c30\u0c4d\u0c2f = 29. \u0c15\u0c4a\u0c21\u0c41\u0c15\u0c41\u0c24\u0c4b \u0c15\u0c32\u0c3f\u0c2a\u0c3f \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c35\u0c2f\u0c38\u0c41 = 22 \u00d7 3 = 66.<br>\u0c15\u0c4a\u0c21\u0c41\u0c15\u0c41 \u0c35\u0c2f\u0c38\u0c41 = 66 - (33+29) = 4 \u0c0f\u0c33\u0c4d\u0c32\u0c41.<br>\u0c05\u0c02\u0c1f\u0c47 \u0c35\u0c3f\u0c35\u0c3e\u0c39\u0c2e\u0c48\u0c28 2 \u0c0f\u0c33\u0c4d\u0c32\u0c15\u0c41 \u0c15\u0c4a\u0c21\u0c41\u0c15\u0c41 \u0c2a\u0c41\u0c1f\u0c4d\u0c1f\u0c3e\u0c21\u0c41."}, {"concept": "Aptitude - Averages", "en": "Q5. Mr. Anant Roy, the renowned author, recently got his new novel released. To his utter dismay, he found that for the 1007 pages on an average there were 2 mistakes every page. While in the first 612 pages there were only 434 mistakes, they seemed to increase for the later pages. Find the average number of mistakes per page for the remaining pages.", "te": "Q5. \u0c2a\u0c4d\u0c30\u0c2e\u0c41\u0c16 \u0c30\u0c1a\u0c2f\u0c3f\u0c24 \u0c2e\u0c3f\u0c38\u0c4d\u0c1f\u0c30\u0c4d \u0c05\u0c28\u0c02\u0c24\u0c4d \u0c30\u0c3e\u0c2f\u0c4d \u0c24\u0c28 \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c28\u0c35\u0c32\u0c32\u0c4b 1007 \u0c2a\u0c47\u0c1c\u0c40\u0c32\u0c15\u0c41 \u0c17\u0c3e\u0c28\u0c41 \u0c38\u0c17\u0c1f\u0c41\u0c28 \u0c2a\u0c47\u0c1c\u0c40\u0c15\u0c3f 2 \u0c24\u0c2a\u0c4d\u0c2a\u0c41\u0c32\u0c41 \u0c09\u0c28\u0c4d\u0c28\u0c1f\u0c4d\u0c32\u0c41 \u0c17\u0c41\u0c30\u0c4d\u0c24\u0c3f\u0c02\u0c1a\u0c3e\u0c21\u0c41. \u0c2e\u0c4a\u0c26\u0c1f\u0c3f 612 \u0c2a\u0c47\u0c1c\u0c40\u0c32\u0c32\u0c4b 434 \u0c24\u0c2a\u0c4d\u0c2a\u0c41\u0c32\u0c41 \u0c2e\u0c3e\u0c24\u0c4d\u0c30\u0c2e\u0c47 \u0c09\u0c02\u0c21\u0c17\u0c3e, \u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24 \u0c2a\u0c46\u0c30\u0c3f\u0c17\u0c3e\u0c2f\u0c3f. \u0c2e\u0c3f\u0c17\u0c3f\u0c32\u0c3f\u0c28 \u0c2a\u0c47\u0c1c\u0c40\u0c32\u0c32\u0c4b \u0c38\u0c17\u0c1f\u0c41\u0c28 \u0c0e\u0c28\u0c4d\u0c28\u0c3f \u0c24\u0c2a\u0c4d\u0c2a\u0c41\u0c32\u0c41 \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c2f\u0c4b \u0c15\u0c28\u0c41\u0c17\u0c4a\u0c28\u0c02\u0c21\u0c3f.", "opts_en": ["a) 6", "b) 4", "c) 2", "d) None of these"], "opts_te": ["a) 6", "b) 4", "c) 2", "d) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "ans": 1, "expl_en": "\ud83d\udca1 <br><br>Total mistakes = 1007 * 2 = 2014.<br>Mistakes in first 612 pages = 434.<br>Remaining mistakes = 2014 - 434 = 1580.<br>Remaining pages = 1007 - 612 = 395.<br>Average mistakes in remaining pages = 1580 / 395 = 4.", "expl_te": "\ud83d\udca1 <br><br>\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c24\u0c2a\u0c4d\u0c2a\u0c41\u0c32\u0c41 = 1007 * 2 = 2014.<br>\u0c2e\u0c3f\u0c17\u0c3f\u0c32\u0c3f\u0c28 \u0c24\u0c2a\u0c4d\u0c2a\u0c41\u0c32\u0c41 = 2014 - 434 = 1580.<br>\u0c2e\u0c3f\u0c17\u0c3f\u0c32\u0c3f\u0c28 \u0c2a\u0c47\u0c1c\u0c40\u0c32\u0c41 = 1007 - 612 = 395.<br>\u0c38\u0c17\u0c1f\u0c41 = 1580 / 395 = 4."}, {"concept": "Aptitude - Averages", "en": "Q6. The class X of Nav Yug Vidyalaya has four sections - A, B, C and D. The average weight of the students of A, B, C together and A, C, D together are 45 kg and 55 kg respectively, while the average weight of the students of A, B, D together and B, C, D together are 50 kg and 60 kg respectively. Which of the following could be the average weight of the students of all the four sections together?", "te": "Q6. \u0c28\u0c35\u0c2f\u0c41\u0c17\u0c4d \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c32\u0c2f\u0c32\u0c4b A, B, C, D \u0c05\u0c28\u0c47 4 \u0c38\u0c46\u0c15\u0c4d\u0c37\u0c28\u0c4d\u0c32\u0c41 \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c2f\u0c3f. A, B, C \u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 45 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41, A, C, D \u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 55 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41, A, B, D \u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 50 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41, B, C, D \u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 60 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41. \u0c28\u0c3e\u0c32\u0c41\u0c17\u0c41 \u0c38\u0c46\u0c15\u0c4d\u0c37\u0c28\u0c4d\u0c32 \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c41\u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 \u0c0e\u0c02\u0c24 \u0c15\u0c3e\u0c35\u0c1a\u0c4d\u0c1a\u0c41?", "opts_en": ["a) 47.6 kg", "b) 52.5 kg", "c) 53.7 kg", "d) 56.5 kg"], "opts_te": ["a) 47.6 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41", "b) 52.5 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41", "c) 53.7 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41", "d) 56.5 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41"], "ans": 1, "expl_en": "\ud83d\udca1 <br><br>Assuming equal number of students in each section, sum of averages = 45+55+50+60 = 210.<br>3(A+B+C+D) = 210 => A+B+C+D = 70.<br>The average of averages is (45+55+50+60)/4 = 210/4 = 52.5 kg.", "expl_te": "\ud83d\udca1 <br><br>\u0c2a\u0c4d\u0c30\u0c24\u0c3f \u0c38\u0c46\u0c15\u0c4d\u0c37\u0c28\u0c4d\u200c\u0c32\u0c4b \u0c38\u0c2e\u0c3e\u0c28 \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c41\u0c32\u0c41 \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c30\u0c28\u0c3f \u0c0a\u0c39\u0c3f\u0c38\u0c4d\u0c24\u0c47, \u0c28\u0c3e\u0c32\u0c41\u0c17\u0c41 \u0c38\u0c17\u0c1f\u0c41\u0c32 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = 210.<br>\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 4 \u0c17\u0c4d\u0c30\u0c42\u0c2a\u0c41\u0c32\u0c41 \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f, \u0c38\u0c17\u0c1f\u0c41 = 210 / 4 = 52.5 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41."}, {"concept": "Aptitude - Averages", "en": "Q7. The average score of a cricketer in a certain number of innings is 44. He then played another eight innings in which he got out at 97, 3, 23, 0, 68, 40, 50 and 71 runs respectively. Then, which of the following statements is true regarding his new average score in all the innings together?", "te": "Q7. \u0c12\u0c15 \u0c15\u0c4d\u0c30\u0c3f\u0c15\u0c46\u0c1f\u0c30\u0c4d \u0c24\u0c28 \u0c17\u0c24 \u0c2e\u0c4d\u0c2f\u0c3e\u0c1a\u0c4d\u200c\u0c32\u0c32\u0c4b \u0c38\u0c17\u0c1f\u0c41\u0c28 44 \u0c2a\u0c30\u0c41\u0c17\u0c41\u0c32\u0c41 \u0c1a\u0c47\u0c36\u0c3e\u0c21\u0c41. \u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24\u0c3f 8 \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d\u200c\u0c32\u0c32\u0c4b 97, 3, 23, 0, 68, 40, 50, 71 \u0c2a\u0c30\u0c41\u0c17\u0c41\u0c32\u0c41 \u0c1a\u0c47\u0c36\u0c3e\u0c21\u0c41. \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c17\u0c41\u0c30\u0c3f\u0c02\u0c1a\u0c3f \u0c0f\u0c26\u0c3f \u0c28\u0c3f\u0c1c\u0c02?", "opts_en": ["a) The new average is more than the old average", "b) The new average is less than the old average", "c) The new average is the same as the old average", "d) Cannot conclude any of the above unless we know the number of innings played"], "opts_te": ["a) \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c2a\u0c3e\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c15\u0c02\u0c1f\u0c47 \u0c0e\u0c15\u0c4d\u0c15\u0c41\u0c35", "b) \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c2a\u0c3e\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c15\u0c02\u0c1f\u0c47 \u0c24\u0c15\u0c4d\u0c15\u0c41\u0c35", "c) \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c2a\u0c3e\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c38\u0c2e\u0c3e\u0c28\u0c02", "d) \u0c2a\u0c3e\u0c24 \u0c2e\u0c4d\u0c2f\u0c3e\u0c1a\u0c4d\u200c\u0c32 \u0c38\u0c02\u0c16\u0c4d\u0c2f \u0c24\u0c46\u0c32\u0c3f\u0c2f\u0c15\u0c41\u0c02\u0c21\u0c3e \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c32\u0c47\u0c2e\u0c41"], "ans": 2, "expl_en": "\ud83d\udca1 <br><br>Sum of runs in 8 innings = 97+3+23+0+68+40+50+71 = 352.<br>Average of these 8 innings = 352 / 8 = 44.<br>Since the average of the new 8 innings is exactly equal to his old average (44), the new overall average remains the same (44).", "expl_te": "\ud83d\udca1 <br><br>\u0c15\u0c4a\u0c24\u0c4d\u0c24 8 \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d\u200c\u0c32 \u0c2a\u0c30\u0c41\u0c17\u0c41\u0c32 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = 352.<br>\u0c35\u0c40\u0c1f\u0c3f \u0c38\u0c17\u0c1f\u0c41 = 352 / 8 = 44.<br>\u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c2e\u0c4d\u0c2f\u0c3e\u0c1a\u0c4d\u200c\u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c2a\u0c3e\u0c24 \u0c38\u0c17\u0c1f\u0c41 (44)\u0c15\u0c3f \u0c38\u0c2e\u0c3e\u0c28\u0c02\u0c17\u0c3e \u0c09\u0c28\u0c4d\u0c28\u0c02\u0c26\u0c41\u0c28, \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c15\u0c42\u0c21\u0c3e \u0c2e\u0c3e\u0c30\u0c26\u0c41 (\u0c05\u0c26\u0c47 \u0c09\u0c02\u0c1f\u0c41\u0c02\u0c26\u0c3f)."}, {"concept": "Aptitude - Averages", "en": "Q8. Average age of A, B and C is 84 years however when D joins them, then the average comes down to 80. Now, a new person E whose age is 3 years more than D replaces A and the new average is 79 years. What is the age of A?", "te": "Q8. A, B, C \u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c35\u0c2f\u0c38\u0c41 84 \u0c0f\u0c33\u0c4d\u0c32\u0c41. D \u0c35\u0c3e\u0c30\u0c3f\u0c24\u0c4b \u0c15\u0c32\u0c3f\u0c38\u0c3f\u0c28\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u0c38\u0c17\u0c1f\u0c41 80\u0c15\u0c3f \u0c2a\u0c21\u0c3f\u0c2a\u0c4b\u0c2f\u0c3f\u0c02\u0c26\u0c3f. D \u0c15\u0c02\u0c1f\u0c47 3 \u0c0f\u0c33\u0c4d\u0c32\u0c41 \u0c2a\u0c46\u0c26\u0c4d\u0c26\u0c35\u0c3e\u0c21\u0c48\u0c28 E \u0c05\u0c28\u0c47 \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c35\u0c4d\u0c2f\u0c15\u0c4d\u0c24\u0c3f A \u0c38\u0c4d\u0c25\u0c3e\u0c28\u0c02\u0c32\u0c4b \u0c35\u0c38\u0c4d\u0c24\u0c47, \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 79 \u0c0f\u0c33\u0c4d\u0c32\u0c41 \u0c05\u0c35\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f. A \u0c35\u0c2f\u0c38\u0c41 \u0c0e\u0c02\u0c24?", "opts_en": ["a) 75", "b) 79", "c) 81", "d) 77"], "opts_te": ["a) 75", "b) 79", "c) 81", "d) 77"], "ans": 0, "expl_en": "\ud83d\udca1 <br><br>Sum of A,B,C = 84*3 = 252. Sum of A,B,C,D = 80*4 = 320.<br>D's age = 320 - 252 = 68. E's age = 68 + 3 = 71.<br>Sum of E,B,C,D = 79*4 = 316. Since A,B,C,D = 320 and E,B,C,D = 316, the difference is A - E = 320 - 316 = 4.<br>So A = E + 4 = 71 + 4 = 75.", "expl_te": "\ud83d\udca1 <br><br>A+B+C = 252. A+B+C+D = 320.<br>D \u0c35\u0c2f\u0c38\u0c41 = 320 - 252 = 68.<br>E \u0c35\u0c2f\u0c38\u0c41 = 68 + 3 = 71.<br>E+B+C+D = 316. A+B+C+D = 320.<br>\u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f A \u0c35\u0c2f\u0c38\u0c41 E \u0c15\u0c02\u0c1f\u0c47 4 \u0c0e\u0c15\u0c4d\u0c15\u0c41\u0c35 (320-316). A = 71+4 = 75."}, {"concept": "Aptitude - Averages", "en": "Q9. The average age of the students in a class is 35 years. If a student whose age was 25 is absent from the class, the average of those present goes up by 1. How many students were there in the class originally?", "te": "Q9. \u0c12\u0c15 \u0c24\u0c30\u0c17\u0c24\u0c3f\u0c32\u0c4b\u0c28\u0c3f \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c41\u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c35\u0c2f\u0c38\u0c41 35 \u0c0f\u0c33\u0c4d\u0c32\u0c41. 25 \u0c0f\u0c33\u0c4d\u0c32 \u0c35\u0c2f\u0c38\u0c41\u0c28\u0c4d\u0c28 \u0c12\u0c15 \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c3f \u0c17\u0c48\u0c30\u0c4d\u0c39\u0c3e\u0c1c\u0c30\u0c48\u0c24\u0c47, \u0c39\u0c3e\u0c1c\u0c30\u0c48\u0c28 \u0c35\u0c3e\u0c30\u0c3f \u0c38\u0c17\u0c1f\u0c41 1 \u0c2a\u0c46\u0c30\u0c41\u0c17\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c24\u0c30\u0c17\u0c24\u0c3f\u0c32\u0c4b \u0c2e\u0c4a\u0c26\u0c1f \u0c0e\u0c02\u0c24 \u0c2e\u0c02\u0c26\u0c3f \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c41\u0c32\u0c41 \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c30\u0c41?", "opts_en": ["a) 9", "b) 10", "c) 11", "d) 12"], "opts_te": ["a) 9", "b) 10", "c) 11", "d) 12"], "ans": 2, "expl_en": "\ud83d\udca1 <br><br>Let original number of students be n. Sum = 35n.<br>If one student leaves, sum = 35n - 25.<br>New average = (35n - 25)/(n - 1) = 36.<br>35n - 25 = 36n - 36 => n = 11.", "expl_te": "\ud83d\udca1 <br><br>\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c41\u0c32\u0c41 'n' \u0c05\u0c28\u0c41\u0c15\u0c41\u0c02\u0c1f\u0c47, (35n - 25)/(n-1) = 36.<br>\u0c38\u0c2e\u0c40\u0c15\u0c30\u0c23\u0c3e\u0c28\u0c4d\u0c28\u0c3f \u0c38\u0c3e\u0c27\u0c3f\u0c38\u0c4d\u0c24\u0c47 n = 11 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f."}, {"concept": "Aptitude - Averages", "en": "Q10. If 2 students whose ages were 30 years and 20 years left the class (initial average 35, n=11), by what value would the average of the remaining increase?", "te": "Q10. (\u0c2a\u0c48 \u0c2a\u0c4d\u0c30\u0c36\u0c4d\u0c28 \u0c38\u0c2e\u0c3e\u0c1a\u0c3e\u0c30\u0c02 \u0c06\u0c27\u0c3e\u0c30\u0c02\u0c17\u0c3e) 30 \u0c0f\u0c33\u0c4d\u0c32\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 20 \u0c0f\u0c33\u0c4d\u0c32 \u0c35\u0c2f\u0c38\u0c41\u0c28\u0c4d\u0c28 \u0c07\u0c26\u0c4d\u0c26\u0c30\u0c41 \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c41\u0c32\u0c41 \u0c24\u0c30\u0c17\u0c24\u0c3f \u0c28\u0c41\u0c02\u0c21\u0c3f \u0c35\u0c46\u0c33\u0c4d\u0c32\u0c3f\u0c2a\u0c4b\u0c24\u0c47, \u0c2e\u0c3f\u0c17\u0c3f\u0c32\u0c3f\u0c28 \u0c35\u0c3e\u0c30\u0c3f \u0c38\u0c17\u0c1f\u0c41 \u0c0e\u0c02\u0c24 \u0c2a\u0c46\u0c30\u0c41\u0c17\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f?", "opts_en": ["a) 20/9", "b) 2", "c) 20/11", "d) None of these"], "opts_te": ["a) 20/9", "b) 2", "c) 20/11", "d) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "ans": 0, "expl_en": "\ud83d\udca1 <br><br>Initial sum for 11 students = 11*35 = 385.<br>Two students left, total age removed = 50.<br>New sum = 385 - 50 = 335. Remaining students = 9.<br>New average = 335 / 9 = 37.22.<br>Increase in average = 335/9 - 35 = 335/9 - 315/9 = 20/9.", "expl_te": "\ud83d\udca1 <br><br>11 \u0c2e\u0c02\u0c26\u0c3f \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c35\u0c2f\u0c38\u0c41 385.<br>50 \u0c0f\u0c33\u0c4d\u0c32\u0c41 (30+20) \u0c2a\u0c4b\u0c24\u0c47, \u0c2e\u0c3f\u0c17\u0c3f\u0c32\u0c3f\u0c28\u0c26\u0c3f 335.<br>\u0c2e\u0c3f\u0c17\u0c3f\u0c32\u0c3f\u0c28 9 \u0c2e\u0c02\u0c26\u0c3f \u0c38\u0c17\u0c1f\u0c41 = 335/9.<br>\u0c2a\u0c46\u0c30\u0c3f\u0c17\u0c3f\u0c28 \u0c38\u0c17\u0c1f\u0c41 = 335/9 - 35 = 20/9."}, {"concept": "Aptitude - Averages", "en": "Q11. If the average of m numbers is a, and on adding x to the m numbers, the average of the 1 + m numbers is b. Then find the value of x.", "te": "Q11. 'm' \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32 \u0c38\u0c17\u0c1f\u0c41 a. \u0c06 'm' \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32\u0c15\u0c41 'x' \u0c28\u0c3f \u0c15\u0c32\u0c3f\u0c2a\u0c3f\u0c24\u0c47 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 (1+m) \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32 \u0c38\u0c17\u0c1f\u0c41 b \u0c05\u0c35\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c05\u0c2f\u0c3f\u0c24\u0c47 x \u0c35\u0c3f\u0c32\u0c41\u0c35 \u0c0e\u0c02\u0c24?", "opts_en": ["a) m(b - a) + b", "b) m(b + a) + a", "c) m(a - b) + a", "d) None of these"], "opts_te": ["a) m(b - a) + b", "b) m(b + a) + a", "c) m(a - b) + a", "d) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "ans": 0, "expl_en": "\ud83d\udca1 <br><br>Sum of m numbers = ma.<br>New sum = ma + x.<br>New average = (ma + x) / (m + 1) = b.<br>So, ma + x = b(m + 1) => x = mb + b - ma => x = m(b - a) + b.", "expl_te": "\ud83d\udca1 <br><br>m \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = ma.<br>\u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = ma + x.<br>\u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 = (ma+x)/(m+1) = b.<br>\u0c26\u0c40\u0c28\u0c4d\u0c28\u0c3f \u0c38\u0c3e\u0c27\u0c3f\u0c38\u0c4d\u0c24\u0c47 x = m(b - a) + b \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f."}, {"concept": "Aptitude - Averages", "en": "Q12. Brian Lara, the famous batsman, scored 6000 runs in a certain number of innings. In the next five innings he was out of form and hence, could make only a total of 90 runs, as a result of which his average fell by 2 runs. How many innings did he play in all, if he gets out in all the innings?", "te": "Q12. \u0c2c\u0c4d\u0c30\u0c3f\u0c2f\u0c3e\u0c28\u0c4d \u0c32\u0c3e\u0c30\u0c3e \u0c15\u0c4a\u0c28\u0c4d\u0c28\u0c3f \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d\u200c\u0c32\u0c32\u0c4b 6000 \u0c2a\u0c30\u0c41\u0c17\u0c41\u0c32\u0c41 \u0c1a\u0c47\u0c36\u0c3e\u0c21\u0c41. \u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24\u0c3f 5 \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d\u200c\u0c32\u0c32\u0c4b 90 \u0c2a\u0c30\u0c41\u0c17\u0c41\u0c32\u0c41 \u0c2e\u0c3e\u0c24\u0c4d\u0c30\u0c2e\u0c47 \u0c1a\u0c47\u0c36\u0c3e\u0c21\u0c41, \u0c26\u0c40\u0c28\u0c3f\u0c35\u0c32\u0c4d\u0c32 \u0c05\u0c24\u0c28\u0c3f \u0c38\u0c17\u0c1f\u0c41 2 \u0c2a\u0c30\u0c41\u0c17\u0c41\u0c32\u0c41 \u0c24\u0c17\u0c4d\u0c17\u0c3f\u0c02\u0c26\u0c3f. \u0c05\u0c24\u0c28\u0c41 \u0c06\u0c21\u0c3f\u0c28 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d\u200c\u0c32\u0c41 \u0c0e\u0c28\u0c4d\u0c28\u0c3f?", "opts_en": ["a) 105", "b) 95", "c) 115", "d) 104"], "opts_te": ["a) 105", "b) 95", "c) 115", "d) 104"], "ans": 0, "expl_en": "\ud83d\udca1 <br><br>Let initial innings be n. Initial average = 6000/n.<br>New average = (6090)/(n+5).<br>Given, 6000/n - 6090/(n+5) = 2.<br>Solving this quadratic equation, n = 100.<br>Total innings played = 100 + 5 = 105.", "expl_te": "\ud83d\udca1 <br><br>\u0c2e\u0c4a\u0c26\u0c1f\u0c3f \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d\u200c\u0c32\u0c41 n \u0c05\u0c28\u0c41\u0c15\u0c41\u0c02\u0c1f\u0c47 \u0c38\u0c17\u0c1f\u0c41 6000/n.<br>(6000/n) - (6090/(n+5)) = 2.<br>\u0c06\u0c2a\u0c4d\u0c37\u0c28\u0c4d\u0c32 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c32\u0c47\u0c26\u0c3e \u0c35\u0c30\u0c4d\u0c17 \u0c38\u0c2e\u0c40\u0c15\u0c30\u0c23\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c38\u0c3e\u0c27\u0c3f\u0c38\u0c4d\u0c24\u0c47 n = 100 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f.<br>\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d\u200c\u0c32\u0c41 = 105."}, {"concept": "Aptitude - Averages", "en": "Q13. One out of the five weights A, B, C, D and E is of a different weight. A person makes a measurement and finds the following: A + B = C + D + E. Which of the following should be known to find out which one is of a different weight?", "te": "Q13. A, B, C, D, E \u0c05\u0c28\u0c47 5 \u0c2c\u0c30\u0c41\u0c35\u0c41\u0c32\u0c32\u0c4b \u0c12\u0c15\u0c1f\u0c3f \u0c35\u0c47\u0c30\u0c47 \u0c2c\u0c30\u0c41\u0c35\u0c41\u0c28\u0c41 \u0c15\u0c32\u0c3f\u0c17\u0c3f \u0c09\u0c02\u0c1f\u0c41\u0c02\u0c26\u0c3f. \u0c12\u0c15 \u0c35\u0c4d\u0c2f\u0c15\u0c4d\u0c24\u0c3f \u0c15\u0c4a\u0c32\u0c24\u0c32\u0c41 \u0c1a\u0c47\u0c38\u0c3f A + B = C + D + E \u0c05\u0c28\u0c3f \u0c17\u0c41\u0c30\u0c4d\u0c24\u0c3f\u0c02\u0c1a\u0c3e\u0c21\u0c41. \u0c06 \u0c35\u0c47\u0c30\u0c47 \u0c2c\u0c30\u0c41\u0c35\u0c41 \u0c0f\u0c02\u0c1f\u0c4b \u0c15\u0c28\u0c41\u0c15\u0c4d\u0c15\u0c4b\u0c35\u0c21\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c15\u0c3f\u0c02\u0c26\u0c3f \u0c35\u0c3e\u0c1f\u0c3f\u0c32\u0c4b \u0c0f\u0c26\u0c3f \u0c24\u0c46\u0c32\u0c3f\u0c2f\u0c3e\u0c32\u0c3f?", "opts_en": ["a) A + C > B + D + E", "b) A + D + E < B + C", "c) A + B + C > D + E", "d) A + C < B + D + E"], "opts_te": ["a) A + C > B + D + E", "b) A + D + E < B + C", "c) A + B + C > D + E", "d) A + C < B + D + E"], "ans": 0, "expl_en": "\ud83d\udca1 <br><br>From the given equation A+B = C+D+E, if we have A+C > B+D+E, we can mathematically manipulate these inequalities to isolate variables and identify the distinct weight.", "expl_te": "\ud83d\udca1 <br><br>\u0c07\u0c1a\u0c4d\u0c1a\u0c3f\u0c28 A+B = C+D+E \u0c38\u0c2e\u0c40\u0c15\u0c30\u0c23\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c06\u0c21\u0c4d \u0c35\u0c28\u0c4d\u200c\u0c28\u0c41 \u0c15\u0c28\u0c41\u0c15\u0c4d\u0c15\u0c4b\u0c35\u0c3e\u0c32\u0c02\u0c1f\u0c47, \u0c0e\u0c21\u0c2e\u0c35\u0c48\u0c2a\u0c41\u0c28 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c15\u0c41\u0c21\u0c3f\u0c35\u0c48\u0c2a\u0c41\u0c28 \u0c2c\u0c30\u0c41\u0c35\u0c41\u0c32 \u0c15\u0c42\u0c21\u0c3f\u0c15/\u0c24\u0c40\u0c38\u0c3f\u0c35\u0c47\u0c24\u0c32\u0c24\u0c4b \u0c15\u0c42\u0c21\u0c3f\u0c28 \u0c2e\u0c30\u0c4a\u0c15 \u0c05\u0c38\u0c2e\u0c3e\u0c28\u0c24 (inequality) A+C > B+D+E \u0c24\u0c46\u0c32\u0c3f\u0c2f\u0c3e\u0c32\u0c3f."}, {"concept": "Aptitude - Averages", "en": "Q14. In a class, with a certain number of students, if another student weighing 50 kg joins, then the average weight of the class increases by 1. If one more student weighing 50 kg joins then the average weight of the class increases by 1.5 over the original average. What is the original average weight of the class?", "te": "Q14. \u0c12\u0c15 \u0c24\u0c30\u0c17\u0c24\u0c3f\u0c32\u0c4b 50 \u0c15\u0c3f\u0c32\u0c4b\u0c32 \u0c2c\u0c30\u0c41\u0c35\u0c41\u0c28\u0c4d\u0c28 \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c3f \u0c1a\u0c47\u0c30\u0c3f\u0c24\u0c47, \u0c24\u0c30\u0c17\u0c24\u0c3f \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 1 \u0c2a\u0c46\u0c30\u0c41\u0c17\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c2e\u0c30\u0c4b 50 \u0c15\u0c3f\u0c32\u0c4b\u0c32 \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c3f \u0c1a\u0c47\u0c30\u0c3f\u0c24\u0c47, \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 \u0c05\u0c38\u0c32\u0c41 \u0c38\u0c17\u0c1f\u0c41 \u0c15\u0c02\u0c1f\u0c47 1.5 \u0c2a\u0c46\u0c30\u0c41\u0c17\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c24\u0c30\u0c17\u0c24\u0c3f \u0c05\u0c38\u0c32\u0c41 \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 \u0c0e\u0c02\u0c24?", "opts_en": ["a) 46", "b) 4", "c) 2", "d) 47"], "opts_te": ["a) 46", "b) 4", "c) 2", "d) 47"], "ans": 3, "expl_en": "\ud83d\udca1 <br><br>Let n be initial students, A be initial average.<br>1) (nA + 50)/(n+1) = A + 1 => nA + 50 = nA + n + A + 1 => n + A = 49.<br>2) (nA + 100)/(n+2) = A + 1.5 => nA + 100 = nA + 1.5n + 2A + 3 => 1.5n + 2A = 97.<br>We have A = 49 - n. 1.5n + 2(49 - n) = 97 => 1.5n + 98 - 2n = 97 => 0.5n = 1 => n = 2.<br>So A = 47.", "expl_te": "\ud83d\udca1 <br><br>\u0c2e\u0c4a\u0c26\u0c1f\u0c3f \u0c38\u0c2e\u0c40\u0c15\u0c30\u0c23\u0c02: n + A = 49.<br>\u0c30\u0c46\u0c02\u0c21\u0c35 \u0c38\u0c2e\u0c40\u0c15\u0c30\u0c23\u0c02: 1.5n + 2A = 97.<br>\u0c08 \u0c30\u0c46\u0c02\u0c21\u0c3f\u0c02\u0c1f\u0c3f\u0c28\u0c40 \u0c38\u0c3e\u0c27\u0c3f\u0c38\u0c4d\u0c24\u0c47 \u0c35\u0c3f\u0c26\u0c4d\u0c2f\u0c3e\u0c30\u0c4d\u0c25\u0c41\u0c32 \u0c38\u0c02\u0c16\u0c4d\u0c2f n=2 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f.<br>\u0c05\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u0c05\u0c38\u0c32\u0c41 \u0c38\u0c17\u0c1f\u0c41 A = 49 - 2 = 47."}, {"concept": "Aptitude - Averages", "en": "Q15. The average weight of the books carried by Kuku to school is 1.5 kg and 2.5 kg is the average weight of the exercise books. If Kuku is carrying only text books and exercise books in the ratio of 3:4, what is the total weight of his school bag? (Ignore bag weight)", "te": "Q15. \u0c15\u0c41\u0c15\u0c41 \u0c2a\u0c3e\u0c20\u0c36\u0c3e\u0c32\u0c15\u0c41 \u0c24\u0c40\u0c38\u0c41\u0c15\u0c46\u0c33\u0c4d\u0c32\u0c47 \u0c1f\u0c46\u0c15\u0c4d\u0c38\u0c4d\u0c1f\u0c4d \u0c2c\u0c41\u0c15\u0c4d\u0c38\u0c4d \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 1.5 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41, \u0c0e\u0c15\u0c4d\u0c38\u0c30\u0c4d\u0c38\u0c48\u0c1c\u0c4d \u0c2c\u0c41\u0c15\u0c4d\u0c38\u0c4d \u0c38\u0c17\u0c1f\u0c41 \u0c2c\u0c30\u0c41\u0c35\u0c41 2.5 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41. \u0c2a\u0c41\u0c38\u0c4d\u0c24\u0c15\u0c3e\u0c32 \u0c28\u0c3f\u0c37\u0c4d\u0c2a\u0c24\u0c4d\u0c24\u0c3f 3:4 \u0c05\u0c2f\u0c3f\u0c24\u0c47, \u0c05\u0c24\u0c28\u0c3f \u0c38\u0c4d\u0c15\u0c42\u0c32\u0c4d \u0c2c\u0c4d\u0c2f\u0c3e\u0c17\u0c4d \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c2c\u0c30\u0c41\u0c35\u0c41 \u0c0e\u0c02\u0c24? (\u0c2c\u0c4d\u0c2f\u0c3e\u0c17\u0c4d \u0c2c\u0c30\u0c41\u0c35\u0c41 \u0c35\u0c3f\u0c38\u0c4d\u0c2e\u0c30\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f)", "opts_en": ["a) 10.5 kg", "b) 1 kg", "c) 6 kg", "d) Data insufficient"], "opts_te": ["a) 10.5 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41", "b) 1 \u0c15\u0c3f\u0c32\u0c4b", "c) 6 \u0c15\u0c3f\u0c32\u0c4b\u0c32\u0c41", "d) \u0c38\u0c2e\u0c3e\u0c1a\u0c3e\u0c30\u0c02 \u0c38\u0c30\u0c3f\u0c2a\u0c4b\u0c26\u0c41"], "ans": 3, "expl_en": "\ud83d\udca1 <br><br>The ratio of number of books is 3:4. Let there be 3x text books and 4x exercise books.<br>Total weight = 3x*1.5 + 4x*2.5 = 4.5x + 10x = 14.5x.<br>Since x is unknown, total weight cannot be determined.", "expl_te": "\ud83d\udca1 <br><br>\u0c2a\u0c41\u0c38\u0c4d\u0c24\u0c15\u0c3e\u0c32 \u0c28\u0c3f\u0c37\u0c4d\u0c2a\u0c24\u0c4d\u0c24\u0c3f 3:4. \u0c05\u0c28\u0c17\u0c3e 3x, 4x \u0c05\u0c28\u0c3f \u0c05\u0c28\u0c41\u0c15\u0c41\u0c02\u0c26\u0c3e\u0c02.<br>\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c2c\u0c30\u0c41\u0c35\u0c41 14.5x \u0c05\u0c35\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f.<br>'x' \u0c35\u0c3f\u0c32\u0c41\u0c35 (\u0c05\u0c02\u0c1f\u0c47 \u0c16\u0c1a\u0c4d\u0c1a\u0c3f\u0c24\u0c2e\u0c48\u0c28 \u0c2a\u0c41\u0c38\u0c4d\u0c24\u0c15\u0c3e\u0c32 \u0c38\u0c02\u0c16\u0c4d\u0c2f) \u0c24\u0c46\u0c32\u0c3f\u0c2f\u0c26\u0c41 \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f \u0c2c\u0c30\u0c41\u0c35\u0c41\u0c28\u0c41 \u0c15\u0c28\u0c41\u0c15\u0c4d\u0c15\u0c4b\u0c32\u0c47\u0c2e\u0c41."}, {"concept": "Aptitude - Averages", "en": "Q16. The average of n numbers is 32. If 3/4 of the numbers are increased by 4 each and the remaining are decreased by 6 each, then what is the new average?", "te": "Q16. 'n' \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32 \u0c38\u0c17\u0c1f\u0c41 32. \u0c06 \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32\u0c32\u0c4b 3/4 \u0c35\u0c02\u0c24\u0c41 \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32\u0c28\u0c41 \u0c24\u0c32\u0c3e 4 \u0c2a\u0c46\u0c02\u0c1a\u0c3f, \u0c2e\u0c3f\u0c17\u0c3f\u0c32\u0c3f\u0c28 \u0c35\u0c3e\u0c1f\u0c3f\u0c28\u0c3f \u0c24\u0c32\u0c3e 6 \u0c24\u0c17\u0c4d\u0c17\u0c3f\u0c38\u0c4d\u0c24\u0c47, \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c0e\u0c02\u0c24 \u0c05\u0c35\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f?", "opts_en": ["a) 32", "b) 32.5", "c) 33.5", "d) 34.5"], "opts_te": ["a) 32", "b) 32.5", "c) 33.5", "d) 34.5"], "ans": 2, "expl_en": "\ud83d\udca1 <br><br>Total change = (3/4 * n) * (+4) + (1/4 * n) * (-6) = 3n - 1.5n = +1.5n.<br>Average change = (+1.5n)/n = +1.5.<br>New average = 32 + 1.5 = 33.5.", "expl_te": "\ud83d\udca1 <br><br>\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c2e\u0c3e\u0c30\u0c4d\u0c2a\u0c41 = 3/4 \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32\u0c15\u0c41 (+4) + 1/4 \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32\u0c15\u0c41 (-6).<br>\u0c07\u0c26\u0c3f +3 - 1.5 = +1.5 \u0c38\u0c17\u0c1f\u0c41 \u0c2a\u0c46\u0c30\u0c41\u0c17\u0c41\u0c26\u0c32\u0c15\u0c41 \u0c26\u0c3e\u0c30\u0c3f\u0c24\u0c40\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f.<br>\u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 32 + 1.5 = 33.5."}, {"concept": "Aptitude - Averages", "en": "Q17. The average of eight numbers is 25, that of the first two is 20 and of the next three is 26. The sixth number is less than the seventh by 4, and less than the eighth by 6. The last number is", "te": "Q17. 8 \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32 \u0c38\u0c17\u0c1f\u0c41 25. \u0c05\u0c02\u0c26\u0c41\u0c32\u0c4b \u0c2e\u0c4a\u0c26\u0c1f\u0c3f \u0c30\u0c46\u0c02\u0c21\u0c3f\u0c02\u0c1f\u0c3f \u0c38\u0c17\u0c1f\u0c41 20, \u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24\u0c3f \u0c2e\u0c42\u0c21\u0c3f\u0c02\u0c1f\u0c3f \u0c38\u0c17\u0c1f\u0c41 26. \u0c06\u0c30\u0c35 \u0c38\u0c02\u0c16\u0c4d\u0c2f \u0c0f\u0c21\u0c35 \u0c26\u0c3e\u0c28\u0c3f\u0c15\u0c02\u0c1f\u0c47 4 \u0c24\u0c15\u0c4d\u0c15\u0c41\u0c35, \u0c0e\u0c28\u0c3f\u0c2e\u0c3f\u0c26\u0c35 \u0c26\u0c3e\u0c28\u0c3f\u0c15\u0c02\u0c1f\u0c47 6 \u0c24\u0c15\u0c4d\u0c15\u0c41\u0c35. \u0c05\u0c2f\u0c3f\u0c24\u0c47 \u0c1a\u0c3f\u0c35\u0c30\u0c3f (\u0c0e\u0c28\u0c3f\u0c2e\u0c3f\u0c26\u0c35) \u0c38\u0c02\u0c16\u0c4d\u0c2f \u0c0e\u0c02\u0c24?", "opts_en": ["a) 30", "b) 32", "c) 40", "d) 36"], "opts_te": ["a) 30", "b) 32", "c) 40", "d) 36"], "ans": 0, "expl_en": "\ud83d\udca1 <br><br>Sum of 8 = 200.<br>Sum of 1st two = 40. Sum of next 3 = 78.<br>Remaining 3 numbers sum = 200 - (40+78) = 82.<br>Let 6th be x. 7th = x+4, 8th = x+6.<br>x + x+4 + x+6 = 82 => 3x + 10 = 82 => 3x = 72 => x = 24.<br>The 8th number = x+6 = 30.", "expl_te": "\ud83d\udca1 <br><br>\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = 8*25 = 200.<br>\u0c2e\u0c3f\u0c17\u0c3f\u0c32\u0c3f\u0c28 3 \u0c38\u0c02\u0c16\u0c4d\u0c2f\u0c32 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = 200 - (2*20 + 3*26) = 200 - 118 = 82.<br>\u0c06\u0c30\u0c35 \u0c38\u0c02\u0c16\u0c4d\u0c2f x \u0c05\u0c28\u0c41\u0c15\u0c41\u0c02\u0c1f\u0c47 7\u0c35\u0c26\u0c3f x+4, 8\u0c35\u0c26\u0c3f x+6.<br>\u0c35\u0c40\u0c1f\u0c3f \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 3x+10=82 => x=24.<br>\u0c1a\u0c3f\u0c35\u0c30\u0c3f (8\u0c35) \u0c38\u0c02\u0c16\u0c4d\u0c2f = 24+6 = 30."}, {"concept": "Aptitude - Averages", "en": "Q18. The average amount of sales per day in a shop for 5 days starting from Monday is Rs 1,800. The average amount of sales per day for 5 days from Tuesday is Rs 1,890. By how much does the sale on Saturday exceed that on Monday?", "te": "Q18. \u0c12\u0c15 \u0c26\u0c41\u0c15\u0c3e\u0c23\u0c02\u0c32\u0c4b \u0c38\u0c4b\u0c2e\u0c35\u0c3e\u0c30\u0c02 \u0c28\u0c41\u0c02\u0c21\u0c3f 5 \u0c30\u0c4b\u0c1c\u0c41\u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c35\u0c3f\u0c15\u0c4d\u0c30\u0c2f\u0c3e\u0c32\u0c41 \u0c30\u0c42.1,800. \u0c2e\u0c02\u0c17\u0c33\u0c35\u0c3e\u0c30\u0c02 \u0c28\u0c41\u0c02\u0c21\u0c3f 5 \u0c30\u0c4b\u0c1c\u0c41\u0c32 \u0c38\u0c17\u0c1f\u0c41 \u0c35\u0c3f\u0c15\u0c4d\u0c30\u0c2f\u0c3e\u0c32\u0c41 \u0c30\u0c42.1,890. \u0c38\u0c4b\u0c2e\u0c35\u0c3e\u0c30\u0c02 \u0c35\u0c3f\u0c15\u0c4d\u0c30\u0c2f\u0c3e\u0c32 \u0c15\u0c02\u0c1f\u0c47 \u0c36\u0c28\u0c3f\u0c35\u0c3e\u0c30\u0c02 \u0c35\u0c3f\u0c15\u0c4d\u0c30\u0c2f\u0c3e\u0c32\u0c41 \u0c0e\u0c02\u0c24 \u0c0e\u0c15\u0c4d\u0c15\u0c41\u0c35?", "opts_en": ["a) Rs 450", "b) Rs 500", "c) Rs 600", "d) Rs 650"], "opts_te": ["a) \u0c30\u0c42.450", "b) \u0c30\u0c42.500", "c) \u0c30\u0c42.600", "d) \u0c30\u0c42.650"], "ans": 0, "expl_en": "\ud83d\udca1 <br><br>Mon to Fri sum = 5 * 1800 = 9000.<br>Tue to Sat sum = 5 * 1890 = 9450.<br>Difference = (Tue to Sat sum) - (Mon to Fri sum) = Saturday - Monday = 9450 - 9000 = 450.", "expl_te": "\ud83d\udca1 <br><br>\u0c38\u0c4b\u0c2e\u0c35\u0c3e\u0c30\u0c02 \u0c28\u0c41\u0c02\u0c21\u0c3f \u0c36\u0c41\u0c15\u0c4d\u0c30\u0c35\u0c3e\u0c30\u0c02 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = 9000.<br>\u0c2e\u0c02\u0c17\u0c33\u0c35\u0c3e\u0c30\u0c02 \u0c28\u0c41\u0c02\u0c21\u0c3f \u0c36\u0c28\u0c3f\u0c35\u0c3e\u0c30\u0c02 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = 9450.<br>\u0c35\u0c40\u0c1f\u0c3f \u0c35\u0c4d\u0c2f\u0c24\u0c4d\u0c2f\u0c3e\u0c38\u0c2e\u0c47 \u0c36\u0c28\u0c3f\u0c35\u0c3e\u0c30\u0c02 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c38\u0c4b\u0c2e\u0c35\u0c3e\u0c30\u0c3e\u0c32 \u0c2e\u0c27\u0c4d\u0c2f \u0c35\u0c4d\u0c2f\u0c24\u0c4d\u0c2f\u0c3e\u0c38\u0c02 = 9450 - 9000 = 450."}, {"concept": "Aptitude - Averages", "en": "Q19. Three years ago, the average age of a family of 5 members was 17 years. In spite of the birth of a child in the family, the present average age of the family remains the same. The present age of the child is", "te": "Q19. \u0c2e\u0c42\u0c21\u0c47\u0c33\u0c4d\u0c32 \u0c15\u0c4d\u0c30\u0c3f\u0c24\u0c02 5 \u0c17\u0c41\u0c30\u0c41 \u0c38\u0c2d\u0c4d\u0c2f\u0c41\u0c32 \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c38\u0c17\u0c1f\u0c41 \u0c35\u0c2f\u0c38\u0c41 17 \u0c0f\u0c33\u0c4d\u0c32\u0c41. \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c\u0c02\u0c32\u0c4b \u0c12\u0c15 \u0c2c\u0c3f\u0c21\u0c4d\u0c21 \u0c2a\u0c41\u0c1f\u0c4d\u0c1f\u0c3f\u0c28\u0c2a\u0c4d\u0c2a\u0c1f\u0c3f\u0c15\u0c40, \u0c15\u0c41\u0c1f\u0c41\u0c02\u0c2c \u0c2a\u0c4d\u0c30\u0c38\u0c4d\u0c24\u0c41\u0c24 \u0c38\u0c17\u0c1f\u0c41 \u0c35\u0c2f\u0c38\u0c41 \u0c05\u0c32\u0c3e\u0c17\u0c47 \u0c09\u0c02\u0c26\u0c3f. \u0c06 \u0c2c\u0c3f\u0c21\u0c4d\u0c21 \u0c2a\u0c4d\u0c30\u0c38\u0c4d\u0c24\u0c41\u0c24 \u0c35\u0c2f\u0c38\u0c41 \u0c0e\u0c02\u0c24?", "opts_en": ["a) 3 years", "b) 1 year", "c) 2 years", "d) 1.5 years"], "opts_te": ["a) 3 \u0c0f\u0c33\u0c4d\u0c32\u0c41", "b) 1 \u0c0f\u0c21\u0c41", "c) 2 \u0c0f\u0c33\u0c4d\u0c32\u0c41", "d) 1.5 \u0c0f\u0c33\u0c4d\u0c32\u0c41"], "ans": 2, "expl_en": "\ud83d\udca1 <br><br>Sum of ages 3 years ago = 5 * 17 = 85.<br>Present sum of those 5 members = 85 + (5*3) = 100.<br>Current total members = 6. Present average = 17. Present sum of 6 members = 6 * 17 = 102.<br>Age of child = 102 - 100 = 2 years.", "expl_te": "\ud83d\udca1 <br><br>\u0c2e\u0c42\u0c21\u0c47\u0c33\u0c4d\u0c32 \u0c15\u0c4d\u0c30\u0c3f\u0c24\u0c02 5 \u0c17\u0c41\u0c30\u0c3f \u0c35\u0c2f\u0c38\u0c41\u0c32 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = 85.<br>\u0c35\u0c3e\u0c30\u0c3f \u0c2a\u0c4d\u0c30\u0c38\u0c4d\u0c24\u0c41\u0c24 \u0c35\u0c2f\u0c38\u0c41\u0c32 \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 = 85 + 15 = 100.<br>\u0c2c\u0c3f\u0c21\u0c4d\u0c21\u0c24\u0c4b \u0c15\u0c32\u0c3f\u0c2a\u0c3f \u0c07\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 6 \u0c17\u0c41\u0c30\u0c41 \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c30\u0c41. \u0c38\u0c17\u0c1f\u0c41 17 \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c35\u0c2f\u0c38\u0c41 102.<br>\u0c2c\u0c3f\u0c21\u0c4d\u0c21 \u0c35\u0c2f\u0c38\u0c41 = 102 - 100 = 2 \u0c0f\u0c33\u0c4d\u0c32\u0c41."}, {"concept": "Aptitude - Averages", "en": "Q20. A batsman has a certain average of runs for 16 innings. In the 17th inning, he makes a score of 85 runs, thereby increasing his average by 3 runs. What is the average after the 17th inning?", "te": "Q20. \u0c12\u0c15 \u0c2c\u0c4d\u0c2f\u0c3e\u0c1f\u0c4d\u0c38\u0c4d\u200c\u0c2e\u0c46\u0c28\u0c4d 16 \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d\u200c\u0c32\u0c32\u0c4b \u0c15\u0c4a\u0c02\u0c24 \u0c38\u0c17\u0c1f\u0c41\u0c28\u0c41 \u0c15\u0c32\u0c3f\u0c17\u0c3f \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c21\u0c41. 17\u0c35 \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d\u200c\u0c32\u0c4b \u0c05\u0c24\u0c28\u0c41 85 \u0c2a\u0c30\u0c41\u0c17\u0c41\u0c32\u0c41 \u0c1a\u0c47\u0c2f\u0c21\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c05\u0c24\u0c28\u0c3f \u0c38\u0c17\u0c1f\u0c41 3 \u0c2a\u0c30\u0c41\u0c17\u0c41\u0c32\u0c41 \u0c2a\u0c46\u0c30\u0c3f\u0c17\u0c3f\u0c02\u0c26\u0c3f. 17\u0c35 \u0c07\u0c28\u0c4d\u0c28\u0c3f\u0c02\u0c17\u0c4d\u0c38\u0c4d \u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24 \u0c05\u0c24\u0c28\u0c3f \u0c38\u0c17\u0c1f\u0c41 \u0c0e\u0c02\u0c24?", "opts_en": ["a) 34", "b) 35", "c) 36", "d) 37"], "opts_te": ["a) 34", "b) 35", "c) 36", "d) 37"], "ans": 3, "expl_en": "\ud83d\udca1 <br><br>Let old average be x. Total runs = 16x.<br>New total = 16x + 85. New average = x + 3.<br>So, (16x + 85) / 17 = x + 3 => 16x + 85 = 17x + 51 => x = 34.<br>New average = x + 3 = 37.", "expl_te": "\ud83d\udca1 <br><br>\u0c2a\u0c3e\u0c24 \u0c38\u0c17\u0c1f\u0c41 x \u0c05\u0c28\u0c41\u0c15\u0c41\u0c02\u0c1f\u0c47, 16x + 85 = 17(x + 3).<br>\u0c26\u0c40\u0c28\u0c3f\u0c28\u0c3f \u0c38\u0c3e\u0c27\u0c3f\u0c38\u0c4d\u0c24\u0c47 x = 34 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f.<br>\u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c38\u0c17\u0c1f\u0c41 = 34 + 3 = 37."}];
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(questionsData.length).fill(null);
+        let visitedStatus = new Array(questionsData.length).fill(false);
+        visitedStatus[0] = true;
+        let currentLang = 'en';
+
+        let timeLeft = 60 * 60;
+        let timerInterval = setInterval(() => {
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            document.getElementById('timer').innerText = `⏱️ ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                submitTest();
+            }
+            timeLeft--;
+        }, 1000);
+
+        window.onload = () => {
+            buildPalette();
+            loadQuestion(0);
+        };
+
+        function switchLang(lang) {
+            currentLang = lang;
+            document.getElementById('lang-en').classList.remove('active');
+            document.getElementById('lang-te').classList.remove('active');
+            document.getElementById(`lang-${lang}`).classList.add('active');
+            
+            if (document.getElementById('review-mode-view').style.display === 'flex') {
+                openReviewMode();
+            } else {
+                loadQuestion(currentQIndex);
+            }
+        }
+
+        function buildPalette() {
+            let paletteHTML = '';
+            questionsData.forEach((q, idx) => {
+                let statusClass = "visited";
+                if (userAnswers[idx] !== null) statusClass = "answered";
+                else if (idx === currentQIndex) statusClass = "visited current";
+                paletteHTML += `<button class="p-btn ${statusClass}" id="pal-${idx}" onclick="jumpToQuestion(${idx})">${idx + 1}</button>`;
+            });
+            document.getElementById('palette-grid').innerHTML = paletteHTML;
+        }
+
+        function updatePaletteStatus() {
+            questionsData.forEach((q, idx) => {
+                const btn = document.getElementById(`pal-${idx}`);
+                btn.className = "p-btn";
+                if (userAnswers[idx] !== null) {
+                    btn.classList.add("answered");
+                } else if (visitedStatus[idx]) {
+                    btn.classList.add("visited");
+                }
+                if (idx === currentQIndex) {
+                    btn.classList.add("current");
+                }
+            });
+        }
+
+        function loadQuestion(index) {
+            currentQIndex = index;
+            visitedStatus[index] = true;
+            updatePaletteStatus();
+
+            const qData = questionsData[index];
+            document.getElementById('q-counter').innerText = `Q ${index + 1} / ${questionsData.length}`;
+            
+            let qText = currentLang === 'en' ? qData.en : qData.te;
+            let qOpts = currentLang === 'en' ? qData.opts_en : qData.opts_te;
+
+            document.getElementById('q-text-disp').innerHTML = qText;
+            
+            let optsHTML = '';
+            qOpts.forEach((opt, idx) => {
+                let selectedClass = (userAnswers[index] === idx) ? "selected" : "";
+                optsHTML += `
+                <div class="opt-btn ${selectedClass}" id="opt-${index}-${idx}" onclick="selectOption(${index}, ${idx})">
+                    <div class="opt-indicator"></div>
+                    <div>${opt}</div>
+                </div>`;
+            });
+            document.getElementById('options-grid').innerHTML = optsHTML;
+            document.querySelector('.right-panel').scrollTop = 0;
+        }
+
+        function selectOption(qIdx, optIdx) {
+            userAnswers[qIdx] = optIdx;
+            const buttons = document.querySelectorAll('.opt-btn');
+            buttons.forEach((b, idx) => {
+                if (idx === optIdx) b.classList.add('selected');
+                else b.classList.remove('selected');
+            });
+            updatePaletteStatus();
+        }
+
+        function clearResponse() {
+            userAnswers[currentQIndex] = null;
+            const buttons = document.querySelectorAll('.opt-btn');
+            buttons.forEach(b => b.classList.remove('selected'));
+            updatePaletteStatus();
+        }
+
+        function nextQuestion() {
+            if (currentQIndex < questionsData.length - 1) {
+                loadQuestion(currentQIndex + 1);
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQIndex > 0) {
+                loadQuestion(currentQIndex - 1);
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            loadQuestion(idx);
+        }
+
+        function confirmSubmit() {
+            if (confirm(currentLang === 'en' ? "Are you sure you want to submit the test?" : "మీరు టెస్ట్ సబ్మిట్ చేయాలనుకుంటున్నారా?")) {
+                submitTest();
+            }
+        }
+
+        function submitTest() {
+            clearInterval(timerInterval);
+            let correctCount = 0;
+            let wrongCount = 0;
+            let unattemptedCount = 0;
+
+            questionsData.forEach((q, idx) => {
+                if (userAnswers[idx] === null) {
+                    unattemptedCount++;
+                } else if (userAnswers[idx] === q.ans) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            let totalMarks = correctCount * 3 - wrongCount * 1; 
+            let maxMarks = questionsData.length * 3;
+
+            document.getElementById('score-stats-content').innerHTML = `
+                <div class="stat-item">${currentLang === 'en' ? 'Total Questions:' : 'మొత్తం ప్రశ్నలు:'} <span>${questionsData.length}</span></div>
+                <div class="stat-item">${currentLang === 'en' ? 'Attempted:' : 'ప్రయత్నించినవి:'} <span>${correctCount + wrongCount}</span></div>
+                <div class="stat-item" style="color:var(--correct);">${currentLang === 'en' ? 'Correct (+3):' : 'సరైనవి (+3):'} <span>${correctCount}</span></div>
+                <div class="stat-item" style="color:var(--wrong);">${currentLang === 'en' ? 'Wrong (-1):' : 'తప్పు సమాధానాలు (-1):'} <span>${wrongCount}</span></div>
+                <div class="stat-item">${currentLang === 'en' ? 'Unattempted:' : 'వదిలేసినవి:'} <span>${unattemptedCount}</span></div>
+                <div class="stat-item" style="color:var(--box-yellow);">${currentLang === 'en' ? 'Final Score:' : 'తుది స్కోరు:'} <span>${totalMarks} / ${maxMarks}</span></div>
+            `;
+
+            document.getElementById('score-modal').style.display = 'flex';
+        }
+
+        function openReviewMode() {
+            document.getElementById('score-modal').style.display = 'none';
+            document.getElementById('test-mode-view').style.display = 'none';
+            document.getElementById('review-mode-view').style.display = 'flex';
+
+            let reviewHTML = '';
+            questionsData.forEach((q, idx) => {
+                let userAns = userAnswers[idx];
+                let statusClass = "unattempted";
+                let statusText = currentLang === 'en' ? "Not Attempted" : "వదిలేశారు";
+
+                if (userAns !== null) {
+                    if (userAns === q.ans) {
+                        statusClass = "correct-ans";
+                        statusText = currentLang === 'en' ? "Correct ✅" : "సరైనది ✅";
+                    } else {
+                        statusClass = "wrong-ans";
+                        statusText = currentLang === 'en' ? "Wrong ❌" : "తప్పు ❌";
+                    }
+                }
+                
+                let qText = currentLang === 'en' ? q.en : q.te;
+                let qOpts = currentLang === 'en' ? q.opts_en : q.opts_te;
+                let qExpl = currentLang === 'en' ? q.expl_en : q.expl_te;
+                let yaText = currentLang === 'en' ? "Your Answer:" : "మీ సమాధానం:";
+                let caText = currentLang === 'en' ? "Correct Answer:" : "సరైన సమాధానం:";
+
+                reviewHTML += `
+                    <div class="review-q-item ${statusClass}">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <strong style="color:var(--primary-cyan); font-weight: 500;">[${q.concept}]</strong>
+                            <span>${statusText}</span>
+                        </div>
+                        <div style="margin-bottom:12px; color:#fff; font-family:'Montserrat'; font-size: 1.15rem; line-height: 1.6;">${qText}</div>
+                        <div style="font-size:1.05rem; color:#cbd5e1; margin-bottom:8px;">
+                            ${yaText} <b>${userAns !== null ? qOpts[userAns] : 'None'}</b> | ${caText} <b style="color:var(--correct);">${qOpts[q.ans]}</b>
+                        </div>
+                        <div class="expl-box-review">
+                            ${qExpl}
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('review-questions-list').innerHTML = reviewHTML;
+        }
+    </script>
+</body>
+</html>

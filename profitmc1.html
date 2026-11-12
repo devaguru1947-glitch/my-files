@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHUL ACADEMY - Profit and Loss CBT Test</title>
+    <!-- Using Barlow font as requested -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --panel-bg: #111111;
+            --border-color: #2a2a2a;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --brand-color: #00d2ff;
+            --brand-color-dark: #0099cc;
+            --btn-bg: #1a1a1a;
+            --btn-hover: #222222;
+            --opt-bg: #0a0a0a;
+            --opt-hover: #161616;
+            --opt-border: #333333;
+            --opt-selected-bg: #0d1f2d;
+            --opt-selected-border: #0088cc;
+            --success: #10b981;
+            --danger: #ef4444;
+            --answered-bg: #059669;
+            --not-answered-bg: #b45309;
+            --not-visited-bg: #334155;
+        }
+
+        * { box-sizing: border-box; font-family: 'Barlow', sans-serif; }
+        
+        body {
+            margin: 0; padding: 0; background-color: var(--bg-dark); color: var(--text-main);
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--bg-dark);
+            padding: 15px 30px; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .brand-container {
+            display: flex; align-items: center; gap: 15px;
+        }
+        .brand { font-size: 1.6rem; font-weight: 700; color: var(--brand-color); letter-spacing: 1px; text-transform: uppercase; }
+        .test-title { font-size: 1rem; color: var(--brand-color); border: 1px solid #444; padding: 5px 15px; border-radius: 20px; }
+
+        .header-controls {
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        .lang-toggle {
+            display: flex; border-radius: 4px; overflow: hidden;
+        }
+        .lang-btn {
+            background: var(--btn-bg); color: var(--text-muted); border: 1px solid var(--border-color); padding: 8px 15px; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+        .lang-btn.active { background: var(--brand-color); color: var(--bg-dark); border-color: var(--brand-color); }
+
+        .timer-container {
+            background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 4px;
+            font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border-color); color: var(--brand-color);
+        }
+        
+        .full-screen-btn {
+            background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-color);
+            padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px;
+        }
+        .full-screen-btn:hover { background: rgba(255,255,255,0.1); }
+
+        /* --- MAIN LAYOUT --- */
+        .main-container {
+            display: flex; flex: 1; overflow: hidden; padding: 15px; gap: 15px;
+        }
+
+        /* --- LEFT PALETTE --- */
+        .palette-area {
+            flex: 0 0 320px; background: var(--panel-bg); border: 1px solid var(--border-color);
+            display: flex; flex-direction: column; padding: 20px; border-radius: 8px;
+        }
+        
+        .palette-header { 
+            font-size: 1rem; font-weight: 600; margin-bottom: 20px; color: var(--brand-color); text-transform: uppercase; text-align: center;
+        }
+        
+        .grid-container {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; overflow-y: auto; padding-right: 5px; margin-bottom: 20px;
+        }
+        
+        .q-bubble {
+            aspect-ratio: 2 / 1.2; border-radius: 4px; background: var(--not-visited-bg); border: 1px solid transparent;
+            display: flex; justify-content: center; align-items: center; font-weight: 500; cursor: pointer;
+            transition: 0.2s; font-size: 0.95rem; color: #fff;
+        }
+        .q-bubble:hover { filter: brightness(1.2); }
+        .q-bubble.active { border-color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.5); border-width: 2px; }
+        
+        /* Status Colors */
+        .q-bubble.answered { background: var(--answered-bg); }
+        .q-bubble.not-answered { background: var(--not-answered-bg); }
+        
+        /* Result Stats */
+        .q-bubble.correct-ans { background: var(--success); }
+        .q-bubble.wrong-ans { background: var(--danger); }
+
+        .palette-legend {
+            margin-top:20px; font-size: 0.85rem; color:var(--text-muted); display:flex; flex-direction:column; gap:12px;
+            padding-top: 20px; border-top: 1px dashed var(--border-color); margin-bottom: 20px;
+        }
+        .legend-item { display:flex; align-items:center; gap:10px; }
+        .legend-box { width:14px; height:14px; border-radius:3px; }
+
+        .submit-btn {
+            background: var(--success); color: white; border: none; padding: 12px; font-size: 1rem;
+            font-weight: 600; border-radius: 6px; cursor: pointer; transition: 0.3s; width: 100%;
+            text-transform: uppercase; letter-spacing: 1px; margin-top: auto;
+        }
+        .submit-btn:hover { filter: brightness(1.1); }
+
+        /* --- RIGHT QUESTION AREA --- */
+        .question-area {
+            flex: 1; padding: 25px 40px; overflow-y: auto; position: relative; background: var(--panel-bg);
+            border-radius: 8px; display: flex; flex-direction: column; border: 1px solid var(--border-color);
+        }
+
+        .question-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;
+        }
+        
+        .subject-tag {
+            background: var(--brand-color-dark); color: #fff; font-weight: 600; padding: 6px 15px; border-radius: 4px; font-size: 0.9rem; text-transform: uppercase;
+        }
+        .q-num { font-size: 1rem; font-weight: 500; color: var(--brand-color); border: 1px solid var(--border-color); padding: 5px 15px; border-radius: 20px;}
+
+        .question-text-container { margin-bottom: 30px; }
+        .question-text { font-size: 1.35rem; line-height: 1.5; margin-bottom: 12px; font-weight: 400; }
+        .telugu-q { font-family: 'Noto Sans Telugu', sans-serif; color: #d0d0d0; font-size: 1.2rem; line-height: 1.6; }
+
+        .options-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: auto; }
+        
+        .option-btn {
+            background: var(--opt-bg); border: 1px solid var(--opt-border);
+            padding: 15px 20px; border-radius: 8px; color: var(--text-main); font-size: 1.1rem;
+            text-align: left; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 15px;
+        }
+        .option-btn:hover { background: var(--opt-hover); }
+        .option-btn.selected { background: var(--opt-selected-bg); border-color: var(--opt-selected-border); }
+        
+        .radio-circle {
+            width: 22px; height: 22px; border: 2px solid #777; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0;
+        }
+        .option-btn.selected .radio-circle { border-color: var(--brand-color); }
+        .option-btn.selected .radio-circle::after { content: ''; width: 10px; height: 10px; background: var(--brand-color); border-radius: 50%; }
+
+        .opt-content { display: flex; flex-direction: column; gap: 4px; }
+        .opt-en { color: var(--text-main); }
+        .opt-te { font-family: 'Noto Sans Telugu', sans-serif; font-size: 1rem; color: #a0a0a0; }
+        
+        /* Result Mode Styles */
+        .option-btn.correct { border-color: var(--success) !important; background: rgba(16, 185, 129, 0.1) !important; }
+        .option-btn.correct .radio-circle { border-color: var(--success); }
+        .option-btn.correct .radio-circle::after { content: '✓'; color: var(--success); font-weight: bold; font-size: 14px; background: transparent; width: auto; height: auto; }
+        
+        .option-btn.wrong { border-color: var(--danger) !important; background: rgba(239, 68, 68, 0.1) !important; opacity: 0.8; }
+        .option-btn.wrong .radio-circle { border-color: var(--danger); }
+        .option-btn.wrong .radio-circle::after { content: '✗'; color: var(--danger); font-weight: bold; font-size: 14px; background: transparent; width: auto; height: auto; }
+        
+        .explanation-box {
+            display: none; background: #1a1a1a; border-left: 4px solid var(--brand-color);
+            padding: 20px; margin-top: 30px; animation: slideIn 0.5s ease; border-radius: 4px;
+        }
+        .explanation-box h4 { margin: 0 0 10px 0; color: var(--brand-color); text-transform: uppercase; letter-spacing: 1px; }
+        .expl-te { font-family: 'Noto Sans Telugu', sans-serif; color: #e0e0e0; margin-bottom: 10px; font-size: 1.1rem; line-height: 1.6;}
+        .expl-en { font-style: italic; color: #999; font-size: 1rem; line-height: 1.5; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; border-top: 1px dashed var(--border-color); padding-top: 20px;}
+        
+        .clear-btn {
+            background: #7f1d1d; color: white; border: 1px solid #991b1b; padding: 10px 20px;
+            font-size: 0.95rem; font-weight: 500; border-radius: 4px; cursor: pointer; transition: 0.3s;
+        }
+        .clear-btn:hover { background: #991b1b; }
+
+        .nav-buttons { display: flex; gap: 15px; }
+        
+        .nav-btn {
+            background: var(--btn-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 25px;
+            font-size: 1rem; font-weight: 600; border-radius: 4px; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-btn:hover { background: var(--hover-bg); }
+        .nav-btn.next { background: var(--brand-color-dark); border-color: var(--brand-color-dark); color: white; }
+        .nav-btn.next:hover { background: var(--brand-color); }
+        .nav-btn:disabled { background: #1a1a1a; color: #555; border-color: #222; cursor: not-allowed; }
+
+        /* Result Screen */
+        .result-screen {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 10, 10, 0.95); z-index: 100; display: none;
+            flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+        }
+        .score-card {
+            background: var(--panel-bg); padding: 50px; border-radius: 8px; border: 1px solid var(--brand-color);
+            text-align: center; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+        .score-val { font-size: 5rem; font-weight: 700; color: var(--brand-color); margin: 20px 0; line-height: 1;}
+        .view-expl-btn {
+            background: var(--brand-color-dark); color: white; border: none; padding: 15px 30px;
+            font-size: 1.1rem; font-weight: 600; border-radius: 6px; cursor: pointer; margin-top: 35px; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; width: 100%;
+        }
+        .view-expl-btn:hover { filter: brightness(1.2); }
+        
+        /* Disable interaction during review */
+        .review-mode .option-btn { pointer-events: none; }
+        .review-mode .clear-btn { display: none; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #666; }
+
+        /* Language Toggle Logic */
+        .hide-en .english-text, .hide-en .opt-en, .hide-en .expl-en { display: none !important; }
+        .hide-te .telugu-q, .hide-te .opt-te, .hide-te .expl-te { display: none !important; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand">RAHUL ACADEMY</div>
+            <div class="test-title">Profit and Loss Master Test (25 Qs)</div>
+        </div>
+        <div class="header-controls">
+            <div class="lang-toggle">
+                <button class="lang-btn active" id="btnEn" onclick="toggleLang('en')">ENGLISH</button>
+                <button class="lang-btn" id="btnTe" onclick="toggleLang('te')">TELUGU</button>
+            </div>
+            <div class="timer-container" id="timerDisplay">
+                <span id="time">30:00</span>
+            </div>
+            <button class="full-screen-btn" onclick="toggleFullScreen()">⛶ FULL SCREEN</button>
+        </div>
+    </header>
+
+    <div class="main-container" id="mainWrapper">
+        
+        <!-- Palette Area (Left Side) -->
+        <div class="palette-area">
+            <div class="palette-header">QUESTION PALETTE (25 QS)</div>
+            <div class="grid-container" id="paletteGrid">
+                <!-- Bubbles injected via JS -->
+            </div>
+            
+            <div class="palette-legend">
+                <div class="legend-item"><div class="legend-box" style="background:var(--answered-bg);"></div> Answered</div>
+                <div class="legend-item"><div class="legend-box" style="background:var(--not-answered-bg);"></div> Not Answered (Viewed)</div>
+                <div class="legend-item"><div class="legend-box" style="background:var(--not-visited-bg);"></div> Not Visited</div>
+            </div>
+            
+            <button class="submit-btn" id="submitExamBtn" onclick="submitExam()">SUBMIT TEST</button>
+        </div>
+
+        <!-- Question Area (Right Side) -->
+        <div class="question-area" id="qArea">
+            <div class="question-header">
+                <div class="subject-tag">PROFIT & LOSS</div>
+                <div class="q-num" id="qNumText">Q 1 / 25</div>
+            </div>
+            
+            <div class="question-text-container">
+                <div class="question-text english-text" id="qTextEn">Question English</div>
+                <div class="telugu-q" id="qTextTe">Question Telugu</div>
+            </div>
+            
+            <div class="options-container" id="optionsContainer">
+                <!-- Options injected via JS -->
+            </div>
+            
+            <div class="explanation-box" id="explBox">
+                <h4>💡 Solution</h4>
+                <div class="expl-te" id="explTe">Telugu explanation</div>
+                <div class="expl-en" id="explEn">English explanation</div>
+            </div>
+
+            <div class="controls">
+                <button class="clear-btn" onclick="clearResponse()">CLEAR RESPONSE</button>
+                <div class="nav-buttons">
+                    <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">⬅ PREV</button>
+                    <button class="nav-btn next" id="nextBtn" onclick="nextQuestion()">NEXT ➡</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div class="result-screen" id="resultScreen">
+            <div class="score-card">
+                <h2 style="margin-top:0; color:#fff; font-size:1.8rem; letter-spacing:2px; font-weight:600;">TEST SUBMITTED</h2>
+                <div style="font-size:1rem; color:#888; margin-top:20px; text-transform:uppercase;">Your Score</div>
+                <div class="score-val" id="finalScore">0 / 25</div>
+                
+                <div style="display:flex; justify-content:space-around; margin-top:30px; color:#ddd; font-size:1rem; background:#1a1a1a; padding:15px; border-radius:6px; border: 1px solid #333;">
+                    <div style="display:flex; flex-direction:column; gap:5px;">Correct<span id="corrCount" style="color:var(--success); font-weight:700; font-size:1.4rem;">0</span></div>
+                    <div style="display:flex; flex-direction:column; gap:5px;">Wrong<span id="wrongCount" style="color:var(--danger); font-weight:700; font-size:1.4rem;">0</span></div>
+                    <div style="display:flex; flex-direction:column; gap:5px;">Unattempted<span id="unattCount" style="color:#888; font-weight:700; font-size:1.4rem;">0</span></div>
+                </div>
+
+                <button class="view-expl-btn" onclick="viewExplanations()">VIEW SOLUTIONS</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const qData = [{"q_en": "By selling an article for Rs. 100, one gains Rs. 10. Then the gain per cent is-", "q_te": "\u0c12\u0c15 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c28\u0c41 \u0c30\u0c42. 100 \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c21\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c12\u0c15\u0c30\u0c41 \u0c30\u0c42. 10 \u0c32\u0c3e\u0c2d\u0c02 \u0c2a\u0c4a\u0c02\u0c26\u0c41\u0c24\u0c3e\u0c30\u0c41. \u0c05\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 9%", "(B) 10%", "(C) 11 1/9%", "(D) None of these"], "options_te": ["(A) 9%", "(B) 10%", "(C) 11 1/9%", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 2, "expl_en": "S.P. = Rs. 100, Gain = Rs. 10. C.P. = 100 - 10 = Rs. 90. Gain % = (10/90) * 100 = 11 1/9%.", "expl_te": "\u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = \u0c30\u0c42. 100, \u0c32\u0c3e\u0c2d\u0c02 = \u0c30\u0c42. 10. \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 100 - 10 = \u0c30\u0c42. 90. \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 = (10/90) * 100 = 11 1/9%."}, {"q_en": "There would be 10% loss if a toy is sold at Rs. 10.80 per piece. At what price should it be sold to earn a profit of 20%?", "q_te": "\u0c12\u0c15 \u0c2c\u0c4a\u0c2e\u0c4d\u0c2e\u0c28\u0c41 \u0c30\u0c42. 10.80 \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c24\u0c47 10% \u0c28\u0c37\u0c4d\u0c1f\u0c02 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f. 20% \u0c32\u0c3e\u0c2d\u0c02 \u0c2a\u0c4a\u0c02\u0c26\u0c3e\u0c32\u0c02\u0c1f\u0c47 \u0c26\u0c3e\u0c28\u0c3f\u0c28\u0c3f \u0c0f \u0c27\u0c30\u0c15\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c32\u0c3f?", "options_en": ["(A) Rs. 12", "(B) Rs. 12.96", "(C) Rs. 14.40", "(D) None of these"], "options_te": ["(A) \u0c30\u0c42. 12", "(B) \u0c30\u0c42. 12.96", "(C) \u0c30\u0c42. 14.40", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 2, "expl_en": "90% of C.P. = Rs. 10.80 => C.P. = (10.80 * 100) / 90 = Rs. 12. To get 20% profit, S.P. = 120% of 12 = 1.2 * 12 = Rs. 14.40.", "expl_te": "\u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 90% = \u0c30\u0c42. 10.80 => \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = \u0c30\u0c42. 12. 20% \u0c32\u0c3e\u0c2d\u0c02 \u0c30\u0c3e\u0c35\u0c3e\u0c32\u0c02\u0c1f\u0c47 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = 12 \u0c32\u0c4b 120% = \u0c30\u0c42. 14.40."}, {"q_en": "By selling an article for Rs. 247.50 we get a profit of 12 1/2%. The cost of the article is-", "q_te": "\u0c12\u0c15 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c28\u0c41 \u0c30\u0c42. 247.50 \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c21\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e 12 1/2% \u0c32\u0c3e\u0c2d\u0c02 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c06 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 210", "(B) Rs. 220", "(C) Rs. 224", "(D) Rs. 225"], "options_te": ["(A) \u0c30\u0c42. 210", "(B) \u0c30\u0c42. 220", "(C) \u0c30\u0c42. 224", "(D) \u0c30\u0c42. 225"], "answer": 1, "expl_en": "112.5% of C.P. = 247.50 => (225/2)% of C.P. = 247.50 => C.P. = (247.50 * 200) / 225 = Rs. 220.", "expl_te": "\u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 112.5% = 247.50. \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = (247.50 * 100) / 112.5 = \u0c30\u0c42. 220."}, {"q_en": "The selling price of 12 articles is equal to the cost price of 15 articles. The gain per cent is-", "q_te": "12 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 15 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c15\u0c41 \u0c38\u0c2e\u0c3e\u0c28\u0c02. \u0c05\u0c2f\u0c3f\u0c24\u0c47 \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 6 2/3%", "(B) 25%", "(C) 20%", "(D) 80%"], "options_te": ["(A) 6 2/3%", "(B) 25%", "(C) 20%", "(D) 80%"], "answer": 1, "expl_en": "Let C.P. of 1 article = Re 1. C.P. of 12 articles = Rs 12. S.P. of 12 articles = Rs 15. Gain = 15 - 12 = 3. Gain % = (3/12) * 100 = 25%.", "expl_te": "1 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 \u0c30\u0c42. 1 \u0c05\u0c28\u0c41\u0c15\u0c41\u0c02\u0c1f\u0c47, 12 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 \u0c30\u0c42. 12. 12 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = 15 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = \u0c30\u0c42. 15. \u0c32\u0c3e\u0c2d\u0c02 = 15 - 12 = 3. \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 = (3/12) * 100 = 25%."}, {"q_en": "The cost price of 20 tables is equal to the selling price of 15 tables. The gain percent is-", "q_te": "20 \u0c2c\u0c32\u0c4d\u0c32\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 15 \u0c2c\u0c32\u0c4d\u0c32\u0c32 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32\u0c15\u0c41 \u0c38\u0c2e\u0c3e\u0c28\u0c02. \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 25%", "(B) 33 1/3%", "(C) 20%", "(D) None of these"], "options_te": ["(A) 25%", "(B) 33 1/3%", "(C) 20%", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 1, "expl_en": "Let C.P. of 1 table = Re 1. S.P. of 15 tables = Rs 20. C.P. of 15 tables = Rs 15. Gain = Rs 5. Gain % = (5/15) * 100 = 33 1/3%.", "expl_te": "15 \u0c2c\u0c32\u0c4d\u0c32\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 \u0c30\u0c42. 15. \u0c35\u0c3e\u0c1f\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 20 \u0c2c\u0c32\u0c4d\u0c32\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c15\u0c41 \u0c38\u0c2e\u0c3e\u0c28\u0c02 \u0c05\u0c28\u0c17\u0c3e \u0c30\u0c42. 20. \u0c32\u0c3e\u0c2d\u0c02 = \u0c30\u0c42. 5. \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 = (5/15) * 100 = 33 1/3%."}, {"q_en": "A man buys an article for Rs. 80 and sells it at a loss of 20%. The selling price is-", "q_te": "\u0c12\u0c15 \u0c35\u0c4d\u0c2f\u0c15\u0c4d\u0c24\u0c3f \u0c12\u0c15 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c28\u0c41 \u0c30\u0c42. 80 \u0c15\u0c3f \u0c15\u0c4a\u0c28\u0c3f, \u0c26\u0c3e\u0c28\u0c3f\u0c28\u0c3f 20% \u0c28\u0c37\u0c4d\u0c1f\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c21\u0c41. \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 64", "(B) Rs. 60", "(C) Rs. 70", "(D) Rs. 72"], "options_te": ["(A) \u0c30\u0c42. 64", "(B) \u0c30\u0c42. 60", "(C) \u0c30\u0c42. 70", "(D) \u0c30\u0c42. 72"], "answer": 0, "expl_en": "S.P. = 80% of C.P. = (80/100) * 80 = Rs. 64.", "expl_te": "\u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 80% = 80 \u0c32\u0c4b 80% = 64."}, {"q_en": "If the profit after selling a commodity for Rs. 425 is same as the loss after selling it for Rs. 355. The cost of the commodity is-", "q_te": "\u0c12\u0c15 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c28\u0c41 \u0c30\u0c42. 425 \u0c15\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u0c35\u0c1a\u0c4d\u0c1a\u0c47 \u0c32\u0c3e\u0c2d\u0c02, \u0c26\u0c3e\u0c28\u0c3f\u0c28\u0c3f \u0c30\u0c42. 355 \u0c15\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u0c35\u0c1a\u0c4d\u0c1a\u0c47 \u0c28\u0c37\u0c4d\u0c1f\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c38\u0c2e\u0c3e\u0c28\u0c02. \u0c06 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 385", "(B) Rs. 390", "(C) Rs. 395", "(D) Rs. 400"], "options_te": ["(A) \u0c30\u0c42. 385", "(B) \u0c30\u0c42. 390", "(C) \u0c30\u0c42. 395", "(D) \u0c30\u0c42. 400"], "answer": 1, "expl_en": "Profit = Loss => 425 - C.P. = C.P. - 355 => 2 * C.P. = 425 + 355 = 780 => C.P. = Rs. 390.", "expl_te": "\u0c32\u0c3e\u0c2d\u0c02 = \u0c28\u0c37\u0c4d\u0c1f\u0c02 \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f, \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = (425 + 355) / 2 = 780 / 2 = \u0c30\u0c42. 390."}, {"q_en": "By selling an article for Rs. 100 one loses Rs. 10. Then, the loss per cent is-", "q_te": "\u0c12\u0c15 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c28\u0c41 \u0c30\u0c42. 100 \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c21\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c12\u0c15\u0c30\u0c41 \u0c30\u0c42. 10 \u0c28\u0c37\u0c4d\u0c1f\u0c2a\u0c4b\u0c24\u0c3e\u0c30\u0c41. \u0c05\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u0c28\u0c37\u0c4d\u0c1f \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 11 1/9%", "(B) 9 1/11%", "(C) 10%", "(D) None of these"], "options_te": ["(A) 11 1/9%", "(B) 9 1/11%", "(C) 10%", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 1, "expl_en": "S.P. = 100, Loss = 10 => C.P. = 100 + 10 = 110. Loss % = (10/110) * 100 = 100/11 = 9 1/11%.", "expl_te": "\u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = 100, \u0c28\u0c37\u0c4d\u0c1f\u0c02 = 10 \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 110. \u0c28\u0c37\u0c4d\u0c1f \u0c36\u0c3e\u0c24\u0c02 = (10/110) * 100 = 9 1/11%."}, {"q_en": "A man buys 10 articles for Rs. 8 and sells them at the rate of Rs. 1.25 per article. His gain is-", "q_te": "\u0c12\u0c15 \u0c35\u0c4d\u0c2f\u0c15\u0c4d\u0c24\u0c3f 10 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32\u0c28\u0c41 \u0c30\u0c42. 8 \u0c15\u0c3f \u0c15\u0c4a\u0c28\u0c3f, \u0c35\u0c3e\u0c1f\u0c3f\u0c28\u0c3f \u0c12\u0c15\u0c4d\u0c15\u0c4a\u0c15\u0c4d\u0c15\u0c1f\u0c3f \u0c30\u0c42. 1.25 \u0c1a\u0c4a\u0c2a\u0c4d\u0c2a\u0c41\u0c28 \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c21\u0c41. \u0c05\u0c24\u0c28\u0c3f \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 20%", "(B) 50%", "(C) 19 1/2%", "(D) 56 1/4%"], "options_te": ["(A) 20%", "(B) 50%", "(C) 19 1/2%", "(D) 56 1/4%"], "answer": 3, "expl_en": "C.P. of 10 articles = Rs. 8. S.P. of 10 articles = 10 * 1.25 = Rs. 12.50. Gain = 12.50 - 8 = 4.50. Gain % = (4.50/8) * 100 = 56.25% = 56 1/4%.", "expl_te": "10 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = \u0c30\u0c42. 8. 10 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = 10 * 1.25 = \u0c30\u0c42. 12.50. \u0c32\u0c3e\u0c2d\u0c02 = 4.50. \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 = (4.50 / 8) * 100 = 56.25%."}, {"q_en": "A man sold a radio for Rs. 1980 and gained 10%. The radio was bought for-", "q_te": "\u0c12\u0c15 \u0c35\u0c4d\u0c2f\u0c15\u0c4d\u0c24\u0c3f \u0c12\u0c15 \u0c30\u0c47\u0c21\u0c3f\u0c2f\u0c4b\u0c28\u0c41 \u0c30\u0c42. 1980 \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f 10% \u0c32\u0c3e\u0c2d\u0c02 \u0c2a\u0c4a\u0c02\u0c26\u0c3e\u0c21\u0c41. \u0c06 \u0c30\u0c47\u0c21\u0c3f\u0c2f\u0c4b\u0c28\u0c41 \u0c0e\u0c02\u0c24\u0c15\u0c41 \u0c15\u0c4a\u0c28\u0c4d\u0c28\u0c3e\u0c21\u0c41?", "options_en": ["(A) Rs. 1782", "(B) Rs. 1800", "(C) Rs. 2178", "(D) None of these"], "options_te": ["(A) \u0c30\u0c42. 1782", "(B) \u0c30\u0c42. 1800", "(C) \u0c30\u0c42. 2178", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 1, "expl_en": "110% of C.P. = 1980 => C.P. = (1980 * 100) / 110 = Rs. 1800.", "expl_te": "\u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 110% = 1980 => \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = (1980 * 100) / 110 = \u0c30\u0c42. 1800."}, {"q_en": "What per cent of selling price would be 34% of cost price if profit is 26% of the selling price?", "q_te": "\u0c32\u0c3e\u0c2d\u0c02 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 26% \u0c05\u0c2f\u0c3f\u0c24\u0c47, \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b\u0c28\u0c3f 34% \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b \u0c0e\u0c02\u0c24 \u0c36\u0c3e\u0c24\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c38\u0c2e\u0c3e\u0c28\u0c02?", "options_en": ["(A) 17.16%", "(B) 74.00%", "(C) 25.16%", "(D) None of these"], "options_te": ["(A) 17.16%", "(B) 74.00%", "(C) 25.16%", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 2, "expl_en": "Let S.P. = 100. Profit = 26. So C.P. = 100 - 26 = 74. Now, 34% of C.P. = 0.34 * 74 = 25.16. Since S.P. is 100, this is 25.16% of S.P.", "expl_te": "\u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 100 \u0c05\u0c28\u0c41\u0c15\u0c41\u0c02\u0c1f\u0c47, \u0c32\u0c3e\u0c2d\u0c02 26. \u0c05\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 74. \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 34% = 74 * (34/100) = 25.16. \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 100 \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f \u0c07\u0c26\u0c3f 25.16% \u0c05\u0c35\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f."}, {"q_en": "Alok bought 25 kg of rice at the rate of Rs. 6.00 per kg and 35 kg of rice at the rate of Rs. 7.00 per kg. He mixed the two and sold the mixture at the rate of Rs. 6.75 per kg. What was his gain or loss in the transaction?", "q_te": "\u0c05\u0c32\u0c4b\u0c15\u0c4d 25 \u0c15\u0c3f\u0c32\u0c4b\u0c32 \u0c2c\u0c3f\u0c2f\u0c4d\u0c2f\u0c3e\u0c28\u0c4d\u0c28\u0c3f \u0c15\u0c3f\u0c32\u0c4b \u0c30\u0c42. 6 \u0c1a\u0c4a\u0c2a\u0c4d\u0c2a\u0c41\u0c28, 35 \u0c15\u0c3f\u0c32\u0c4b\u0c32 \u0c2c\u0c3f\u0c2f\u0c4d\u0c2f\u0c3e\u0c28\u0c4d\u0c28\u0c3f \u0c15\u0c3f\u0c32\u0c4b \u0c30\u0c42. 7 \u0c1a\u0c4a\u0c2a\u0c4d\u0c2a\u0c41\u0c28 \u0c15\u0c4a\u0c28\u0c4d\u0c28\u0c3e\u0c21\u0c41. \u0c30\u0c46\u0c02\u0c21\u0c3f\u0c02\u0c1f\u0c3f\u0c28\u0c40 \u0c15\u0c32\u0c3f\u0c2a\u0c3f \u0c15\u0c3f\u0c32\u0c4b \u0c30\u0c42. 6.75 \u0c1a\u0c4a\u0c2a\u0c4d\u0c2a\u0c41\u0c28 \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c21\u0c41. \u0c08 \u0c32\u0c3e\u0c35\u0c3e\u0c26\u0c47\u0c35\u0c40\u0c32\u0c4b \u0c05\u0c24\u0c28\u0c3f\u0c15\u0c3f \u0c32\u0c3e\u0c2d\u0c2e\u0c3e \u0c32\u0c47\u0c26\u0c3e \u0c28\u0c37\u0c4d\u0c1f\u0c2e\u0c3e? \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 15 loss", "(B) Rs. 15 gain", "(C) Rs. 10 loss", "(D) Rs. 10 gain"], "options_te": ["(A) \u0c30\u0c42. 15 \u0c28\u0c37\u0c4d\u0c1f\u0c02", "(B) \u0c30\u0c42. 15 \u0c32\u0c3e\u0c2d\u0c02", "(C) \u0c30\u0c42. 10 \u0c28\u0c37\u0c4d\u0c1f\u0c02", "(D) \u0c30\u0c42. 10 \u0c32\u0c3e\u0c2d\u0c02"], "answer": 3, "expl_en": "Total C.P. = (25 * 6) + (35 * 7) = 150 + 245 = 395. Total S.P. = 60 * 6.75 = 405. Gain = 405 - 395 = Rs. 10.", "expl_te": "\u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = (25 * 6) + (35 * 7) = 150 + 245 = 395. \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = 60 * 6.75 = 405. \u0c32\u0c3e\u0c2d\u0c02 = 405 - 395 = \u0c30\u0c42. 10."}, {"q_en": "A buys oranges at 2 for 3 rupees (wait, the text says Rs. 2 for 3 oranges) and sells them at a rupee each. To make a profit of Rs. 10, he must sell-", "q_te": "A 3 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c32\u0c28\u0c41 \u0c30\u0c42. 2 \u0c15\u0c41 \u0c15\u0c4a\u0c28\u0c3f, \u0c35\u0c3e\u0c1f\u0c3f\u0c28\u0c3f \u0c12\u0c15\u0c4d\u0c15\u0c4a\u0c15\u0c4d\u0c15\u0c1f\u0c3f \u0c12\u0c15 \u0c30\u0c42\u0c2a\u0c3e\u0c2f\u0c3f \u0c1a\u0c4a\u0c2a\u0c4d\u0c2a\u0c41\u0c28 \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c21\u0c41. \u0c30\u0c42. 10 \u0c32\u0c3e\u0c2d\u0c02 \u0c2a\u0c4a\u0c02\u0c26\u0c3e\u0c32\u0c02\u0c1f\u0c47, \u0c05\u0c24\u0c28\u0c41 \u0c0e\u0c28\u0c4d\u0c28\u0c3f \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c32\u0c28\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c32\u0c3f?", "options_en": ["(A) 10 oranges", "(B) 20 oranges", "(C) 30 oranges", "(D) 40 oranges"], "options_te": ["(A) 10 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c32\u0c41", "(B) 20 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c32\u0c41", "(C) 30 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c32\u0c41", "(D) 40 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c32\u0c41"], "answer": 2, "expl_en": "C.P. of 1 orange = Rs. 2/3. S.P. of 1 orange = Re. 1. Profit on 1 orange = 1 - 2/3 = 1/3. For Rs. 10 profit, number of oranges = 10 / (1/3) = 30.", "expl_te": "1 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 2/3 \u0c30\u0c42. \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = 1 \u0c30\u0c42. 1 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c2a\u0c48 \u0c32\u0c3e\u0c2d\u0c02 = 1 - 2/3 = 1/3 \u0c30\u0c42. \u0c30\u0c42. 10 \u0c32\u0c3e\u0c2d\u0c02 \u0c30\u0c3e\u0c35\u0c3e\u0c32\u0c02\u0c1f\u0c47 \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c32\u0c4d\u0c38\u0c3f\u0c28 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c32\u0c41 = 10 / (1/3) = 30."}, {"q_en": "The cost of 2 T.V. sets and a radio is Rs. 7000, while 2 radios and one T.V. set together cost Rs. 4250. The cost of a T.V. set is-", "q_te": "2 T.V. \u0c38\u0c46\u0c1f\u0c4d\u0c32\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c12\u0c15 \u0c30\u0c47\u0c21\u0c3f\u0c2f\u0c4b \u0c27\u0c30 \u0c30\u0c42. 7000. 2 \u0c30\u0c47\u0c21\u0c3f\u0c2f\u0c4b\u0c32\u0c41 \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c12\u0c15 T.V. \u0c38\u0c46\u0c1f\u0c4d \u0c27\u0c30 \u0c30\u0c42. 4250. \u0c12\u0c15 T.V. \u0c38\u0c46\u0c1f\u0c4d \u0c27\u0c30 \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 3000", "(B) Rs. 3160", "(C) Rs. 3240", "(D) None of these"], "options_te": ["(A) \u0c30\u0c42. 3000", "(B) \u0c30\u0c42. 3160", "(C) \u0c30\u0c42. 3240", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 1, "expl_en": "2T + R = 7000. T + 2R = 4250. Multiply first by 2: 4T + 2R = 14000. Subtract second: 3T = 14000 - 4250 = 9750 => T = 3250. Option (D) None of these is correct. Let's recheck. Yes, T=3250. So None of these.", "expl_te": "2T + R = 7000. T + 2R = 4250. \u0c2e\u0c4a\u0c26\u0c1f\u0c3f \u0c38\u0c2e\u0c40\u0c15\u0c30\u0c23\u0c3e\u0c28\u0c4d\u0c28\u0c3f 2 \u0c24\u0c4b \u0c17\u0c41\u0c23\u0c3f\u0c38\u0c4d\u0c24\u0c47 4T + 2R = 14000. \u0c26\u0c40\u0c28\u0c3f \u0c28\u0c41\u0c02\u0c21\u0c3f \u0c30\u0c46\u0c02\u0c21\u0c35\u0c26\u0c3f \u0c24\u0c40\u0c38\u0c3f\u0c35\u0c47\u0c38\u0c4d\u0c24\u0c47 3T = 9750 => T = 3250. \u0c06\u0c2a\u0c4d\u0c37\u0c28\u0c4d\u0c38\u0c4d \u0c32\u0c4b \u0c32\u0c47\u0c26\u0c41 \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f '\u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41'."}, {"q_en": "If books bought at prices ranging from Rs. 200 to Rs. 350 are sold at prices ranging from Rs. 300 to Rs. 425. what is the greatest possible profit that might be made in selling 8 books?", "q_te": "\u0c30\u0c42. 200 \u0c28\u0c41\u0c02\u0c21\u0c3f \u0c30\u0c42. 350 \u0c2e\u0c27\u0c4d\u0c2f \u0c27\u0c30\u0c32\u0c32\u0c4b \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c2a\u0c41\u0c38\u0c4d\u0c24\u0c15\u0c3e\u0c32\u0c28\u0c41 \u0c30\u0c42. 300 \u0c28\u0c41\u0c02\u0c21\u0c3f \u0c30\u0c42. 425 \u0c2e\u0c27\u0c4d\u0c2f \u0c27\u0c30\u0c32\u0c32\u0c4b \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28\u0c1f\u0c4d\u0c32\u0c2f\u0c3f\u0c24\u0c47, 8 \u0c2a\u0c41\u0c38\u0c4d\u0c24\u0c15\u0c3e\u0c32\u0c28\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c21\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c35\u0c1a\u0c4d\u0c1a\u0c47 \u0c17\u0c30\u0c3f\u0c37\u0c4d\u0c1f \u0c32\u0c3e\u0c2d\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 400", "(B) Rs. 600", "(C) Cannot be determined", "(D) None of these"], "options_te": ["(A) \u0c30\u0c42. 400", "(B) \u0c30\u0c42. 600", "(C) \u0c15\u0c28\u0c41\u0c17\u0c4a\u0c28\u0c32\u0c47\u0c2e\u0c41", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41 (\u0c30\u0c42. 1800)"], "answer": 3, "expl_en": "To get greatest profit, buy at lowest price (200) and sell at highest price (425). Profit per book = 425 - 200 = 225. Profit for 8 books = 8 * 225 = Rs. 1800.", "expl_te": "\u0c17\u0c30\u0c3f\u0c37\u0c4d\u0c1f \u0c32\u0c3e\u0c2d\u0c02 \u0c30\u0c3e\u0c35\u0c3e\u0c32\u0c02\u0c1f\u0c47 \u0c05\u0c24\u0c3f \u0c24\u0c15\u0c4d\u0c15\u0c41\u0c35 \u0c27\u0c30\u0c15\u0c41 (200) \u0c15\u0c4a\u0c28\u0c3f, \u0c05\u0c24\u0c3f \u0c0e\u0c15\u0c4d\u0c15\u0c41\u0c35 \u0c27\u0c30\u0c15\u0c41 (425) \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c32\u0c3f. \u0c12\u0c15\u0c4d\u0c15\u0c4b \u0c2a\u0c41\u0c38\u0c4d\u0c24\u0c15\u0c02\u0c2a\u0c48 \u0c32\u0c3e\u0c2d\u0c02 225. 8 \u0c2a\u0c41\u0c38\u0c4d\u0c24\u0c15\u0c3e\u0c32\u0c2a\u0c48 \u0c32\u0c3e\u0c2d\u0c02 = 8 * 225 = 1800 \u0c30\u0c42."}, {"q_en": "A man purchased a watch for Rs. 400 and sold it at a gain of 20% of the selling price. The selling price of the watch is-", "q_te": "\u0c12\u0c15 \u0c35\u0c4d\u0c2f\u0c15\u0c4d\u0c24\u0c3f \u0c12\u0c15 \u0c17\u0c21\u0c3f\u0c2f\u0c3e\u0c30\u0c3e\u0c28\u0c4d\u0c28\u0c3f \u0c30\u0c42. 400 \u0c15\u0c3f \u0c15\u0c4a\u0c28\u0c3f, \u0c26\u0c3e\u0c28\u0c3f\u0c28\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32\u0c2a\u0c48 20% \u0c32\u0c3e\u0c2d\u0c02\u0c24\u0c4b \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c21\u0c41. \u0c06 \u0c17\u0c21\u0c3f\u0c2f\u0c3e\u0c30\u0c02 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 300", "(B) Rs. 320", "(C) Rs. 440", "(D) Rs. 500"], "options_te": ["(A) \u0c30\u0c42. 300", "(B) \u0c30\u0c42. 320", "(C) \u0c30\u0c42. 440", "(D) \u0c30\u0c42. 500"], "answer": 3, "expl_en": "Profit = 20% of S.P. => S.P. - C.P. = 0.2 S.P. => 0.8 S.P. = C.P. => 0.8 S.P. = 400 => S.P. = 500.", "expl_te": "\u0c32\u0c3e\u0c2d\u0c02 = \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 20%. \u0c05\u0c28\u0c17\u0c3e, \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 80%. 80% = 400 \u0c05\u0c2f\u0c3f\u0c24\u0c47, 100% (\u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32) = 500."}, {"q_en": "By selling 1 dozen of pencils, a shopkeeper gains the selling price of 1 pencil (assume text typo '1 dazen' means 1 pencil based on standard problems). Actually, it says '1 dozen pencils, a shopkeeper gains the selling price of 1 dozen pencils' which is impossible. Let's assume it means gains selling price of 1 pencil or 2 pencils. Let's use a standard: By selling 8 dozen pencils, gains selling price of 1 dozen pencils.", "q_te": "\u0c12\u0c15 \u0c26\u0c41\u0c15\u0c3e\u0c23\u0c26\u0c3e\u0c30\u0c41\u0c21\u0c41 8 \u0c21\u0c1c\u0c28\u0c4d\u0c32 \u0c2a\u0c46\u0c28\u0c4d\u0c38\u0c3f\u0c33\u0c4d\u0c32\u0c28\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c21\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e 1 \u0c21\u0c1c\u0c28\u0c4d \u0c2a\u0c46\u0c28\u0c4d\u0c38\u0c3f\u0c33\u0c4d\u0c32 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32\u0c28\u0c41 \u0c32\u0c3e\u0c2d\u0c02\u0c17\u0c3e \u0c2a\u0c4a\u0c02\u0c26\u0c41\u0c24\u0c3e\u0c21\u0c41. \u0c05\u0c24\u0c28\u0c3f \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 12.5%", "(B) 14 2/7%", "(C) 87.5%", "(D) None of these"], "options_te": ["(A) 12.5%", "(B) 14 2/7%", "(C) 87.5%", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 1, "expl_en": "Gain = S.P. of 1 dozen. S.P. of 8 dozen - C.P. of 8 dozen = S.P. of 1 dozen => C.P. of 8 dozen = S.P. of 7 dozen. Gain % = (1/7) * 100 = 14 2/7%.", "expl_te": "\u0c32\u0c3e\u0c2d\u0c02 = 1 \u0c21\u0c1c\u0c28\u0c4d \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32. \u0c32\u0c3e\u0c2d\u0c02 = \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 - \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32. 8 \u0c21\u0c1c\u0c28\u0c4d\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 7 \u0c21\u0c1c\u0c28\u0c4d\u0c32 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32. \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 = 1/7 = 14 2/7%."}, {"q_en": "By selling 36 oranges, a vender loses the selling price of 4 oranges. His loss per cent is-", "q_te": "36 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c32\u0c28\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c21\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e \u0c12\u0c15 \u0c35\u0c4d\u0c2f\u0c3e\u0c2a\u0c3e\u0c30\u0c3f 4 \u0c28\u0c3e\u0c30\u0c3f\u0c02\u0c1c\u0c32 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32\u0c28\u0c41 \u0c28\u0c37\u0c4d\u0c1f\u0c2a\u0c4b\u0c24\u0c3e\u0c21\u0c41. \u0c05\u0c24\u0c28\u0c3f \u0c28\u0c37\u0c4d\u0c1f \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 12 1/2%", "(B) 10%", "(C) 11 1/9%", "(D) None of these"], "options_te": ["(A) 12 1/2%", "(B) 10%", "(C) 11 1/9%", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 1, "expl_en": "Loss = C.P. of 36 - S.P. of 36 = S.P. of 4 => C.P. of 36 = S.P. of 40. Loss % = (4/40) * 100 = 10%.", "expl_te": "\u0c28\u0c37\u0c4d\u0c1f\u0c02 = 36 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 - 36 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = 4 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c32 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32. \u0c05\u0c28\u0c17\u0c3e, 36 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 40 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32. \u0c28\u0c37\u0c4d\u0c1f \u0c36\u0c3e\u0c24\u0c02 = (4/40) * 100 = 10%."}, {"q_en": "While selling a watch a shopkeeper gives a discount of 5%. If he gives a discount of 7%, he earns Rs. 15 less as profit. What is the marked price of the watch?", "q_te": "\u0c12\u0c15 \u0c26\u0c41\u0c15\u0c3e\u0c23\u0c26\u0c3e\u0c30\u0c41\u0c21\u0c41 \u0c17\u0c21\u0c3f\u0c2f\u0c3e\u0c30\u0c3e\u0c28\u0c4d\u0c28\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c47\u0c1f\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 5% \u0c21\u0c3f\u0c38\u0c4d\u0c15\u0c4c\u0c02\u0c1f\u0c4d \u0c07\u0c38\u0c4d\u0c24\u0c3e\u0c21\u0c41. \u0c05\u0c24\u0c28\u0c41 7% \u0c21\u0c3f\u0c38\u0c4d\u0c15\u0c4c\u0c02\u0c1f\u0c4d \u0c07\u0c38\u0c4d\u0c24\u0c47, \u0c05\u0c24\u0c28\u0c3f\u0c15\u0c3f \u0c30\u0c42. 15 \u0c24\u0c15\u0c4d\u0c15\u0c41\u0c35 \u0c32\u0c3e\u0c2d\u0c02 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c06 \u0c17\u0c21\u0c3f\u0c2f\u0c3e\u0c30\u0c02 \u0c2f\u0c4a\u0c15\u0c4d\u0c15 \u0c2a\u0c4d\u0c30\u0c15\u0c1f\u0c3f\u0c24 \u0c35\u0c46\u0c32 (marked price) \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 697.50", "(B) Rs. 712.50", "(C) Rs. 750", "(D) Rs. 787.50"], "options_te": ["(A) \u0c30\u0c42. 697.50", "(B) \u0c30\u0c42. 712.50", "(C) \u0c30\u0c42. 750", "(D) \u0c30\u0c42. 787.50"], "answer": 2, "expl_en": "Difference in discount = 7% - 5% = 2%. This 2% corresponds to the difference in profit, which is Rs. 15. So, 2% of Marked Price = 15 => Marked Price = 15 * 50 = Rs. 750. Option C represents 750 based on logic, matching standard answers.", "expl_te": "\u0c21\u0c3f\u0c38\u0c4d\u0c15\u0c4c\u0c02\u0c1f\u0c4d \u0c32\u0c4b \u0c35\u0c4d\u0c2f\u0c24\u0c4d\u0c2f\u0c3e\u0c38\u0c02 = 7% - 5% = 2%. \u0c08 2% \u0c2a\u0c4d\u0c30\u0c15\u0c1f\u0c3f\u0c24 \u0c35\u0c46\u0c32\u0c32\u0c4b \u0c30\u0c42. 15 \u0c15\u0c3f \u0c38\u0c2e\u0c3e\u0c28\u0c02. 100% \u0c2a\u0c4d\u0c30\u0c15\u0c1f\u0c3f\u0c24 \u0c35\u0c46\u0c32 = 15 * 50 = 750 \u0c30\u0c42."}, {"q_en": "A sells a horse to B for Rs. 4860, thereby losing 19 per cent. B sells it to C at a price which would have given A 17 per cent profit. Find B's gain-", "q_te": "A \u0c12\u0c15 \u0c17\u0c41\u0c30\u0c4d\u0c30\u0c3e\u0c28\u0c4d\u0c28\u0c3f B \u0c15\u0c3f \u0c30\u0c42. 4860 \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f 19% \u0c28\u0c37\u0c4d\u0c1f\u0c2a\u0c4b\u0c2f\u0c3e\u0c21\u0c41. B \u0c26\u0c3e\u0c28\u0c3f\u0c28\u0c3f C \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c27\u0c30, A \u0c15\u0c3f 17% \u0c32\u0c3e\u0c2d\u0c02 \u0c24\u0c46\u0c1a\u0c4d\u0c1a\u0c3f\u0c2a\u0c46\u0c1f\u0c4d\u0c1f\u0c47 \u0c27\u0c30\u0c15\u0c41 \u0c38\u0c2e\u0c3e\u0c28\u0c02. B \u0c2f\u0c4a\u0c15\u0c4d\u0c15 \u0c32\u0c3e\u0c2d\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 2160", "(B) Rs. 2610", "(C) Rs. 1260", "(D) Rs. 2260"], "options_te": ["(A) \u0c30\u0c42. 2160", "(B) \u0c30\u0c42. 2610", "(C) \u0c30\u0c42. 1260", "(D) \u0c30\u0c42. 2260"], "answer": 0, "expl_en": "A's S.P. = 4860 (81% of A's C.P.). A's C.P. = 4860 / 0.81 = 6000. B sells at 117% of A's C.P. = 6000 * 1.17 = 7020. B's gain = 7020 - 4860 = Rs. 2160.", "expl_te": "A \u0c2f\u0c4a\u0c15\u0c4d\u0c15 81% \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 4860. A \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 6000. B \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = A \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 117% = 7020. B \u0c15\u0c3f \u0c35\u0c1a\u0c4d\u0c1a\u0c3f\u0c28 \u0c32\u0c3e\u0c2d\u0c02 = 7020 - 4860 = 2160."}, {"q_en": "The cost price of an article, which on being sold at a gain of 12% yields Rs. 6 more than when it is sold at a loss of 12% is-", "q_te": "\u0c12\u0c15 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c28\u0c41 12% \u0c28\u0c37\u0c4d\u0c1f\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c26\u0c3e\u0c28\u0c3f\u0c15\u0c02\u0c1f\u0c47 12% \u0c32\u0c3e\u0c2d\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c24\u0c47 \u0c30\u0c42. 6 \u0c0e\u0c15\u0c4d\u0c15\u0c41\u0c35 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c06 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 \u0c0e\u0c02\u0c24?", "options_en": ["(A) Rs. 30", "(B) Rs. 25", "(C) Rs. 20", "(D) Rs. 24"], "options_te": ["(A) \u0c30\u0c42. 30", "(B) \u0c30\u0c42. 25", "(C) \u0c30\u0c42. 20", "(D) \u0c30\u0c42. 24"], "answer": 1, "expl_en": "Difference in percentage = 12% - (-12%) = 24%. 24% of C.P. = Rs. 6 => C.P. = (6 / 24) * 100 = Rs. 25.", "expl_te": "\u0c36\u0c3e\u0c24\u0c3e\u0c32\u0c32\u0c4b \u0c35\u0c4d\u0c2f\u0c24\u0c4d\u0c2f\u0c3e\u0c38\u0c02 = 12% \u0c32\u0c3e\u0c2d\u0c02 - 12% \u0c28\u0c37\u0c4d\u0c1f\u0c02 = 24%. \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 24% = 6. \u0c05\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 100% \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 25 \u0c30\u0c42."}, {"q_en": "When the price of pressure cooker was increased by 15%, its sale fell down by 15%. The effect on the money receipt was-", "q_te": "\u0c2a\u0c4d\u0c30\u0c46\u0c37\u0c30\u0c4d \u0c15\u0c41\u0c15\u0c4d\u0c15\u0c30\u0c4d \u0c27\u0c30 15% \u0c2a\u0c46\u0c30\u0c3f\u0c17\u0c3f\u0c28\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41, \u0c26\u0c3e\u0c28\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c15\u0c3e\u0c32\u0c41 15% \u0c2a\u0c21\u0c3f\u0c2a\u0c4b\u0c2f\u0c3e\u0c2f\u0c3f. \u0c2e\u0c4a\u0c24\u0c4d\u0c24\u0c02 \u0c06\u0c26\u0c3e\u0c2f\u0c02 (money receipt) \u0c2a\u0c48 \u0c26\u0c40\u0c28\u0c3f \u0c2a\u0c4d\u0c30\u0c2d\u0c3e\u0c35\u0c02 \u0c0f\u0c2e\u0c3f\u0c1f\u0c3f?", "options_en": ["(A) No effect", "(B) 15% decrease", "(C) 7.5% increase", "(D) 2.25% decrease"], "options_te": ["(A) \u0c2e\u0c3e\u0c30\u0c4d\u0c2a\u0c41 \u0c32\u0c47\u0c26\u0c41", "(B) 15% \u0c24\u0c17\u0c4d\u0c17\u0c41\u0c26\u0c32", "(C) 7.5% \u0c2a\u0c46\u0c30\u0c41\u0c17\u0c41\u0c26\u0c32", "(D) 2.25% \u0c24\u0c17\u0c4d\u0c17\u0c41\u0c26\u0c32"], "answer": 3, "expl_en": "Net effect = a + b + (ab)/100 = 15 - 15 - (15*15)/100 = -225/100 = -2.25%. So, 2.25% decrease.", "expl_te": "\u0c38\u0c4a\u0c24\u0c4d\u0c30\u0c02: x - y - xy/100 = 15 - 15 - (15*15)/100 = -2.25%. \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f 2.25% \u0c24\u0c17\u0c4d\u0c17\u0c41\u0c26\u0c32."}, {"q_en": "Subhash purchased a tape-recorder at 9/10 th of its selling price and sold it at 8% more than its selling price. His gain is-", "q_te": "\u0c38\u0c41\u0c2d\u0c3e\u0c37\u0c4d \u0c12\u0c15 \u0c1f\u0c47\u0c2a\u0c4d \u0c30\u0c3f\u0c15\u0c3e\u0c30\u0c4d\u0c21\u0c30\u0c4d\u200c\u0c28\u0c41 \u0c26\u0c3e\u0c28\u0c3f \u0c05\u0c38\u0c32\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 9/10 \u0c35\u0c02\u0c24\u0c41\u0c15\u0c41 \u0c15\u0c4a\u0c28\u0c41\u0c17\u0c4b\u0c32\u0c41 \u0c1a\u0c47\u0c38\u0c3f, \u0c05\u0c38\u0c32\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 \u0c15\u0c02\u0c1f\u0c47 8% \u0c0e\u0c15\u0c4d\u0c15\u0c41\u0c35\u0c15\u0c41 \u0c35\u0c3f\u0c15\u0c4d\u0c30\u0c2f\u0c3f\u0c02\u0c1a\u0c3e\u0c21\u0c41. \u0c05\u0c24\u0c28\u0c3f \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 9%", "(B) 10%", "(C) 18%", "(D) 20%"], "options_te": ["(A) 9%", "(B) 10%", "(C) 18%", "(D) 20%"], "answer": 3, "expl_en": "Let original S.P. = 100. Subhash's C.P. = (9/10)*100 = 90. His S.P. = 108. Gain = 108 - 90 = 18. Gain % = (18/90) * 100 = 20%.", "expl_te": "\u0c05\u0c38\u0c32\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 100 \u0c05\u0c28\u0c41\u0c15\u0c41\u0c02\u0c1f\u0c47, \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 90. \u0c05\u0c24\u0c28\u0c41 \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 = 108. \u0c32\u0c3e\u0c2d\u0c02 = 18. \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 = (18/90) * 100 = 20%."}, {"q_en": "By selling an article for Rs. 144, a man loses 1/7 of his outlay. By selling it for Rs. 168, his gain or loss per cent is-", "q_te": "\u0c12\u0c15 \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c35\u0c41\u0c28\u0c41 \u0c30\u0c42. 144 \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c21\u0c02 \u0c26\u0c4d\u0c35\u0c3e\u0c30\u0c3e, \u0c12\u0c15 \u0c35\u0c4d\u0c2f\u0c15\u0c4d\u0c24\u0c3f \u0c24\u0c28 \u0c2a\u0c46\u0c1f\u0c4d\u0c1f\u0c41\u0c2c\u0c21\u0c3f\u0c32\u0c4b 1/7 \u0c35\u0c02\u0c24\u0c41 \u0c28\u0c37\u0c4d\u0c1f\u0c2a\u0c4b\u0c24\u0c3e\u0c21\u0c41. \u0c26\u0c3e\u0c28\u0c3f\u0c28\u0c3f \u0c30\u0c42. 168 \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c24\u0c47, \u0c05\u0c24\u0c28\u0c3f \u0c32\u0c3e\u0c2d \u0c32\u0c47\u0c26\u0c3e \u0c28\u0c37\u0c4d\u0c1f \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 20% loss", "(B) 20% gain", "(C) No profit no loss", "(D) None of these"], "options_te": ["(A) 20% \u0c28\u0c37\u0c4d\u0c1f\u0c02", "(B) 20% \u0c32\u0c3e\u0c2d\u0c02", "(C) \u0c32\u0c3e\u0c2d\u0c02 \u0c32\u0c47\u0c26\u0c41 \u0c28\u0c37\u0c4d\u0c1f\u0c02 \u0c32\u0c47\u0c26\u0c41", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 2, "expl_en": "Loss = 1/7 of C.P. So S.P. = 6/7 of C.P. => 6/7 C.P. = 144 => C.P. = 168. If sold for 168, S.P. = C.P., so no profit no loss.", "expl_te": "\u0c28\u0c37\u0c4d\u0c1f\u0c02 1/7 \u0c35\u0c02\u0c24\u0c41 \u0c15\u0c3e\u0c2c\u0c1f\u0c4d\u0c1f\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32\u0c32\u0c4b 6/7 \u0c35\u0c02\u0c24\u0c41. 6/7 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 = 144 \u0c05\u0c2f\u0c3f\u0c24\u0c47 \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 168. 168 \u0c15\u0c3f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c24\u0c47 \u0c32\u0c3e\u0c2d\u0c02 \u0c32\u0c47\u0c26\u0c41 \u0c28\u0c37\u0c4d\u0c1f\u0c02 \u0c32\u0c47\u0c26\u0c41."}, {"q_en": "A fruitseller buys lemons at 2 for a rupee and sells them at five for three rupees. His gain per cent is-", "q_te": "\u0c12\u0c15 \u0c2a\u0c02\u0c21\u0c4d\u0c32 \u0c35\u0c4d\u0c2f\u0c3e\u0c2a\u0c3e\u0c30\u0c3f \u0c30\u0c42\u0c2a\u0c3e\u0c2f\u0c15\u0c3f 2 \u0c28\u0c3f\u0c2e\u0c4d\u0c2e\u0c15\u0c3e\u0c2f\u0c32\u0c41 \u0c15\u0c4a\u0c28\u0c3f, 3 \u0c30\u0c42\u0c2a\u0c3e\u0c2f\u0c32\u0c15\u0c41 5 \u0c1a\u0c4a\u0c2a\u0c4d\u0c2a\u0c41\u0c28 \u0c05\u0c2e\u0c4d\u0c2e\u0c3e\u0c21\u0c41. \u0c05\u0c24\u0c28\u0c3f \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 \u0c0e\u0c02\u0c24?", "options_en": ["(A) 10%", "(B) 15%", "(C) 20%", "(D) None of these"], "options_te": ["(A) 10%", "(B) 15%", "(C) 20%", "(D) \u0c0f\u0c26\u0c40 \u0c15\u0c3e\u0c26\u0c41"], "answer": 2, "expl_en": "C.P. of 1 lemon = 1/2 = 0.50. S.P. of 1 lemon = 3/5 = 0.60. Profit = 0.10. Profit % = (0.10 / 0.50) * 100 = 20%.", "expl_te": "1 \u0c28\u0c3f\u0c2e\u0c4d\u0c2e\u0c15\u0c3e\u0c2f \u0c15\u0c4a\u0c28\u0c4d\u0c28 \u0c35\u0c46\u0c32 1/2 \u0c30\u0c42. 1 \u0c28\u0c3f\u0c2e\u0c4d\u0c2e\u0c15\u0c3e\u0c2f \u0c05\u0c2e\u0c4d\u0c2e\u0c3f\u0c28 \u0c35\u0c46\u0c32 3/5 \u0c30\u0c42. \u0c32\u0c3e\u0c2d\u0c02 = 3/5 - 1/2 = 1/10 \u0c30\u0c42. \u0c32\u0c3e\u0c2d \u0c36\u0c3e\u0c24\u0c02 = (1/10) / (1/2) * 100 = 20%."}];
+        let currentQ = 0;
+        let userAnswers = new Array(qData.length).fill(null);
+        let visitedStatus = new Array(qData.length).fill(false); // track visited
+        let isSubmitted = false;
+        
+        // Timer logic
+        let timeLeft = 30 * 60; 
+        let timerInterval;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                } else {
+                    timeLeft--;
+                    let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                    let s = (timeLeft % 60).toString().padStart(2, '0');
+                    document.getElementById('time').innerText = m + ':' + s;
+                }
+            }, 1000);
+        }
+
+        function initPalette() {
+            const grid = document.getElementById('paletteGrid');
+            grid.innerHTML = '';
+            for(let i=0; i<qData.length; i++) {
+                let bubble = document.createElement('div');
+                bubble.className = 'q-bubble';
+                bubble.innerText = i + 1;
+                bubble.onclick = () => jumpToQuestion(i);
+                grid.appendChild(bubble);
+            }
+        }
+
+        function loadQuestion(index) {
+            currentQ = index;
+            visitedStatus[index] = true;
+            const q = qData[index];
+            
+            document.getElementById('qNumText').innerText = `Q ${index + 1} / ${qData.length}`;
+            document.getElementById('qTextEn').innerText = q.q_en;
+            document.getElementById('qTextTe').innerText = q.q_te;
+            
+            const optsContainer = document.getElementById('optionsContainer');
+            optsContainer.innerHTML = '';
+            
+            q.options_en.forEach((opt_en, i) => {
+                let opt_te = q.options_te[i];
+                let btn = document.createElement('div');
+                btn.className = 'option-btn';
+                
+                if (userAnswers[index] === i) btn.classList.add('selected');
+                
+                if (isSubmitted) {
+                    if (q.answer === i) btn.classList.add('correct');
+                    else if (userAnswers[index] === i) btn.classList.add('wrong');
+                } else {
+                    btn.onclick = () => selectOption(i);
+                }
+
+                let clean_en = opt_en.replace(/^\([A-E]\)\s*/, '').trim();
+                let clean_te = opt_te.replace(/^\([A-E]\)\s*/, '').trim();
+                let prefix = opt_en.match(/^\([A-E]\)/) ? opt_en.match(/^\([A-E]\)/)[0].replace(/[()]/g, '') + ')' : '';
+                
+                btn.innerHTML = `<div class="radio-circle"></div>
+                                 <div class="opt-content">
+                                    <div class="opt-en"><b>${prefix}</b> ${clean_en}</div>
+                                    <div class="opt-te">${clean_te}</div>
+                                 </div>`;
+                
+                optsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('prevBtn').disabled = (index === 0);
+            if(index === qData.length - 1 && !isSubmitted) {
+                document.getElementById('nextBtn').innerText = 'SUBMIT';
+                document.getElementById('nextBtn').onclick = submitExam;
+            } else {
+                document.getElementById('nextBtn').innerText = 'NEXT ➡';
+                document.getElementById('nextBtn').onclick = nextQuestion;
+                document.getElementById('nextBtn').disabled = (index === qData.length - 1);
+            }
+            
+            updatePaletteUI();
+
+            const explBox = document.getElementById('explBox');
+            if (isSubmitted) {
+                explBox.style.display = 'block';
+                document.getElementById('explTe').innerHTML = q.expl_te;
+                document.getElementById('explEn').innerHTML = q.expl_en;
+            } else {
+                explBox.style.display = 'none';
+            }
+        }
+
+        function selectOption(optIndex) {
+            if (isSubmitted) return;
+            userAnswers[currentQ] = optIndex;
+            loadQuestion(currentQ); 
+        }
+
+        function clearResponse() {
+            if(isSubmitted) return;
+            userAnswers[currentQ] = null;
+            loadQuestion(currentQ);
+        }
+
+        function nextQuestion() {
+            if (currentQ < qData.length - 1) loadQuestion(currentQ + 1);
+        }
+
+        function prevQuestion() {
+            if (currentQ > 0) loadQuestion(currentQ - 1);
+        }
+
+        function jumpToQuestion(index) {
+            loadQuestion(index);
+        }
+
+        function updatePaletteUI() {
+            const bubbles = document.querySelectorAll('.q-bubble');
+            bubbles.forEach((b, i) => {
+                b.className = 'q-bubble'; // reset
+                
+                if (isSubmitted) {
+                    if (userAnswers[i] === null) b.classList.add('unattempted');
+                    else if (userAnswers[i] === qData[i].answer) b.classList.add('correct-ans');
+                    else b.classList.add('wrong-ans');
+                } else {
+                    if (userAnswers[i] !== null) {
+                        b.classList.add('answered');
+                    } else if (visitedStatus[i]) {
+                        b.classList.add('not-answered');
+                    }
+                }
+                
+                if (i === currentQ) b.classList.add('active');
+            });
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            isSubmitted = true;
+            
+            let score = 0;
+            let wrong = 0;
+            let unatt = 0;
+            userAnswers.forEach((ans, i) => {
+                if (ans === qData[i].answer) score++;
+                else if (ans !== null) wrong++;
+                else unatt++;
+            });
+            
+            document.getElementById('finalScore').innerText = `${score} / ${qData.length}`;
+            document.getElementById('corrCount').innerText = score;
+            document.getElementById('wrongCount').innerText = wrong;
+            document.getElementById('unattCount').innerText = unatt;
+            
+            document.getElementById('resultScreen').style.display = 'flex';
+            document.getElementById('submitExamBtn').style.display = 'none';
+            document.getElementById('qArea').classList.add('review-mode');
+        }
+
+        function viewExplanations() {
+            document.getElementById('resultScreen').style.display = 'none';
+            loadQuestion(0);
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function toggleLang(lang) {
+            const wrapper = document.getElementById('mainWrapper');
+            document.getElementById('btnEn').classList.remove('active');
+            document.getElementById('btnTe').classList.remove('active');
+            
+            if(lang === 'en') {
+                wrapper.classList.remove('hide-en');
+                wrapper.classList.add('hide-te');
+                document.getElementById('btnEn').classList.add('active');
+            } else if(lang === 'te') {
+                wrapper.classList.remove('hide-te');
+                wrapper.classList.add('hide-en');
+                document.getElementById('btnTe').classList.add('active');
+            } else {
+                wrapper.classList.remove('hide-en');
+                wrapper.classList.remove('hide-te');
+            }
+        }
+
+        // Init
+        window.onload = () => {
+            initPalette();
+            loadQuestion(0);
+            startTimer();
+        };
+    </script>
+</body>
+</html>

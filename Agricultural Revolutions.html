@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="te" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>భారతదేశ వ్యవసాయ విప్లవాలు - Rahul Academy</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Sans Telugu & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Telugu"', 'Outfit', 'sans-serif'],
+          },
+          colors: {
+            deepBg: '#030306',
+            cardBg: '#090a12',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #030306;
+      color: #f1f5f9;
+      font-family: 'Noto Sans Telugu', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Rahul Academy Watermark Layer */
+    .watermark-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-rows: repeat(auto-fill, minmax(220px, 1fr));
+      opacity: 0.035;
+      user-select: none;
+    }
+
+    .watermark-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-25deg);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      white-space: nowrap;
+    }
+
+    .glass-card {
+      background: rgba(10, 11, 20, 0.88);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glow-cyan { box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3); }
+    .glow-purple { box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.3); }
+
+    /* Horizontal Mindmap Tree Styling */
+    .h-node {
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      white-space: nowrap;
+    }
+    .h-node:hover {
+      transform: translateY(-2px);
+      border-color: rgba(6, 182, 212, 0.6);
+      background: rgba(6, 182, 212, 0.15);
+    }
+    .h-node.active {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.28) 0%, rgba(168, 85, 247, 0.22) 100%);
+      border-color: #06b6d4;
+      box-shadow: 0 0 16px -2px rgba(6, 182, 212, 0.45);
+      transform: translateY(-3px);
+    }
+
+    .map-pulse {
+      animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    ::-webkit-scrollbar { height: 7px; width: 6px; }
+    ::-webkit-scrollbar-track { background: #07080f; }
+    ::-webkit-scrollbar-thumb { background: #222538; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #373b54; }
+  </style>
+</head>
+<body class="selection:bg-cyan-500 selection:text-black">
+
+  <!-- Rahul Academy Watermark Background -->
+  <div class="watermark-grid">
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">AGRICULTURAL REVOLUTIONS</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">AGRICULTURAL REVOLUTIONS</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">AGRICULTURAL REVOLUTIONS</span></div>
+    <div class="watermark-item"><span>RAHUL ACADEMY</span><span class="text-[9px] tracking-widest text-pink-500">AGRICULTURAL REVOLUTIONS</span></div>
+  </div>
+
+  <div class="relative z-10 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-[#06070edb] backdrop-blur-md px-4 lg:px-8 py-3">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 shadow-lg shadow-cyan-500/20">
+            <i data-lucide="sprout" class="w-5 h-5 text-white animate-pulse"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg md:text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-300 to-pink-400">
+                భారతదేశ వ్యవసాయ విప్లవాలు (Agricultural Revolutions)
+              </h1>
+              <span class="text-[10px] font-bold text-amber-300 border border-amber-500/40 bg-amber-950/40 px-2 py-0.5 rounded-full tracking-wider">RAHUL ACADEMY</span>
+            </div>
+            <p class="text-[11px] text-slate-400">హరిత, శ్వేత, పసుపు, నీలి, సువర్ణ, సతతహరిత విప్లవాలు, పితామహులు & 20 MCQs</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="openQuizModal()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/30 hover:opacity-95 transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="award" class="w-4 h-4"></i>
+            <span>20 ప్రాక్టీస్ MCQs</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6 w-full space-y-6">
+
+      <!-- Compact Banner -->
+      <section class="glass-card rounded-2xl p-4 md:p-5 border border-cyan-500/30 glow-cyan">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[10px] font-semibold mb-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+              హారిజాంటల్ మైండ్‌మ్యాప్ & మినీ అట్లాస్ ఎడిషన్
+            </div>
+            <h2 class="text-xl md:text-2xl font-extrabold text-white">
+              భారతదేశంలో వ్యవసాయ రంగ విప్లవాలు & రంగుల వర్గీకరణ
+            </h2>
+            <p class="text-slate-300 text-xs mt-1 max-w-2xl">
+              ఆహారధాన్యాలు, పాడిపరిశ్రమ, నూనెగింజలు, ఆక్వాకల్చర్, ఉద్యానవన పంటలు, మాంసం, పత్తి, ఎరువులు మరియు సుస్థిర వ్యవసాయ విప్లవాల రూపకర్తలు, కాలాలు మరియు కీలక మైలురాళ్ల సమగ్ర సమాచారం.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] shrink-0">
+            <div class="p-2.5 rounded-xl bg-black/50 border border-cyan-500/30 text-center">
+              <span class="text-slate-400 block text-[10px]">హరిత విప్లవం</span>
+              <strong class="text-cyan-300">ఎం.ఎస్. స్వామినాథన్</strong>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/50 border border-purple-500/30 text-center">
+              <span class="text-slate-400 block text-[10px]">ఆపరేషన్ ఫ్లడ్</span>
+              <strong class="text-purple-300">వర్గీస్ కురియన్ (ఆముల్)</strong>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/50 border border-emerald-500/30 text-center">
+              <span class="text-slate-400 block text-[10px]">నీలి విప్లవం</span>
+              <strong class="text-emerald-300">హీరాలాల్ చౌధురి</strong>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/50 border border-pink-500/30 text-center">
+              <span class="text-slate-400 block text-[10px]">పసుపు విప్లవం</span>
+              <strong class="text-pink-300">శ్యామ్ పిట్రోడా</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1. FULL HORIZONTAL MINDMAP TREE (SCROLLABLE DEDICATED SECTION) -->
+      <section class="glass-card rounded-2xl p-4 border border-cyan-500/30 glow-cyan space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-white/10">
+          <div class="flex items-center gap-2">
+            <i data-lucide="git-fork" class="w-4 h-4 text-cyan-400"></i>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">హారిజాంటల్ కాన్సెప్ట్ మైండ్‌మ్యాప్ (Horizontal Revolutions Tree)</h3>
+          </div>
+          <span class="text-[10px] text-amber-400 font-mono">నోడ్‌పై క్లిక్ చేసి వివరాలు & మ్యాప్ పిన్ చూడండి</span>
+        </div>
+
+        <!-- Horizontal Flow Container -->
+        <div class="overflow-x-auto pb-3 pt-1">
+          <div class="inline-flex items-center gap-4 min-w-[1580px]">
+            
+            <!-- Root Central Node -->
+            <div class="p-3 rounded-2xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 border border-cyan-400 text-white font-extrabold text-xs shadow-lg shadow-cyan-500/20 shrink-0 flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4"></i>
+              <span>భారత వ్యవసాయ విప్లవాలు</span>
+            </div>
+
+            <!-- Flow Connector Line -->
+            <div class="w-6 h-0.5 bg-cyan-500/40 shrink-0"></div>
+
+            <!-- Horizontal Branch 1: Green Revolution -->
+            <div onclick="selectRevolution('green_rev')" id="hnode-green_rev" class="h-node active p-3 rounded-xl bg-white/5 border border-white/10 shrink-0 space-y-1">
+              <div class="flex items-center gap-1.5 text-emerald-300 font-bold text-xs">
+                <i data-lucide="wheat" class="w-3.5 h-3.5"></i>
+                <span>1. హరిత విప్లవం (Green)</span>
+              </div>
+              <p class="text-[10px] text-slate-400">గోధుమ, వరి • స్వామినాథన్, బోర్లాగ్ • HYV విత్తనాలు</p>
+            </div>
+
+            <div class="w-4 h-0.5 bg-slate-700 shrink-0"></div>
+
+            <!-- Horizontal Branch 2: White Revolution -->
+            <div onclick="selectRevolution('white_rev')" id="hnode-white_rev" class="h-node p-3 rounded-xl bg-white/5 border border-white/10 shrink-0 space-y-1">
+              <div class="flex items-center gap-1.5 text-slate-100 font-bold text-xs">
+                <i data-lucide="milk" class="w-3.5 h-3.5"></i>
+                <span>2. శ్వేత విప్లవం / ఆపరేషన్ ఫ్లడ్ (White)</span>
+              </div>
+              <p class="text-[10px] text-slate-400">పాలు/డైరీ • వర్గీస్ కురియన్, NDDB • ఆనంద్ పద్ధతి</p>
+            </div>
+
+            <div class="w-4 h-0.5 bg-slate-700 shrink-0"></div>
+
+            <!-- Horizontal Branch 3: Yellow Revolution -->
+            <div onclick="selectRevolution('yellow_rev')" id="hnode-yellow_rev" class="h-node p-3 rounded-xl bg-white/5 border border-white/10 shrink-0 space-y-1">
+              <div class="flex items-center gap-1.5 text-yellow-300 font-bold text-xs">
+                <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+                <span>3. పసుపు విప్లవం (Yellow)</span>
+              </div>
+              <p class="text-[10px] text-slate-400">నూనెగింజలు (ఆవాలు, సోయాబీన్) • శ్యామ్ పిట్రోడా</p>
+            </div>
+
+            <div class="w-4 h-0.5 bg-slate-700 shrink-0"></div>
+
+            <!-- Horizontal Branch 4: Blue Revolution -->
+            <div onclick="selectRevolution('blue_rev')" id="hnode-blue_rev" class="h-node p-3 rounded-xl bg-white/5 border border-white/10 shrink-0 space-y-1">
+              <div class="flex items-center gap-1.5 text-cyan-300 font-bold text-xs">
+                <i data-lucide="fish" class="w-3.5 h-3.5"></i>
+                <span>4. నీలి విప్లవం (Blue)</span>
+              </div>
+              <p class="text-[10px] text-slate-400">చేపలు/ఆక్వాకల్చర్ • హీరాలాల్ చౌధురి • PMMSY 2020</p>
+            </div>
+
+            <div class="w-4 h-0.5 bg-slate-700 shrink-0"></div>
+
+            <!-- Horizontal Branch 5: Golden Revolution -->
+            <div onclick="selectRevolution('golden_rev')" id="hnode-golden_rev" class="h-node p-3 rounded-xl bg-white/5 border border-white/10 shrink-0 space-y-1">
+              <div class="flex items-center gap-1.5 text-amber-300 font-bold text-xs">
+                <i data-lucide="apple" class="w-3.5 h-3.5"></i>
+                <span>5. సువర్ణ విప్లవం (Golden)</span>
+              </div>
+              <p class="text-[10px] text-slate-400">ఉద్యానవన పంటలు, తేనె • నిర్పఖ్ టుతేజ్ • NHM 2005</p>
+            </div>
+
+            <div class="w-4 h-0.5 bg-slate-700 shrink-0"></div>
+
+            <!-- Horizontal Branch 6: Pink & Red Revolutions -->
+            <div onclick="selectRevolution('pink_red_rev')" id="hnode-pink_red_rev" class="h-node p-3 rounded-xl bg-white/5 border border-white/10 shrink-0 space-y-1">
+              <div class="flex items-center gap-1.5 text-pink-400 font-bold text-xs">
+                <i data-lucide="drumstick" class="w-3.5 h-3.5"></i>
+                <span>6. గులాబీ & ఎరుపు విప్లవాలు</span>
+              </div>
+              <p class="text-[10px] text-slate-400">ఉల్లి, మాంసం (Pink) • టమాటా, మాంసం (Red: విశాల్ తివారీ)</p>
+            </div>
+
+            <div class="w-4 h-0.5 bg-slate-700 shrink-0"></div>
+
+            <!-- Horizontal Branch 7: Silver, Round & Fibres -->
+            <div onclick="selectRevolution('silver_round_rev')" id="hnode-silver_round_rev" class="h-node p-3 rounded-xl bg-white/5 border border-white/10 shrink-0 space-y-1">
+              <div class="flex items-center gap-1.5 text-purple-300 font-bold text-xs">
+                <i data-lucide="egg" class="w-3.5 h-3.5"></i>
+                <span>7. రజత, గుండ్రని & సిల్వర్ ఫైబర్</span>
+              </div>
+              <p class="text-[10px] text-slate-400">గుడ్లు (Silver) • బంగాళాదుంప (Round) • పత్తి (Silver Fibre)</p>
+            </div>
+
+            <div class="w-4 h-0.5 bg-slate-700 shrink-0"></div>
+
+            <!-- Horizontal Branch 8: Grey, Black, Evergreen & Rainbow -->
+            <div onclick="selectRevolution('evergreen_rainbow')" id="hnode-evergreen_rainbow" class="h-node p-3 rounded-xl bg-white/5 border border-white/5 shrink-0 space-y-1">
+              <div class="flex items-center gap-1.5 text-teal-300 font-bold text-xs">
+                <i data-lucide="rainbow" class="w-3.5 h-3.5"></i>
+                <span>8. సతతహరిత, ఇంద్రధనుస్సు & ఇతరాలు</span>
+              </div>
+              <p class="text-[10px] text-slate-400">ఎరువులు (Grey) • ఇంధనం (Black) • సమగ్ర (Evergreen/Rainbow)</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. MINI MAP (3 COLS) + DETAILED KNOWLEDGE DISPLAY (9 COLS) -->
+      <section class="grid lg:grid-cols-12 gap-5 items-start">
+        
+        <!-- PANE 1: COMPACT MINI INDIA MAP (3 COLS) -->
+        <div class="lg:col-span-3 glass-card rounded-2xl p-3 border border-cyan-500/30 bg-[#060712] flex flex-col items-center justify-center">
+          <div class="w-full flex justify-between items-center px-1 mb-2">
+            <span class="text-[10px] text-cyan-300 font-bold tracking-wider uppercase flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3 h-3"></i> విప్లవాల ఎపిసెంటర్
+            </span>
+            <span class="text-[9px] text-slate-500 font-mono">లైవ్ పిన్</span>
+          </div>
+
+          <!-- Small Vector Map -->
+          <svg viewBox="0 0 320 370" class="w-full max-w-[210px] h-auto drop-shadow-lg">
+            <!-- Accurate India Outline -->
+            <path d="M 110 25 L 130 18 L 155 35 L 160 60 L 180 80 L 200 90 L 210 80 L 230 85 L 245 95 L 270 95 L 285 110 L 285 130 L 270 140 L 245 145 L 235 165 L 210 180 L 200 210 L 190 250 L 175 280 L 160 330 L 155 345 L 150 330 L 130 290 L 120 250 L 110 215 L 95 195 L 75 185 L 70 170 L 85 160 L 80 120 L 100 90 L 95 60 Z" 
+                  fill="#0c1020" stroke="#22d3ee" stroke-width="1.6" stroke-linejoin="round" />
+
+            <!-- Static Regional Centers (Subtle) -->
+            <!-- Anand / Gujarat (White) -->
+            <circle cx="100" cy="200" r="5" fill="#f1f5f9" opacity="0.3" />
+            <!-- Punjab / Haryana / W.UP (Green) -->
+            <circle cx="120" cy="95" r="7" fill="#10b981" opacity="0.3" />
+            <!-- Andhra / Coastal Aquaculture (Blue) -->
+            <circle cx="195" cy="245" r="5" fill="#06b6d4" opacity="0.3" />
+
+            <!-- Dynamic Pin (Moved via Horizontal Mindmap Click) -->
+            <circle id="map-pin-pulse" cx="120" cy="95" r="10" fill="#10b981" opacity="0.4" class="map-pulse" />
+            <circle id="map-pin-core" cx="120" cy="95" r="4.5" fill="#10b981" stroke="#ffffff" stroke-width="1.8" />
+            <text id="map-pin-label" x="50" y="115" fill="#34d399" font-size="8.5" font-weight="bold">పంజాబ్-హర్యానా-పశ్చిమ UP</text>
+          </svg>
+
+          <div class="mt-2 text-center text-[9px] text-slate-400 bg-white/5 px-2 py-1 rounded w-full border border-white/5 font-mono">
+            హారిజాంటల్ నోడ్ ఎంపికతో కేంద్రం మారుతుంది
+          </div>
+        </div>
+
+        <!-- PANE 2: DETAILED INFORMATION DISPLAY (9 COLS) -->
+        <div class="lg:col-span-9 glass-card rounded-2xl p-5 border border-cyan-500/30 glow-cyan space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-white/10 flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span id="detail-tag" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
+                GREEN REVOLUTION
+              </span>
+              <h4 id="detail-title" class="text-lg font-bold text-white">హరిత విప్లవం (Green Revolution)</h4>
+            </div>
+            <span class="text-[10px] text-amber-400 font-semibold font-mono">Rahul Academy Master Notes</span>
+          </div>
+
+          <!-- Dynamic Info Content -->
+          <div id="detail-content" class="space-y-3 text-xs leading-relaxed text-slate-300">
+            <!-- Content Injected via JS -->
+          </div>
+
+          <!-- Exam Tip Box -->
+          <div id="detail-tip" class="p-3 rounded-xl bg-black/60 border border-white/10 text-[11px] leading-relaxed text-amber-200">
+            <!-- Exam Tip Injected via JS -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 20 PRACTICE MCQS SECTION -->
+      <section class="glass-card rounded-2xl p-6 md:p-8 border border-white/10 glow-purple text-center relative overflow-hidden">
+        <div class="max-w-2xl mx-auto space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center mx-auto shadow-lg shadow-purple-500/30">
+            <i data-lucide="award" class="w-6 h-6 text-white"></i>
+          </div>
+          <h3 class="text-2xl font-extrabold text-white">వ్యవసాయ విప్లవాలు - 20 ప్రాక్టీస్ MCQs</h3>
+          <p class="text-xs md:text-sm text-slate-300">
+            హరిత, శ్వేత, పసుపు, నీలి, సువర్ణ, గులాబీ, ఎరుపు, రజత, సతతహరిత విప్లవాల రూపకర్తలు, పంటలు మరియు పథకాలపై 20 ప్రామాణిక పరీక్షా ప్రశ్నలు.
+          </p>
+          <div class="pt-2">
+            <button onclick="openQuizModal()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 text-white font-bold text-xs shadow-xl hover:scale-105 transition flex items-center gap-2 mx-auto cursor-pointer">
+              <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+              20 MCQs పరీక్ష ప్రారంభించండి
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="border-t border-white/10 bg-[#040408] py-4 px-4 text-center text-xs text-slate-500">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-cyan-400">RAHUL ACADEMY</span>
+          <span>• భారతదేశ వ్యవసాయ విప్లవాల సమగ్ర అట్లాస్ (Horizontal Mindmap & Mini-Map Edition)</span>
+        </div>
+        <span class="text-slate-400 font-mono">Dark Neon Edition • Official Watermark Protected</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- 20 MCQs మోడల్ (Modal) -->
+  <div id="quiz-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-[#0b0c16] border border-cyan-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 glow-cyan relative max-h-[92vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="check-square" class="text-cyan-400 w-5 h-5"></i>
+          <div>
+            <h3 class="text-lg font-bold text-white">వ్యవసాయ విప్లవాలు - 20 MCQs పరీక్ష</h3>
+            <span class="text-[10px] text-amber-400 font-semibold">Rahul Academy Agricultural Revolutions Series</span>
+          </div>
+        </div>
+        <button onclick="closeQuizModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="quiz-content">
+        <div class="flex justify-between items-center text-xs text-slate-400 mb-2">
+          <span id="quiz-step" class="font-bold text-cyan-400">ప్రశ్న 1 / 20</span>
+          <span id="quiz-score" class="font-mono text-emerald-400">స్కోరు: 0</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-white/5 border border-white/5 text-sm md:text-base font-semibold text-white mb-4" id="quiz-question">
+          ప్రశ్న లోడ్ అవుతోంది...
+        </div>
+
+        <div class="space-y-2" id="quiz-options"></div>
+
+        <div id="quiz-feedback" class="hidden mt-3 p-3 rounded-xl text-xs leading-relaxed"></div>
+      </div>
+
+      <div class="flex justify-between items-center pt-3 border-t border-white/10">
+        <button onclick="resetQuiz()" class="text-xs text-slate-400 hover:text-slate-200 cursor-pointer">రీస్టార్ట్</button>
+        <button id="quiz-next-btn" onclick="nextQuestion()" class="hidden px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition cursor-pointer">
+          తరువాతి ప్రశ్న →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      selectRevolution('green_rev');
+    });
+
+    const revDatabase = {
+      green_rev: {
+        tag: "GREEN REVOLUTION",
+        title: "హరిత విప్లవం (Green Revolution)",
+        map: { cx: 120, cy: 95, label: "పంజాబ్-హర్యానా-పశ్చిమ UP", color: "#10b981" },
+        content: `
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-cyan-300 block font-semibold">• రంగం & కాలం:</strong>
+              <p>మొదట గోధుమ (Wheat), ఆ తర్వాత వరి (Rice); 1960ల మధ్యకాలం (Mid-1960s) నుండి ప్రారంభం[cite: 207].</p>
+              <strong class="text-cyan-300 block font-semibold pt-1">• శిల్పులు / పితామహులు (Architects):</strong>
+              <p><strong>ఎం.ఎస్. స్వామినాథన్ (M.S. Swaminathan)</strong> మరియు <strong>నార్మన్ బోర్లాగ్ (Norman Borlaug)</strong>[cite: 207].</p>
+            </div>
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-amber-300 block font-semibold">• కీలక లక్షణాలు:</strong>
+              <p>• అధిక దిగుబడినిచ్చే పొట్టి వంగడాలు (HYV dwarf seeds): మెక్సికన్ గోధుమ రకాలు (లర్మా రోజో, సోనోరా 64); IRRI నుండి తెచ్చిన IR-8 వరి వంగడం[cite: 207].<br>
+              • రసాయన ఎరువులు, ట్యూబ్‌వెల్ నీటిపారుదల[cite: 207].<br>
+              • <strong>ఎపిసెంటర్:</strong> పంజాబ్, హర్యానా మరియు పశ్చిమ ఉత్తరప్రదేశ్[cite: 207].</p>
+            </div>
+          </div>
+        `,
+        tip: `<strong>పరీక్షల కీ-ఫ్యాక్ట్:</strong> హరిత విప్లవం ప్రధానంగా మెక్సికన్ పొట్టి గోధుమ రకాలు మరియు రసాయన ఎరువుల ప్యాకేజీ టెక్నాలజీతో భారతదేశాన్ని ఆహార స్వయంసమృద్ధి వైపు నడిపించింది[cite: 207].`
+      },
+      white_rev: {
+        tag: "WHITE REVOLUTION / OPERATION FLOOD",
+        title: "శ్వేత విప్లవం / ఆపరేషన్ ఫ్లడ్ (White Revolution)",
+        map: { cx: 100, cy: 200, label: "ఆనంద్ / గుజరాత్ (అమూల్ మోడల్)", color: "#f8fafc" },
+        content: `
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-cyan-300 block font-semibold">• రంగం & కాలం:</strong>
+              <p>పాలు మరియు డైరీ రంగం (Milk / Dairy); <strong>1970 - 1996 (3 దశలలో)</strong> అమలు చేయబడింది[cite: 207].</p>
+              <strong class="text-cyan-300 block font-semibold pt-1">• శిల్పి (Architect):</strong>
+              <p><strong>వర్గీస్ కురియన్ (Verghese Kurien)</strong>, నేషనల్ డైరీ డెవలప్‌మెంట్ బోర్డ్ (NDDB)[cite: 207].</p>
+            </div>
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-amber-300 block font-semibold">• కీలక లక్షణాలు & విజయం:</strong>
+              <p>• సహకార పద్ధతి ఆధారిత ఆనంద్ మోడల్ (Anand pattern - Amul model)[cite: 207].<br>
+              • చిన్న రైతులను అనుసంధానించిన గ్రామీణ సహకార నెట్‌వర్క్.<br>
+              • <strong>1998 నాటికి భారతదేశం ప్రపంచంలోనే అతిపెద్ద పాల ఉత్పత్తిదారుగా</strong> అవతరించింది[cite: 207].</p>
+            </div>
+          </div>
+        `,
+        tip: `<strong>ప్రిలిమ్స్ ఫ్యాక్ట్:</strong> ఆపరేషన్ ఫ్లడ్ 1970 లో ప్రారంభమైంది; 1998 లో అమెరికాను అధిగమించి భారత్ పాలలో ప్రపంచ నంబర్ 1 స్థానానికి చేరుకుంది[cite: 207].`
+      },
+      yellow_rev: {
+        tag: "YELLOW REVOLUTION",
+        title: "పసుపు విప్లవం (Yellow Revolution - నూనెగింజలు)",
+        map: { cx: 130, cy: 140, label: "రాజస్థాన్ / MP ఆవాలు, సోయాబీన్ హబ్", color: "#facc15" },
+        content: `
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-cyan-300 block font-semibold">• రంగం & కాలం:</strong>
+              <p>నూనెగింజల ఉత్పత్తి (Oilseeds); <strong>1986-1990 నుండి</strong> ప్రారంభం[cite: 208].</p>
+              <strong class="text-cyan-300 block font-semibold pt-1">• రూపకర్త (Architect):</strong>
+              <p><strong>శ్యామ్ పిట్రోడా (Sam Pitroda)</strong> - టెక్నాలజీ మిషన్ ఆన్ ఆయిల్‌సీడ్స్ ద్వారా నడిపించారు[cite: 208].</p>
+            </div>
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-amber-300 block font-semibold">• కీలక లక్షణాలు:</strong>
+              <p>• ఆవాలు (Mustard), పొద్దుతిరుగుడు (Sunflower), సోయాబీన్ (Soybean) పంటలపై ప్రత్యేక దృష్టి[cite: 208].<br>
+              • నూనెగింజల రంగంలో స్వయంసమృద్ధి సాధించడమే లక్ష్యం అయినప్పటికీ, డిమాండ్ వేగంగా పెరగడం వల్ల నేటికీ భారత్ పామాయిల్ దిగుమతులపై ఆధారపడుతోంది (స్వయంసమృద్ధి అసంపూర్ణం)[cite: 208].</p>
+            </div>
+          </div>
+        `,
+        tip: `<strong>టెక్నాలజీ మిషన్:</strong> 1986 లో రాజీవ్ గాంధీ హయాంలో శ్యామ్ పిట్రోడా నేతృత్వంలో టెక్నాలజీ మిషన్ ఆన్ ఆయిల్‌సీడ్స్ (TMO) ఏర్పాటుతో పసుపు విప్లవం ఊపందుకుంది[cite: 208].`
+      },
+      blue_rev: {
+        tag: "BLUE REVOLUTION",
+        title: "నీలి విప్లవం (Blue Revolution - ఆక్వాకల్చర్)",
+        map: { cx: 205, cy: 245, label: "తీరప్రాంత ఆక్వాకల్చర్ (AP/ఒడిశా/WB)", color: "#06b6d4" },
+        content: `
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-cyan-300 block font-semibold">• రంగం & కాలం:</strong>
+              <p>చేపలు మరియు ఆక్వాకల్చర్ (Fish / Aquaculture); <strong>1985-90 నుండి</strong> ప్రారంభం[cite: 208].</p>
+              <strong class="text-cyan-300 block font-semibold pt-1">• పితామహులు (Architects):</strong>
+              <p><strong>డాక్టర్ హీరాలాల్ చౌధురి (Hiralal Chaudhuri)</strong> మరియు <strong>డాక్టర్ అరుణ్ కృష్ణన్ (Arun Krishnan)</strong>[cite: 208].</p>
+            </div>
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-amber-300 block font-semibold">• కీలక పథకాలు & హోదా:</strong>
+              <p>• లోతట్టు (Inland) మరియు సముద్ర (Marine) మత్స్య సంపద విస్తరణ[cite: 208].<br>
+              • <strong>ప్రధాన మంత్రి మత్స్య సంపద యోజన (PMMSY 2020)</strong> అమలు[cite: 208].<br>
+              • <strong>భారతదేశం ప్రపంచంలోనే 2వ అతిపెద్ద చేపల ఉత్పత్తిదారు</strong>[cite: 208].</p>
+            </div>
+          </div>
+        `,
+        tip: `<strong>హీరాలాల్ చౌధురి పాత్ర:</strong> కార్ప్ చేపలలో కృత్రిమ ప్రజననం (Induced breeding technology) ను ప్రవేశపెట్టి లోతట్టు మత్స్య పరిశ్రమ విప్లవానికి హీరాలాల్ చౌధురి నాంది పలికారు[cite: 208].`
+      },
+      golden_rev: {
+        tag: "GOLDEN REVOLUTION",
+        title: "సువర్ణ విప్లవం (Golden Revolution - ఉద్యానవనం & తేనె)",
+        map: { cx: 155, cy: 175, label: "జాతీయ ఉద్యానవన క్లస్టర్లు", color: "#f59e0b" },
+        content: `
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-cyan-300 block font-semibold">• రంగం & కాలం:</strong>
+              <p>ఉద్యానవన పంటలు (పండ్లు, కూరగాయలు) మరియు తేనె (Horticulture & Honey); <strong>1991 నుండి</strong> ప్రారంభం[cite: 208].</p>
+              <strong class="text-cyan-300 block font-semibold pt-1">• శిల్పి (Architect):</strong>
+              <p><strong>నిర్పఖ్ టుతేజ్ (Nirpakh Tutej)</strong>[cite: 208].</p>
+            </div>
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-amber-300 block font-semibold">• కీలక సంస్థలు & గ్లోబల్ ర్యాంకు:</strong>
+              <p>• <strong>జాతీయ ఉద్యానవన మిషన్ (NHM 2005)</strong>[cite: 208].<br>
+              • మామిడి (Mango), అరటి (Banana), బొప్పాయి (Papaya) ఉత్పత్తిలో <strong>భారతదేశం ప్రపంచంలోనే నంబర్ 1</strong>[cite: 209].<br>
+              • స్వీట్ రివల్యూషన్ (తేనెటీగల పెంపకం) కూడా ఇందులో భాగం.</p>
+            </div>
+          </div>
+        `,
+        tip: `<strong>కన్ఫ్యూజన్ నివారణ:</strong> గోల్డెన్ రివల్యూషన్ ఉద్యానవనం/తేనెకు సంబంధించింది[cite: 208]; గోల్డెన్ ఫైబర్ రివల్యూషన్ అంటే జనపనార (Jute)!`
+      },
+      pink_red_rev: {
+        tag: "PINK & RED REVOLUTIONS",
+        title: "గులాబీ & ఎరుపు విప్లవాలు (Pink & Red Revolutions)",
+        map: { cx: 135, cy: 220, label: "మహారాష్ట్ర (ఉల్లి/పౌల్ట్రీ) & UP (టమాటా)", color: "#f43f5e" },
+        content: `
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-pink-400 block font-semibold">• గులాబీ విప్లవం (Pink Revolution):</strong>
+              <p>• <strong>రంగం:</strong> మాంసం/పౌల్ట్రీ ప్రాసెసింగ్, ఉల్లిపాయలు (Onion), రొయ్యలు (Prawns)[cite: 208].<br>
+              • <strong>కాలం:</strong> 2000ల నుండి ఊపందుకుంది[cite: 208].<br>
+              • పౌల్ట్రీ మరియు మాంసం ప్రాసెసింగ్ ఎగుమతులలో భారత్ వేగంగా వృద్ధి చెందింది[cite: 208].</p>
+            </div>
+            <div class="p-3 rounded-xl bg-red-400/10 border border-red-500/20 p-3 rounded-xl space-y-1.5">
+              <strong class="text-red-400 block font-semibold">• ఎరుపు విప్లవం (Red Revolution):</strong>
+              <p>• <strong>రంగం:</strong> టమాటా (Tomato) మరియు మాంసం (Meat)[cite: 209].<br>
+              • <strong>కాలం & పితామహుడు:</strong> 1980లు-90లు; <strong>విశాల్ తివారీ (Vishal Tewari)</strong>[cite: 209].<br>
+              • టమాటా సాగు విస్తరణ మరియు మాంసం ఉత్పత్తి వృద్ధి[cite: 209].</p>
+            </div>
+          </div>
+        `,
+        tip: `<strong>గుర్తుంచుకోండి:</strong> ఉల్లిపాయ మరియు రొయ్యల ఉత్పత్తి గులాబీ విప్లవం పరిధిలోకి రాగా[cite: 208], టమాటా ఉత్పత్తి ఎరుపు విప్లవం పరిధిలోకి వస్తుంది[cite: 209].`
+      },
+      silver_round_rev: {
+        tag: "SILVER, ROUND & FIBRES",
+        title: "రజత, గుండ్రని & సిల్వర్ ఫైబర్ విప్లవాలు",
+        map: { cx: 165, cy: 250, label: "ఆంధ్రప్రదేశ్ గుడ్లు & గుజరాత్ పత్తి", color: "#c084fc" },
+        content: `
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-purple-300 block font-semibold">• రజత విప్లవం (Silver Revolution):</strong>
+              <p>• రంగం: గుడ్లు మరియు పౌల్ట్రీ (Eggs / Poultry)[cite: 209].<br>
+              • కాలం: 1969-78 (ఇందిరా గాంధీ హయాం)[cite: 209].<br>
+              • <strong>భారతదేశం ప్రపంచంలోనే 3వ అతిపెద్ద గుడ్ల ఉత్పత్తిదారు</strong>[cite: 209].</p>
+              <strong class="text-purple-300 block font-semibold pt-1">• గుండ్రని విప్లవం (Round Revolution):</strong>
+              <p>• రంగం: బంగాళాదుంప (Potato); 1965 నుండి[cite: 209].<br>
+              • భారత్ ప్రపంచంలో <strong>2వ అతిపెద్ద బంగాళాదుంప ఉత్పత్తిదారు</strong>[cite: 209].</p>
+            </div>
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-amber-300 block font-semibold">• సిల్వర్ ఫైబర్ విప్లవం (Silver Fibre):</strong>
+              <p>• రంగం: పత్తి (Cotton)[cite: 209].<br>
+              • కాలం: 2000ల నుండి[cite: 209].<br>
+              • బీటీ కాటన్ (Bt Cotton) ప్రవేశం మరియు టెక్నాలజీ మిషన్ ఆన్ కాటన్ ద్వారా పత్తి విప్లవం[cite: 209].</p>
+            </div>
+          </div>
+        `,
+        tip: `<strong>ఫైబర్ తేడా:</strong> సిల్వర్ ఫైబర్ = పత్తి (Cotton)[cite: 209]; గోల్డెన్ ఫైబర్ = జనపనార (Jute)!`
+      },
+      evergreen_rainbow: {
+        tag: "INTEGRATED & OTHERS",
+        title: "సతతహరిత, ఇంద్రధనుస్సు, నలుపు & బూడిద విప్లవాలు",
+        map: { cx: 180, cy: 200, label: "జాతీయ వ్యవసాయ విస్తరణ", color: "#2dd4bf" },
+        content: `
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-teal-300 block font-semibold">• సతతహరిత విప్లవం (Evergreen Revolution):</strong>
+              <p>• రంగం: సుస్థిర వ్యవసాయం (Sustainable Agriculture)[cite: 210].<br>
+              • రూపకర్త: <strong>ఎం.ఎస్. స్వామినాథన్</strong>[cite: 210].<br>
+              • హరిత విప్లవ దిగుబడులను పర్యావరణ పరిరక్షణతో (Ecological sustainability) జోడించడం[cite: 210].</p>
+              <strong class="text-teal-300 block font-semibold pt-1">• ఇంద్రధనుస్సు విప్లవం (Rainbow Revolution):</strong>
+              <p>అన్ని పంటలు, పాడి, పౌల్ట్రీ, మత్స్య రంగాలు కలిసి సమగ్ర వ్యవసాయ అభివృద్ధి (2000ల జాతీయ వ్యవసాయ విధానం)[cite: 210].</p>
+            </div>
+            <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5">
+              <strong class="text-slate-300 block font-semibold">• బూడిద విప్లవం (Grey Revolution):</strong>
+              <p>ఎరువులు (Fertilisers - యూరియా, డీఏపీ స్వయంసమృద్ధి; 1960లు-70లు)[cite: 209].</p>
+              <strong class="text-slate-300 block font-semibold pt-1">• నలుపు / బ్రౌన్ విప్లవం (Black / Brown):</strong>
+              <p>పెట్రోలియం, బయో-ఫ్యూయల్స్ మరియు ఇథనాల్ బ్లెండింగ్ (Ethanol blending)[cite: 209].</p>
+            </div>
+          </div>
+        `,
+        tip: `<strong>స్వామినాథన్ ఆలోచన:</strong> మొదటి హరిత విప్లవం నేలలు, భూగర్భ జలాలను దెబ్బతీసిందని గుర్తించిన స్వామినాథన్ పర్యావరణ అనుకూల 'ఎవర్‌గ్రీన్ రివల్యూషన్' ను ప్రతిపాదించారు[cite: 210].`
+      }
+    };
+
+    function selectRevolution(key) {
+      const data = revDatabase[key];
+      if (!data) return;
+
+      document.querySelectorAll('.h-node').forEach(el => el.classList.remove('active'));
+      const activeNode = document.getElementById('hnode-' + key);
+      if (activeNode) activeNode.classList.add('active');
+
+      const pulse = document.getElementById('map-pin-pulse');
+      const core = document.getElementById('map-pin-core');
+      const label = document.getElementById('map-pin-label');
+
+      pulse.setAttribute('cx', data.map.cx);
+      pulse.setAttribute('cy', data.map.cy);
+      pulse.setAttribute('fill', data.map.color);
+
+      core.setAttribute('cx', data.map.cx);
+      core.setAttribute('cy', data.map.cy);
+      core.setAttribute('fill', data.map.color);
+
+      label.setAttribute('x', data.map.cx - 45);
+      label.setAttribute('y', data.map.cy + 18);
+      label.setAttribute('fill', data.map.color);
+      label.textContent = data.map.label;
+
+      document.getElementById('detail-tag').textContent = data.tag;
+      document.getElementById('detail-title').textContent = data.title;
+      document.getElementById('detail-content').innerHTML = data.content;
+      document.getElementById('detail-tip').innerHTML = data.tip;
+
+      lucide.createIcons();
+    }
+
+    const quiz20Questions = [
+      {
+        q: "1. భారతదేశంలో 1960ల మధ్యకాలంలో ప్రారంభమైన 'హరిత విప్లవం' (Green Revolution) భారతీయ పితామహుడు ఎవరు?",
+        options: ["వర్గీస్ కురియన్", "ఎం.ఎస్. స్వామినాథన్", "శ్యామ్ పిట్రోడా", "హీరాలాల్ చౌధురి"],
+        correct: 1,
+        exp: "భారతదేశంలో హరిత విప్లవ పితామహుడు ఎం.ఎస్. స్వామినాథన్ (నార్మన్ బోర్లాగ్‌తో కలిసి నడిపించారు)[cite: 207]."
+      },
+      {
+        q: "2. హరిత విప్లవంలో ప్రవేశపెట్టిన మెక్సికన్ పొట్టి గోధుమ రకాలు ఏవి?",
+        options: ["ఐఆర్-8 మరియు తైచుంగ్", "లర్మా రోజో మరియు సోనోరా 64", "సువిన్ మరియు డిసిహెచ్-32", "బాస్మతి 370"],
+        correct: 1,
+        exp: "నార్మన్ బోర్లాగ్ అభివృద్ధి చేసిన లర్మా రోజో మరియు సోనోరా 64 మెక్సికన్ గోధుమ రకాలను ప్రవేశపెట్టారు[cite: 207]."
+      },
+      {
+        q: "3. శ్వేత విప్లవం (White Revolution) లేదా 'ఆపరేషన్ ఫ్లడ్' రూపకర్త ఎవరు?",
+        options: ["ఎం.ఎస్. స్వామినాథన్", "డాక్టర్ వర్గీస్ కురియన్", "విశాల్ తివారీ", "నిర్పఖ్ టుతేజ్"],
+        correct: 1,
+        exp: "ఆపరేషన్ ఫ్లడ్ రూపకర్త డాక్టర్ వర్గీస్ కురియన్ (ఆనంద్ అమూల్ మోడల్)[cite: 207]."
+      },
+      {
+        q: "4. భారతదేశం ఏ సంవత్సరంలో అమెరికాను అధిగమించి ప్రపంచంలోనే అతిపెద్ద పాల ఉత్పత్తిదారుగా అవతరించింది?",
+        options: ["1970", "1985", "1998 లో", "2010"],
+        correct: 2,
+        exp: "ఆపరేషన్ ఫ్లడ్ ఫలితంగా 1998 లో భారతదేశం ప్రపంచంలోనే నంబర్ 1 పాల ఉత్పత్తిదారుగా నిలిచింది[cite: 207]."
+      },
+      {
+        q: "5. నూనెగింజల ఉత్పత్తిలో స్వయంసమృద్ధి కోసం 1986 లో ప్రారంభమైన 'పసుపు విప్లవం' (Yellow Revolution) రూపకర్త ఎవరు?",
+        options: ["శ్యామ్ పిట్రోడా", "ఇందిరా గాంధీ", "అరుణ్ కృష్ణన్", "నార్మన్ బోర్లాగ్"],
+        correct: 0,
+        exp: "టెక్నాలజీ మిషన్ ఆన్ ఆయిల్‌సీడ్స్ ద్వారా పసుపు విప్లవాన్ని శ్యామ్ పిట్రోడా నడిపించారు[cite: 208]."
+      },
+      {
+        q: "6. భారతదేశంలో చేపలు మరియు ఆక్వాకల్చర్ అభివృద్ధికి సంబంధించిన 'నీలి విప్లవం' (Blue Revolution) పితామహులు ఎవరు?",
+        options: [
+          "ఎం.ఎస్. స్వామినాథన్ & కురియన్",
+          "హీరాలాల్ చౌధురి & అరుణ్ కృష్ణన్",
+          "విశాల్ తివారీ & శ్యామ్ పిట్రోడా",
+          "నిర్పఖ్ టుతేజ్ & బోర్లాగ్"
+        ],
+        correct: 1,
+        exp: "నీలి విప్లవ పితామహులుగా డాక్టర్ హీరాలాల్ చౌధురి మరియు డాక్టర్ అరుణ్ కృష్ణన్ గుర్తింపు పొందారు[cite: 208]."
+      },
+      {
+        q: "7. ఉద్యానవన పంటలు (పండ్లు, కూరగాయలు) మరియు తేనె ఉత్పత్తికి సంబంధించిన విప్లవం ఏది?",
+        options: ["రజత విప్లవం", "సువర్ణ విప్లవం (Golden Revolution)", "గుండ్రని విప్లవం", "ఎరుపు విప్లవం"],
+        correct: 1,
+        exp: "ఉద్యానవనం మరియు తేనె అభివృద్ధిని సువర్ణ విప్లవం (Golden Revolution) అంటారు[cite: 208]."
+      },
+      {
+        q: "8. సువర్ణ విప్లవం (Golden Revolution) పితామహుడు ఎవరు?",
+        options: ["నిర్పఖ్ టుతేజ్", "వర్గీస్ కురియన్", "హీరాలాల్ చౌధురి", "విశాల్ తివారీ"],
+        correct: 0,
+        exp: "సువర్ణ విప్లవ పితామహుడు నిర్పఖ్ టుతేజ్[cite: 208]."
+      },
+      {
+        q: "9. ఉల్లిపాయలు, రొయ్యలు (Prawns) మరియు పౌల్ట్రీ మాంసం ప్రాసెసింగ్‌కు సంబంధించిన విప్లవం ఏది?",
+        options: ["ఎరుపు విప్లవం", "గులాబీ విప్లవం (Pink Revolution)", "శ్వేత విప్లవం", "బూడిద విప్లవం"],
+        correct: 1,
+        exp: "ఉల్లిపాయ, రొయ్యలు మరియు మాంసం ప్రాసెసింగ్ వృద్ధిని గులాబీ విప్లవం (Pink Revolution) అంటారు[cite: 208]."
+      },
+      {
+        q: "10. టమాటా మరియు మాంసం ఉత్పత్తి వృద్ధికి సంబంధించిన 'ఎరుపు విప్లవం' (Red Revolution) పితామహుడు ఎవరు?",
+        options: ["విశాల్ తివారీ", "శ్యామ్ పిట్రోడా", "వర్గీస్ కురియన్", "స్వామినాథన్"],
+        correct: 0,
+        exp: "ఎరుపు విప్లవ పితామహుడు విశాల్ తివారీ[cite: 209]."
+      },
+      {
+        q: "11. గుడ్లు మరియు పౌల్ట్రీ ఉత్పత్తిలో స్వయంసమృద్ధి కోసం ఇందిరా గాంధీ హయాంలో ప్రారంభమైన విప్లవం ఏది?",
+        options: ["శ్వేత విప్లవం", "రజత విప్లవం (Silver Revolution)", "సువర్ణ విప్లవం", "గుండ్రని విప్లవం"],
+        correct: 1,
+        exp: "గుడ్ల ఉత్పత్తిని రజత విప్లవం (Silver Revolution) అంటారు[cite: 209]."
+      },
+      {
+        q: "12. బంగాళాదుంప (Potato) ఉత్పత్తి పెంపుదలకు సంబంధించిన విప్లవం ఏది?",
+        options: ["బూడిద విప్లవం", "గుండ్రని విప్లవం (Round Revolution)", "ఎరుపు విప్లవం", "పసుపు విప్లవం"],
+        correct: 1,
+        exp: "బంగాళాదుంప ఉత్పత్తికి సంబంధించిన విప్లవాన్ని గుండ్రని విప్లవం (Round Revolution) అంటారు[cite: 209]."
+      },
+      {
+        q: "13. బీటీ కాటన్ (Bt Cotton) ప్రవేశంతో భారతదేశంలో పత్తి ఉత్పత్తిలో వచ్చిన విప్లవాన్ని ఏమని పిలుస్తారు?",
+        options: ["గోల్డెన్ ఫైబర్ విప్లవం", "సిల్వర్ ఫైబర్ విప్లవం (Silver Fibre Revolution)", "శ్వేత విప్లవం", "బూడిద విప్లవం"],
+        correct: 1,
+        exp: "పత్తి ఉత్పత్తి విప్లవాన్ని 'సిల్వర్ ఫైబర్ విప్లవం' అంటారు (జనపనారను గోల్డెన్ ఫైబర్ అంటారు)[cite: 209]."
+      },
+      {
+        q: "14. యూరియా, డీఏపీ వంటి రసాయన ఎరువుల (Fertilisers) స్వయంసమృద్ధికి సంబంధించిన విప్లవం ఏది?",
+        options: ["నలుపు విప్లవం", "బూడిద విప్లవం (Grey Revolution)", "బ్రౌన్ విప్లవం", "రజత విప్లవం"],
+        correct: 1,
+        exp: "రసాయన ఎరువుల ఉత్పత్తిని బూడిద విప్లవం (Grey Revolution) అంటారు[cite: 209]."
+      },
+      {
+        q: "15. పెట్రోలియం ఉత్పత్తి, బయో-ఇంధనాలు మరియు ఇథనాల్ బ్లెండింగ్‌కు సంబంధించిన విప్లవం ఏది?",
+        options: ["నీలి విప్లవం", "నలుపు / బ్రౌన్ విప్లవం (Black / Brown Revolution)", "గులాబీ విప్లవం", "ఎరుపు విప్లవం"],
+        correct: 1,
+        exp: "పెట్రోలియం మరియు ఇథనాల్ మిశ్రమానికి సంబంధించినది నలుపు/బ్రౌన్ విప్లవం[cite: 209]."
+      },
+      {
+        q: "16. హరిత విప్లవ దిగుబడులను పర్యావరణ పరిరక్షణతో జోడిస్తూ ఎం.ఎస్. స్వామినాథన్ ప్రతిపాదించిన భావన ఏది?",
+        options: ["రెండో హరిత విప్లవం", "సతతహరిత విప్లవం (Evergreen Revolution)", "సేంద్రియ విప్లవం", "ఇంద్రధనుస్సు విప్లవం"],
+        correct: 1,
+        exp: "సుస్థిర వ్యవసాయం కోసం స్వామినాథన్ 'సతతహరిత విప్లవం' (Evergreen Revolution) ను ప్రతిపాదించారు[cite: 210]."
+      },
+      {
+        q: "17. అన్ని వ్యవసాయ రంగాలు (పంటలు, పాడి, పౌల్ట్రీ, మత్స్య) సమగ్రంగా అభివృద్ధి చెందడాన్ని సూచించే విప్లవం ఏది?",
+        options: ["సతతహరిత విప్లవం", "ఇంద్రధనుస్సు విప్లవం (Rainbow Revolution)", "గోల్డెన్ విప్లవం", "హరిత విప్లవం"],
+        correct: 1,
+        exp: "వ్యవసాయ ఉప-రంగాలన్నింటి సమగ్ర అభివృద్ధిని ఇంద్రధనుస్సు విప్లవం (Rainbow Revolution) అంటారు[cite: 210]."
+      },
+      {
+        q: "18. నీలి విప్లవాన్ని వేగవంతం చేయడానికి భారత ప్రభుత్వం 2020 లో ప్రారంభించిన ఫ్లాగ్‌షిప్ పథకం ఏది?",
+        options: ["PM-KISAN", "ప్రధాన మంత్రి మత్స్య సంపద యోజన (PMMSY)", "సాగరమాల", "జల్ జీవన్ మిషన్"],
+        correct: 1,
+        exp: "చేపల రంగ అభివృద్ధికి 2020 లో ప్రధాన మంత్రి మత్స్య సంపద యోజన (PMMSY) ప్రారంభించారు[cite: 208]."
+      },
+      {
+        q: "19. ఉద్యానవన రంగ సమగ్ర అభివృద్ధి కోసం 2005 లో ప్రారంభించబడిన జాతీయ కార్యక్రమం ఏది?",
+        options: ["మిషన్ అమృత్", "జాతీయ ఉద్యానవన మిషన్ (NHM)", "ఆపరేషన్ గ్రీన్స్", "పీఎం కుసుమ్"],
+        correct: 1,
+        exp: "2005 లో నేషనల్ హార్టికల్చర్ మిషన్ (NHM) ప్రారంభించబడింది[cite: 208]."
+      },
+      {
+        q: "20. గుడ్ల ఉత్పత్తిలో ప్రపంచంలో భారతదేశం ఎన్నో స్థానంలో ఉంది?",
+        options: ["1వ స్థానం", "2వ స్థానం", "3వ స్థానం (#3 globally)", "5వ స్థానం"],
+        correct: 2,
+        exp: "రజత విప్లవం ఫలితంగా భారతదేశం గుడ్ల ఉత్పత్తిలో ప్రపంచంలో 3వ స్థానంలో ఉంది[cite: 209]."
+      }
+    ];
+
+    let currentQIndex = 0;
+    let quizScore = 0;
+
+    function openQuizModal() {
+      document.getElementById('quiz-modal').classList.remove('hidden');
+      loadQuizQuestion();
+    }
+
+    function closeQuizModal() {
+      document.getElementById('quiz-modal').classList.add('hidden');
+    }
+
+    function resetQuiz() {
+      currentQIndex = 0;
+      quizScore = 0;
+      document.getElementById('quiz-score').textContent = `స్కోరు: 0`;
+      loadQuizQuestion();
+    }
+
+    function loadQuizQuestion() {
+      const q = quiz20Questions[currentQIndex];
+      document.getElementById('quiz-step').textContent = `ప్రశ్న ${currentQIndex + 1} / 20`;
+      document.getElementById('quiz-question').textContent = q.q;
+      
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+
+      const feedback = document.getElementById('quiz-feedback');
+      feedback.classList.add('hidden');
+      document.getElementById('quiz-next-btn').classList.add('hidden');
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs md:text-sm text-slate-200 transition flex items-center justify-between cursor-pointer';
+        btn.innerHTML = `<span><strong>${['A', 'B', 'C', 'D'][idx]}.</strong> ${opt}</span>`;
+        btn.onclick = () => selectQuizOption(idx);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectQuizOption(selectedIdx) {
+      const q = quiz20Questions[currentQIndex];
+      const optionsContainer = document.getElementById('quiz-options');
+      const buttons = optionsContainer.querySelectorAll('button');
+      const feedback = document.getElementById('quiz-feedback');
+
+      buttons.forEach(b => b.disabled = true);
+
+      if (selectedIdx === q.correct) {
+        quizScore += 1;
+        document.getElementById('quiz-score').textContent = `స్కోరు: ${quizScore}`;
+        buttons[selectedIdx].classList.add('border-emerald-500', 'bg-emerald-950/40', 'text-emerald-300');
+        feedback.className = 'mt-3 p-3 rounded-xl text-xs bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 block';
+        feedback.innerHTML = `<strong>సరైన సమాధానం!</strong> ${q.exp}`;
+      } else {
+        buttons[selectedIdx].classList.add('border-red-500', 'bg-red-950/40', 'text-red-300');
+        buttons[q.correct].classList.add('border-emerald-500', 'bg-emerald-950/40', 'text-emerald-300');
+        feedback.className = 'mt-3 p-3 rounded-xl text-xs bg-red-950/40 border border-red-500/40 text-red-300 block';
+        feedback.innerHTML = `<strong>తప్పు సమాధానం!</strong> ${q.exp}`;
+      }
+
+      document.getElementById('quiz-next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      if (currentQIndex < quiz20Questions.length - 1) {
+        currentQIndex++;
+        loadQuizQuestion();
+      } else {
+        const optionsContainer = document.getElementById('quiz-options');
+        document.getElementById('quiz-question').innerHTML = `🎉 20 MCQs పరీక్ష పూర్తయింది!<br><span class="text-sm font-normal text-slate-300">మీ తుది స్కోరు: ${quizScore} / 20</span>`;
+        optionsContainer.innerHTML = `
+          <div class="p-4 rounded-xl bg-cyan-950/30 border border-cyan-500/40 text-center text-xs text-cyan-200">
+            ${quizScore >= 16 ? 'అద్భుతం! భారత వ్యవసాయ విప్లవాలపై సంపూర్ణ పట్టు సాధించారు.' : 'మంచి ప్రయత్నం! హారిజాంటల్ మైండ్‌మ్యాప్‌లోని విప్లవాల రూపకర్తలు మరియు రంగుల వర్గీకరణను మరోసారి రివైజ్ చేయండి.'}
+          </div>
+        `;
+        document.getElementById('quiz-feedback').classList.add('hidden');
+        document.getElementById('quiz-next-btn').classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

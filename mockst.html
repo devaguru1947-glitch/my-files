@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul Academy — UPSC GS-3 S&T CBT Mock Test (Batch 5: Chapters 25–29 | Bilingual)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0f172a;
+    --secondary: #1e293b;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #d97706;
+    --purple: #7c3aed;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --border: #cbd5e1;
+    --text: #0f172a;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans Telugu', 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-badge {
+    background: #facc15;
+    color: #0f172a;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+  .brand h1 { font-size: 1.15rem; font-weight: 700; }
+  .brand p { font-size: 0.8rem; color: #cbd5e1; }
+  .header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .timer-box {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    font-family: 'Inter', monospace;
+  }
+  .btn {
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-success { background: var(--success); color: #fff; }
+  .btn-success:hover { background: #15803d; }
+  .btn-warning { background: var(--warning); color: #fff; }
+  .btn-purple { background: var(--purple); color: #fff; }
+  .btn-outline { background: #fff; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { background: #f8fafc; }
+  .btn-danger { background: var(--danger); color: #fff; }
+
+  #start-screen {
+    max-width: 1060px;
+    margin: 32px auto;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .mode-card {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #f8fafc;
+  }
+  .mode-card:hover, .mode-card.selected {
+    border-color: var(--accent);
+    background: #eff6ff;
+  }
+  .mode-card h3 { font-size: 1rem; color: var(--primary); margin-bottom: 6px; }
+  .mode-card p { font-size: 0.85rem; color: var(--muted); }
+  .instructions-box {
+    background: #fefce8;
+    border-left: 4px solid #eab308;
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+  }
+  .instructions-box ul { margin-left: 20px; margin-top: 8px; }
+
+  #cbt-screen {
+    display: none;
+    max-width: 1400px;
+    margin: 16px auto;
+    padding: 0 16px;
+    gap: 16px;
+  }
+  .cbt-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 16px;
+  }
+  @media (max-width: 960px) {
+    .cbt-grid { grid-template-columns: 1fr; }
+  }
+  .chapter-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+  }
+  .chap-tab {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #e2e8f0;
+    border: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+  .chap-tab.active { background: var(--accent); color: #fff; }
+  .question-panel {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 540px;
+  }
+  .q-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .q-text-te {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .q-text-en {
+    font-size: 0.96rem;
+    font-weight: 500;
+    color: #334155;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #e2e8f0;
+  }
+  .options-list { display: flex; flex-direction: column; gap: 12px; }
+  .option-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .option-item:hover { background: #f8fafc; border-color: #94a3b8; }
+  .option-item.selected { background: #eff6ff; border-color: var(--accent); }
+  .option-letter {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .option-item.selected .option-letter { background: var(--accent); color: #fff; }
+  .opt-content { display: flex; flex-direction: column; gap: 2px; }
+  .opt-te { font-weight: 600; color: var(--text); font-size: 0.98rem; }
+  .opt-en { font-weight: 400; color: #475569; font-size: 0.88rem; }
+  .q-footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 24px;
+  }
+
+  .sidebar-panel {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .legend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 0.78rem;
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .badge-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .st-not-visited { background: #cbd5e1; color: #0f172a; }
+  .st-not-answered { background: var(--danger); }
+  .st-answered { background: var(--success); }
+  .st-review { background: var(--purple); }
+  .st-ans-review { background: var(--purple); border: 2px solid #22c55e; }
+
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    max-height: 360px;
+    overflow-y: auto;
+    padding: 4px;
+  }
+  .pal-btn {
+    height: 36px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .pal-btn.current { outline: 2.5px solid #0f172a; outline-offset: 1px; }
+
+  #result-screen {
+    display: none;
+    max-width: 1150px;
+    margin: 24px auto;
+    padding: 0 16px;
+  }
+  .score-banner {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+  .stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .stat-card {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .stat-card .val { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+  .stat-card .lbl { font-size: 0.82rem; color: var(--muted); }
+  .chap-breakdown {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.9rem;
+  }
+  .chap-breakdown th, .chap-breakdown td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    text-align: left;
+  }
+  .chap-breakdown th { background: #f1f5f9; }
+  .filter-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+  .review-card {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border-left: 5px solid var(--border);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .review-card.correct { border-left-color: var(--success); }
+  .review-card.wrong { border-left-color: var(--danger); }
+  .review-card.unattempted { border-left-color: #94a3b8; }
+  .exp-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-size: 0.92rem;
+  }
+  .review-card.wrong .exp-box { background: #fef2f2; border-color: #fecaca; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="brand-badge">RAHUL ACADEMY</span>
+    <div>
+      <h1>UPSC GS-3 S&T — Bilingual CBT Mock Test (Batch 5: Chapters 25–29)</h1>
+      <p>తెలుగు & English • 25 MCQs per Chapter (Total 125 Questions & Bilingual Answers + Explanations)</p>
+    </div>
+  </div>
+  <div class="header-controls" id="exam-header-controls" style="display:none;">
+    <div class="timer-box">⏱ <span id="timer-display">30:00</span></div>
+    <button class="btn btn-danger" onclick="confirmSubmit()">Final Submit</button>
+  </div>
+</header>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <h2>బ్యాచ్ 5: పరీక్ష విధానాన్ని ఎంచుకోండి (Select Chapter / Full Test — Telugu & English)</h2>
+  <p style="color:var(--muted); font-size:0.92rem; margin-top:4px;">అధ్యాయాలు 25 నుండి 29 వరకు ఒక్కొక్కటిగా (One-by-One) 25 MCQs చొప్పున లేదా మొత్తం 125 ప్రశ్నల గ్రాండ్ టెస్ట్ రాయవచ్చు.</p>
+
+  <div class="mode-grid" id="mode-selector">
+    <div class="mode-card selected" data-mode="0" onclick="selectMode('0', this)">
+      <h3>Chapter 25: గ్రీన్ హైడ్రోజన్ & క్లీన్ ఎనర్జీ</h3>
+      <p>25 MCQs • 30 Mins • NGHM 2023, SIGHT, 5 MMT Target, Electrolysers, Fuel Cells</p>
+    </div>
+    <div class="mode-card" data-mode="1" onclick="selectMode('1', this)">
+      <h3>Chapter 26: అడ్వాన్స్‌డ్ మెటీరియల్స్ & కాంపోజిట్స్</h3>
+      <p>25 MCQs • 30 Mins • Graphene, CNTs, Nitinol, PZT Piezoelectrics, Metamaterials, CFRP</p>
+    </div>
+    <div class="mode-card" data-mode="2" onclick="selectMode('2', this)">
+      <h3>Chapter 27: మేధో సంపత్తి హక్కులు (IPR)</h3>
+      <p>25 MCQs • 30 Mins • Patents Act, Sec 3(d), Novartis & Natco Cases, TRIPS, GI Tags, TKDL</p>
+    </div>
+    <div class="mode-card" data-mode="3" onclick="selectMode('3', this)">
+      <h3>Chapter 28: శాస్త్రీయ పరిశోధనా సంస్థలు & పరిపాలన</h3>
+      <p>25 MCQs • 30 Mins • GERD 0.64%, ANRF vs SERB, CSIR, DST, ICMR, ICAR, DAE, GII</p>
+    </div>
+    <div class="mode-card" data-mode="4" onclick="selectMode('4', this)">
+      <h3>Chapter 29: భారతీయ శాస్త్రవేత్తలు & S&T విజయాలు</h3>
+      <p>25 MCQs • 30 Mins • C.V. Raman, S. Chandrasekhar, Bhabha, Sarabhai, Kalam, ISRO Milestones</p>
+    </div>
+    <div class="mode-card" data-mode="all" onclick="selectMode('all', this)">
+      <h3>మొత్తం బ్యాచ్ 5 (Full Batch 5 Test — Chapters 25 to 29)</h3>
+      <p>125 Bilingual MCQs • 150 Mins • All 5 Chapters Combined CBT Mock Test</p>
+    </div>
+  </div>
+
+  <div class="instructions-box">
+    <strong>పరీక్ష నియమాలు (UPSC Prelims Pattern):</strong>
+    <ul>
+      <li>ప్రతి ప్రశ్న, ఆప్షన్లు, సమాధానాలు మరియు వివరణలు <strong>తెలుగు మరియు ఇంగ్లీష్ (Bilingual)</strong> రెండింటిలోనూ కనిపిస్తాయి.</li>
+      <li>ప్రతి సరైన సమాధానానికి <strong>+2.00 మార్కులు</strong>; ప్రతి తప్పు సమాధానానికి <strong>-0.66 మార్కులు (1/3 Negative Marking)</strong> కోత ఉంటుంది.</li>
+      <li><strong>Final Submit</strong> నొక్కిన వెంటనే మొత్తం స్కోరు, అధ్యాయాల వారీగా విశ్లేషణ మరియు తెలుగు + ఇంగ్లీష్ వివరణలు కనిపిస్తాయి.</li>
+    </ul>
+    <label style="display:inline-flex; align-items:center; gap:8px; margin-top:12px; font-weight:600; cursor:pointer;">
+      <input type="checkbox" id="neg-marking-toggle" checked> Apply UPSC Negative Marking (-0.66) / నెగటివ్ మార్కింగ్ వర్తింపజేయండి
+    </label>
+  </div>
+
+  <button class="btn btn-primary" style="font-size:1rem; padding:12px 28px;" onclick="startTest()">పరీక్ష ప్రారంభించండి (Start Bilingual CBT Test)</button>
+</div>
+
+<!-- CBT INTERFACE -->
+<div id="cbt-screen">
+  <div class="chapter-tabs" id="chapter-tabs"></div>
+  <div class="cbt-grid">
+    <div class="question-panel">
+      <div>
+        <div class="q-meta">
+          <span id="q-chapter-label" style="font-weight:700; color:var(--accent);">Chapter 25</span>
+          <span>Marks: <strong>+2.0</strong> | Negative: <strong id="neg-label">-0.66</strong></span>
+        </div>
+        <div class="q-text-te" id="q-text-te">ప్రశ్న లోడ్ అవుతోంది...</div>
+        <div class="q-text-en" id="q-text-en">Loading question...</div>
+        <div class="options-list" id="options-list"></div>
+      </div>
+
+      <div class="q-footer">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="prevQuestion()">← Previous / వెనుకకు</button>
+          <button class="btn btn-outline" onclick="clearResponse()">Clear / తొలగించు</button>
+          <button class="btn btn-purple" onclick="markForReviewAndNext()">Mark & Next / రివ్యూ</button>
+        </div>
+        <button class="btn btn-success" onclick="saveAndNext()">Save & Next / తదుపరి →</button>
+      </div>
+    </div>
+
+    <div class="sidebar-panel">
+      <div style="font-weight:700; font-size:0.95rem; border-bottom:1px solid var(--border); padding-bottom:8px;">
+        ప్రశ్నల పాలెట్ (Question Palette)
+      </div>
+      <div class="legend-grid">
+        <div class="legend-item"><span class="badge-dot st-answered" id="cnt-ans">0</span> Answered / ఇచ్చినవి</div>
+        <div class="legend-item"><span class="badge-dot st-not-answered" id="cnt-not-ans">0</span> Not Answered</div>
+        <div class="legend-item"><span class="badge-dot st-not-visited" id="cnt-not-vis">0</span> Not Visited</div>
+        <div class="legend-item"><span class="badge-dot st-review" id="cnt-rev">0</span> Marked Review</div>
+      </div>
+      <div class="palette-grid" id="palette-grid"></div>
+      <button class="btn btn-danger" style="width:100%; margin-top:auto;" onclick="confirmSubmit()">Final Submit / పరీక్ష సమర్పించండి</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT & EXPLANATION SCREEN -->
+<div id="result-screen">
+  <div class="score-banner">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h2 style="color:var(--primary);">పరీక్ష ఫలితాలు & విశ్లేషణ (Scorecard & Analytics)</h2>
+        <p style="color:var(--muted); font-size:0.9rem;">Rahul Academy • UPSC GS-3 Science & Technology (Batch 5: Chapters 25–29)</p>
+      </div>
+      <button class="btn btn-primary" onclick="location.reload()">మరో అధ్యాయం ఎంచుకోండి (Back to Chapters)</button>
+    </div>
+
+    <div class="stats-cards" id="stats-cards"></div>
+
+    <table class="chap-breakdown" id="chap-breakdown">
+      <thead>
+        <tr>
+          <th>అధ్యాయం (Chapter)</th>
+          <th>Total</th>
+          <th>Correct</th>
+          <th>Wrong</th>
+          <th>Skipped</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="filter-bar">
+    <button class="btn btn-primary" onclick="filterReview('all')">All Questions / అన్నీ</button>
+    <button class="btn btn-success" onclick="filterReview('correct')">Correct / సరైనవి</button>
+    <button class="btn btn-danger" onclick="filterReview('wrong')">Incorrect / తప్పులు</button>
+    <button class="btn btn-outline" onclick="filterReview('unattempted')">Unattempted / వదిలేసినవి</button>
+  </div>
+
+  <div id="review-container"></div>
+</div>
+
+<script>
+const CHAPTERS = [
+  "Ch 25: గ్రీన్ హైడ్రోజన్ & క్లీన్ ఎనర్జీ (Green Hydrogen & Clean Energy)",
+  "Ch 26: అడ్వాన్స్‌డ్ మెటీరియల్స్ & కాంపోజిట్స్ (Advanced Materials)",
+  "Ch 27: మేధో సంపత్తి హక్కులు (Intellectual Property Rights)",
+  "Ch 28: శాస్త్రీయ పరిశోధనా సంస్థలు & పరిపాలన (Research Institutions)",
+  "Ch 29: భారతీయ శాస్త్రవేత్తలు & S&T విజయాలు (Indian Scientists & Milestones)"
+];
+
+const RAW_DATA = [
+  // CHAPTER 25: Green Hydrogen & Clean Energy (25 MCQs)
+  {c:0, qt:"జాతీయ గ్రీన్ హైడ్రోజన్ మిషన్ (NGHM) ఏ సంవత్సరంలో కేంద్ర మంత్రివర్గం ఆమోదించింది?", qe:"In which year did the Union Cabinet approve the National Green Hydrogen Mission (NGHM)?",
+   ot:["2021","2022","2023","2024"],
+   oe:["2021","2022","2023","2024"], a:2,
+   et:"జాతీయ గ్రీన్ హైడ్రోజన్ మిషన్ (NGHM) జనవరి 2023లో ₹19,744 కోట్ల మొత్తం వ్యయంతో ఆమోదించబడింది.",
+   ee:"Approved in January 2023 with an outlay of ₹19,744 crore, NGHM builds India's green hydrogen ecosystem."},
+  {c:0, qt:"2030 నాటికి భారతదేశం వార్షికంగా ఎంత గ్రీన్ హైడ్రోజన్ ఉత్పత్తి సామర్థ్యాన్ని సాధించాలని లక్ష్యంగా పెట్టుకుంది?", qe:"What annual green hydrogen production capacity target has India set for 2030 under NGHM?",
+   ot:["1 MMT","3 MMT","5 MMT","10 MMT"],
+   oe:["1 MMT","3 MMT","5 MMT","10 MMT"], a:2,
+   et:"NGHM కింద 2030 నాటికి కనీసం 5 మిలియన్ మెట్రిక్ టన్నుల (MMT) వార్షిక గ్రీన్ హైడ్రోజన్ ఉత్పత్తి లక్ష్యంగా ఉంది.",
+   ee:"NGHM targets developing at least 5 Million Metric Tonnes (MMT) per annum of green hydrogen production capacity by 2030."},
+  {c:0, qt:"పునరుత్పాదక విద్యుత్ ఉపయోగించి నీటి ఎలక్ట్రోలసిస్ ద్వారా ఉత్పత్తి చేసే హైడ్రోజన్‌ను ఏమని పిలుస్తారు?", qe:"What is hydrogen produced via electrolysis of water powered by renewable energy called?",
+   ot:["గ్రే హైడ్రోజన్","బ్లూ హైడ్రోజన్","గ్రీన్ హైడ్రోజన్","బ్రౌన్ హైడ్రోజన్"],
+   oe:["Grey hydrogen","Blue hydrogen","Green hydrogen","Brown hydrogen"], a:2,
+   et:"సౌర, పవన వంటి పునరుత్పాదక ఇంధనాలతో నీటిని విభజించి (ఎలక్ట్రోలసిస్) ఉత్పత్తి చేసే కర్బన రహిత హైడ్రోజన్‌ను గ్రీన్ హైడ్రోజన్ అంటారు.",
+   ee:"Green hydrogen is produced by splitting water (electrolysis) using renewable electricity such as solar, wind, or hydro."},
+  {c:0, qt:"స్టీమ్ మీథేన్ రిఫార్మింగ్ (SMR) ద్వారా ఉత్పత్తి చేసి, విడుదలయ్యే CO2 ను కార్బన్ క్యాప్చర్ (CCUS) ద్వారా బంధిస్తే దానిని ఏ హైడ్రోజన్ అంటారు?", qe:"Hydrogen produced from natural gas/methane with associated CO2 captured and stored (CCUS) is termed:",
+   ot:["గ్రే హైడ్రోజన్","బ్లూ హైడ్రోజన్","పింక్ హైడ్రోజన్","టర్కోయిస్ హైడ్రోజన్"],
+   oe:["Grey hydrogen","Blue hydrogen","Pink hydrogen","Turquoise hydrogen"], a:1,
+   et:"సహజ వాయువు నుండి హైడ్రోజన్ తీసి, వెలువడే CO2 ను భూగర్భంలో బంధిస్తే (CCS/CCUS) దానిని బ్లూ హైడ్రోజన్ అంటారు.",
+   ee:"Blue hydrogen pairs steam methane reforming with carbon capture, utilisation, and storage (CCUS) to lower net emissions."},
+  {c:0, qt:"అణు విద్యుత్ (Nuclear Energy) ఉపయోగించి ఎలక్ట్రోలసిస్ ద్వారా తయారు చేసే హైడ్రోజన్ రంగు కోడ్ ఏమిటి?", qe:"Which colour designation is commonly used for hydrogen produced via electrolysis powered by nuclear energy?",
+   ot:["పింక్ హైడ్రోజన్","యెల్లో హైడ్రోజన్","వైట్ హైడ్రోజన్","గ్రే హైడ్రోజన్"],
+   oe:["Pink hydrogen","Yellow hydrogen","White hydrogen","Grey hydrogen"], a:0,
+   et:"అణు విద్యుత్ ఆధారిత ఎలక్ట్రోలసిస్ ద్వారా ఉత్పత్తి అయ్యే హైడ్రోజన్‌ను పింక్ (లేదా పర్పుల్/రెడ్) హైడ్రోజన్ అంటారు.",
+   ee:"Pink (or purple/red) hydrogen refers to electrolytic hydrogen generated using nuclear power."},
+  {c:0, qt:"NGHM లోని 'SIGHT' కార్యక్రమం పూర్తి రూపం ఏమిటి?", qe:"What does 'SIGHT' stand for under the National Green Hydrogen Mission?",
+   ot:["Strategic Interventions for Green Hydrogen Transition","Solar Integration for Green Hydrogen Technology","Sustainable Industrial Green Hydrogen Target","Scheme for Indigenous Green Hydrogen Turbine"],
+   oe:["Strategic Interventions for Green Hydrogen Transition","Solar Integration for Green Hydrogen Technology","Sustainable Industrial Green Hydrogen Target","Scheme for Indigenous Green Hydrogen Turbine"], a:0,
+   et:"SIGHT అనగా Strategic Interventions for Green Hydrogen Transition — ఇది ఎలక్ట్రోలైజర్ల తయారీ మరియు గ్రీన్ హైడ్రోజన్ ఉత్పత్తికి ఆర్థిక ప్రోత్సాహకాలు అందిస్తుంది.",
+   ee:"SIGHT provides financial incentives for domestic electrolyser manufacturing and green hydrogen production."},
+  {c:0, qt:"2030 నాటికి గ్రీన్ హైడ్రోజన్ మిషన్ ద్వారా భారతదేశంలో ఎన్ని గిగావాట్ల (GW) అదనపు పునరుత్పాదక ఇంధన సామర్థ్యం పెరుగుతుందని అంచనా?", qe:"Approximately how much additional renewable energy capacity is projected to be added in India by 2030 to support NGHM targets?",
+   ot:["50 GW","75 GW","125 GW","200 GW"],
+   oe:["50 GW","75 GW","125 GW","200 GW"], a:2,
+   et:"2030 నాటికి 5 MMT గ్రీన్ హైడ్రోజన్ ఉత్పత్తి కోసం దేశంలో సుమారు 125 GW అదనపు పునరుత్పాదక ఇంధన సామర్థ్యాన్ని జోడించాలని లక్ష్యంగా పెట్టుకున్నారు.",
+   ee:"Achieving 5 MMT of green hydrogen by 2030 is projected to require roughly 125 GW of associated renewable energy capacity."},
+  {c:0, qt:"హైడ్రోజన్ ఫ్యూయల్ సెల్ (Hydrogen Fuel Cell) పనిచేసేటప్పుడు వెలువడే ఏకైక ఉప-ఉత్పత్తి (By-product) ఏమిటి?", qe:"What is the sole emission/by-product when a hydrogen fuel cell generates electricity from hydrogen and oxygen?",
+   ot:["కార్బన్ మోనాక్సైడ్","నీరు (H2O)","నైట్రోజన్ ఆక్సైడ్","మీథేన్"],
+   oe:["Carbon monoxide","Water (H2O) and heat","Nitrogen oxide","Methane"], a:1,
+   et:"హైడ్రోజన్ ఫ్యూయల్ సెల్‌లో హైడ్రోజన్ మరియు ఆక్సిజన్ చర్య జరిపి విద్యుత్, వేడి మరియు స్వచ్ఛమైన నీటిని మాత్రమే విడుదల చేస్తాయి.",
+   ee:"A hydrogen fuel cell electrochemically combines hydrogen and oxygen to produce electricity, heat, and pure water."},
+  {c:0, qt:"భారత ప్రభుత్వ గ్రీన్ హైడ్రోజన్ ప్రమాణాల ప్రకారం, 1 కిలో గ్రీన్ హైడ్రోజన్ ఉత్పత్తిలో గరిష్టంగా ఎంత CO2 సమాన ఉద్గారాలకు అనుమతి ఉంది?", qe:"Under India's Green Hydrogen Standard, what is the maximum well-to-gate emission threshold per kg of hydrogen produced?",
+   ot:["0 kg CO2 eq","2 kg CO2 eq","5 kg CO2 eq","10 kg CO2 eq"],
+   oe:["0 kg CO2 eq","2 kg CO2 eq","5 kg CO2 eq","10 kg CO2 eq"], a:1,
+   et:"MNRE నిర్వచనం ప్రకారం, 1 kg హైడ్రోజన్ ఉత్పత్తిలో వెల్-టు-గేట్ ఉద్గారాలు 2 kg CO2 సమానానికి మించకూడదు.",
+   ee:"MNRE defines green hydrogen as having well-to-gate emissions not exceeding 2 kg CO2 equivalent per kg of hydrogen."},
+  {c:0, qt:"క్రింది వాటిలో ఏ రకమైన ఎలక్ట్రోలైజర్ తక్కువ ఉష్ణోగ్రత వద్ద పనిచేస్తూ, పునరుత్పాదక ఇంధన హెచ్చుతగ్గులకు వేగంగా స్పందిస్తుంది?", qe:"Which electrolyser technology operates at lower temperatures and responds rapidly to variable renewable power inputs?",
+   ot:["PEM (Proton Exchange Membrane) ఎలక్ట్రోలైజర్","సాలిడ్ ఆక్సైడ్ ఎలక్ట్రోలైజర్ (SOEC)","ఆల్కలైన్ ఎలక్ట్రోలైజర్","బొగ్గు గ్యాసిఫైయర్"],
+   oe:["PEM (Proton Exchange Membrane) electrolyser","Solid Oxide Electrolyser Cell (SOEC)","Alkaline electrolyser","Coal gasifier"], a:0,
+   et:"PEM ఎలక్ట్రోలైజర్లు వేగవంతమైన స్టార్ట్-అప్ మరియు పునరుత్పాదక విద్యుత్ హెచ్చుతగ్గులకు అనుగుణంగా పనిచేసే సామర్థ్యం కలిగి ఉంటాయి.",
+   ee:"PEM electrolysers offer fast dynamic response and compact footprint suited to fluctuating solar/wind power."},
+  {c:0, qt:"భారతదేశంలో ప్రస్తుతం అత్యధికంగా ఉత్పత్తి అవుతున్న హైడ్రోజన్ ఏ రకానికి చెందినది?", qe:"Which type of hydrogen currently accounts for the vast majority of India's industrial hydrogen production?",
+   ot:["గ్రీన్ హైడ్రోజన్","గ్రే హైడ్రోజన్","బ్లూ హైడ్రోజన్","పింక్ హైడ్రోజన్"],
+   oe:["Green hydrogen","Grey hydrogen","Blue hydrogen","Pink hydrogen"], a:1,
+   et:"ప్రస్తుతం భారతదేశంలో రసాయన, ఎరువుల మరియు రిఫైనరీ రంగాలలో సహజ వాయువు నుండి తయారయ్యే గ్రే హైడ్రోజన్ ప్రధానంగా వాడుకలో ఉంది.",
+   ee:"Most hydrogen used today in Indian refineries, ammonia/fertilisers, and chemicals is grey hydrogen derived from fossil natural gas."},
+  {c:0, qt:"గ్రీన్ హైడ్రోజన్‌ను నిల్వ చేయడానికి మరియు సుదూర ప్రాంతాలకు రవాణా చేయడానికి ఏ రసాయన రూపంలోకి మార్చడం సులభం?", qe:"Into which energy carrier is green hydrogen frequently converted for easier storage and long-distance maritime transport?",
+   ot:["గ్రీన్ అమ్మోనియా (NH3)","సల్ఫ్యూరిక్ ఆమ్లం","క్లోరిన్ వాయువు","బెంజీన్"],
+   oe:["Green ammonia (NH3)","Sulphuric acid","Chlorine gas","Benzene"], a:0,
+   et:"గ్రీన్ హైడ్రోజన్‌ను నైట్రోజన్‌తో కలిపి గ్రీన్ అమ్మోనియాగా మార్చడం ద్వారా సులభంగా ద్రవీకరించి ఓడల ద్వారా రవాణా చేయవచ్చు.",
+   ee:"Converting green hydrogen into green ammonia simplifies liquefaction, storage, and shipping for fertilisers and export."},
+  {c:0, qt:"2030 నాటికి NGHM ద్వారా వార్షికంగా ఎంత గ్రీన్‌హౌస్ వాయు ఉద్గారాల తగ్గింపును భారత్ లక్ష్యంగా పెట్టుకుంది?", qe:"Approximately how much annual greenhouse gas emission reduction does NGHM target by 2030?",
+   ot:["10 MMT CO2","25 MMT CO2","50 MMT CO2","100 MMT CO2"],
+   oe:["10 MMT CO2","25 MMT CO2","50 MMT CO2","100 MMT CO2"], a:2,
+   et:"2030 నాటికి ఏటా సుమారు 50 MMT కర్బన ఉద్గారాలను తగ్గించడం మిషన్ ప్రధాన లక్ష్యాలలో ఒకటి.",
+   ee:"NGHM is projected to abate roughly 50 MMT of annual CO2 emissions by 2030."},
+  {c:0, qt:"కింది వాటిలో 'హార్డ్-టు-అబేట్' (Hard-to-abate) రంగాలుగా పరిగణించబడేవి ఏవి, ఇక్కడ గ్రీన్ హైడ్రోజన్ కీలకం?", qe:"Which sectors are classic 'hard-to-abate' industries where green hydrogen helps decarbonise heat and feedstocks?",
+   ot:["స్టీల్, సిమెంట్, భారీ రవాణా & రిఫైనరీలు","సోషల్ మీడియా & సాఫ్ట్‌వేర్","వస్త్ర పరిశ్రమ & తోలు పరిశ్రమ","పర్యాటక రంగం"],
+   oe:["Green steel, cement, fertilisers, refining, and heavy/long-haul transport","Social media and software","Textiles and leather","Tourism"], a:0,
+   et:"బ్యాటరీలతో నేరుగా విద్యుదీకరించలేని ఉక్కు (స్టీల్), సిమెంట్, ఎరువులు, షిప్పింగ్ మరియు భారీ రవాణా రంగాలలో గ్రీన్ హైడ్రోజన్ కీలకం.",
+   ee:"Green hydrogen is vital for hard-to-abate sectors like steelmaking, ammonia/fertilisers, refining, and heavy transport."},
+  {c:0, qt:"మీథేన్ పైరోలిసిస్ (Methane Pyrolysis) ద్వారా ఘన కార్బన్‌ను ఉప-ఉత్పత్తిగా ఇస్తూ తయారయ్యే హైడ్రోజన్ ఏది?", qe:"Hydrogen produced via methane pyrolysis that yields solid carbon instead of CO2 gas is referred to as:",
+   ot:["టర్కోయిస్ హైడ్రోజన్","బ్రౌన్ హైడ్రోజన్","యెల్లో హైడ్రోజన్","వైట్ హైడ్రోజన్"],
+   oe:["Turquoise hydrogen","Brown hydrogen","Yellow hydrogen","White hydrogen"], a:0,
+   et:"మీథేన్ పైరోలిసిస్ ప్రక్రియలో CO2 వాయువుకు బదులుగా ఘన కార్బన్ (Solid Carbon) ఏర్పడుతుంది; దీనిని టర్కోయిస్ హైడ్రోజన్ అంటారు.",
+   ee:"Methane pyrolysis splits CH4 into hydrogen and solid carbon ('turquoise hydrogen'), avoiding direct gaseous CO2 release."},
+  {c:0, qt:"భారతదేశంలో తొలి స్వదేశీ హైడ్రోజన్ ఫ్యూయల్ సెల్ బస్సును ఏ సంస్థలు సంయుక్తంగా అభివృద్ధి చేశాయి?", qe:"Which Indian research lab and industry partner jointly developed India's first indigenous hydrogen fuel cell bus?",
+   ot:["CSIR మరియు KPIT","ISRO మరియు HAL","DRDO మరియు BHEL","ICMR మరియు AIIMS"],
+   oe:["CSIR (CSIR-NCL) and KPIT","ISRO and HAL","DRDO and BHEL","ICMR and AIIMS"], a:0,
+   et:"CSIR-NCL (పూణే) మరియు KPIT సంయుక్తంగా భారతదేశపు మొదటి స్వదేశీ హైడ్రోజన్ ఫ్యూయల్ సెల్ బస్సును అభివృద్ధి చేశాయి.",
+   ee:"CSIR-NCL and KPIT developed India's indigenous fuel cell stack and bus architecture."},
+  {c:0, qt:"జాతీయ గ్రీన్ హైడ్రోజన్ మిషన్ అమలుకు నోడల్ మంత్రిత్వ శాఖ ఏది?", qe:"Which Union Ministry is the nodal ministry for implementing the National Green Hydrogen Mission?",
+   ot:["విద్యుత్ మంత్రిత్వ శాఖ","నూతన మరియు పునరుత్పాదక ఇంధన మంత్రిత్వ శాఖ (MNRE)","పెట్రోలియం మంత్రిత్వ శాఖ","శాస్త్ర సాంకేతిక మంత్రిత్వ శాఖ"],
+   oe:["Ministry of Power","Ministry of New and Renewable Energy (MNRE)","Ministry of Petroleum","Ministry of Science and Technology"], a:1,
+   et:"నూతన మరియు పునరుత్పాదక ఇంధన మంత్రిత్వ శాఖ (MNRE) ఈ మిషన్ అమలుకు నోడల్ మంత్రిత్వ శాఖగా వ్యవహరిస్తుంది.",
+   ee:"The Ministry of New and Renewable Energy (MNRE) coordinates NGHM implementation across central and state agencies."},
+  {c:0, qt:"2030 నాటికి NGHM ద్వారా శిలాజ ఇంధన దిగుమతులలో ఎంత ఆదా అవుతుందని అంచనా?", qe:"What cumulative fossil-fuel import savings is NGHM projected to generate by 2030?",
+   ot:["₹10,000 కోట్లు","₹50,000 కోట్లు","₹1 లక్ష కోట్లకు పైగా","₹5 లక్షల కోట్లు"],
+   oe:["₹10,000 crore","₹50,000 crore","Over ₹1 lakh crore","₹5 lakh crore"], a:2,
+   et:"2030 నాటికి శిలాజ ఇంధన దిగుమతులలో ₹1 లక్ష కోట్లకు పైగా విదేశీ మారకద్రవ్యం ఆదా అవుతుందని అంచనా.",
+   ee:"NGHM is estimated to save over ₹1 lakh crore in cumulative fossil fuel imports by 2030."},
+  {c:0, qt:"హైడ్రోజన్ నిల్వ (Storage) విషయంలో ప్రధాన సాంకేతిక సవాలు ఏమిటి?", qe:"What is a major physical/engineering challenge in storing hydrogen for transport and industrial use?",
+   ot:["దీని సాంద్రత చాలా ఎక్కువ","దీని వాల్యూమెట్రిక్ శక్తి సాంద్రత తక్కువగా ఉండి అధిక పీడనం లేదా క్రయోజెనిక్ ఉష్ణోగ్రత అవసరం","ఇది నీటిలో కరిగిపోతుంది","ఇది లోహాలను ఆకర్షిస్తుంది"],
+   oe:["Low volumetric energy density at ambient conditions, requiring high compression (e.g., 350–700 bar), cryogenic cooling (-253°C), or chemical carriers","Excessive density","Dissolves in water","Attracts metals"], a:1,
+   et:"హైడ్రోజన్ బరువు పరంగా అధిక శక్తిని కలిగి ఉన్నా, ఘనపరిమాణ (Volumetric) శక్తి సాంద్రత తక్కువగా ఉండటం వల్ల 700 bar పీడనం లేదా -253°C వద్ద నిల్వ చేయాల్సి ఉంటుంది.",
+   ee:"Hydrogen has high gravimetric energy content but low volumetric energy density at standard temperature and pressure, requiring compression, liquefaction, or carriers like ammonia."},
+  {c:0, qt:"సౌర విద్యుత్ (Solar Power) మాత్రమే ఉపయోగించి ఎలక్ట్రోలసిస్ ద్వారా ఉత్పత్తి చేసే హైడ్రోజన్‌ను ఏమంటారు?", qe:"Hydrogen generated via electrolysis powered specifically by solar energy is sometimes called:",
+   ot:["యెల్లో హైడ్రోజన్","బ్రౌన్ హైడ్రోజన్","బ్లూ హైడ్రోజన్","గ్రే హైడ్రోజన్"],
+   oe:["Yellow hydrogen","Brown hydrogen","Blue hydrogen","Grey hydrogen"], a:0,
+   et:"కేవలం సౌర శక్తి ఆధారిత ఎలక్ట్రోలసిస్ ద్వారా తయారయ్యే హైడ్రోజన్‌ను యెల్లో హైడ్రోజన్ అని పిలుస్తారు.",
+   ee:"Yellow hydrogen is occasionally used to denote electrolytic hydrogen powered by solar energy."},
+  {c:0, qt:"భూగర్భంలో సహజ సిద్ధంగా లభించే హైడ్రోజన్ నిక్షేపాలను ఏ పేరుతో పిలుస్తారు?", qe:"Naturally occurring underground geological hydrogen deposits are known as:",
+   ot:["వైట్ (లేదా గోల్డ్) హైడ్రోజన్","గ్రే హైడ్రోజన్","బ్లాక్ హైడ్రోజన్","పింక్ హైడ్రోజన్"],
+   oe:["White (or gold) hydrogen","Grey hydrogen","Black hydrogen","Pink hydrogen"], a:0,
+   et:"భూమి పొరలలో సహజ భౌగోళిక ప్రక్రియల ద్వారా ఏర్పడే హైడ్రోజన్‌ను వైట్ లేదా గోల్డ్ హైడ్రోజన్ అంటారు.",
+   ee:"White or gold hydrogen refers to naturally occurring geologic hydrogen found trapped in underground formations."},
+  {c:0, qt:"సాలిడ్ ఆక్సైడ్ ఎలక్ట్రోలైజర్ సెల్స్ (SOEC) యొక్క ప్రధాన ప్రత్యేకత ఏమిటి?", qe:"What is a key characteristic of Solid Oxide Electrolyser Cells (SOECs)?",
+   ot:["అవి గది ఉష్ణోగ్రత వద్ద పనిచేస్తాయి","అవి అధిక ఉష్ణోగ్రతల (700–850°C) వద్ద ఆవిరిని విభజించి అధిక సామర్థ్యాన్ని ఇస్తాయి","అవి సముద్రపు ఉప్పును మాత్రమే వాడతాయి","వాటికి విద్యుత్ అవసరం లేదు"],
+   oe:["They operate at high temperatures (~700–850°C) using steam, achieving high electrical-to-hydrogen efficiency when paired with industrial heat","Room-temperature operation only","Uses only seawater","Requires no electricity"], a:1,
+   et:"SOEC ఎలక్ట్రోలైజర్లు అధిక ఉష్ణోగ్రత వద్ద నీటి ఆవిరిని విభజించడం ద్వారా తక్కువ విద్యుత్ వినియోగంతో అధిక సామర్థ్యాన్ని అందిస్తాయి.",
+   ee:"High-temperature steam electrolysis in SOECs reduces electricity demand per kg of hydrogen when waste/industrial heat is available."},
+  {c:0, qt:"NGHM కింద 'గ్రీన్ హైడ్రోజన్ హబ్స్' ఏర్పాటుకు మొదటి దశలో గుర్తించిన ప్రధాన ఓడరేవులు ఏవి?", qe:"Which Indian ports were identified as initial Green Hydrogen Hubs under NGHM?",
+   ot:["దీన్‌దయాళ్ (కాండ్లా), పారాదీప్ మరియు వీవో చిదంబరనార్ (టూటికోరిన్)","ముంబై మరియు కోల్‌కతా మాత్రమే","విశాఖపట్నం మరియు చెన్నై మాత్రమే","కొచ్చిన్ మరియు మంగళూరు మాత్రమే"],
+   oe:["Deendayal (Kandla), Paradip, and V.O. Chidambaranar (Tuticorin)","Mumbai and Kolkata only","Visakhapatnam and Chennai only","Cochin and Mangalore only"], a:0,
+   et:"కాండ్లా (దీన్‌దయాళ్), పారాదీప్ మరియు టూటికోరిన్ ఓడరేవులను ప్రధాన గ్రీన్ హైడ్రోజన్ హబ్‌లుగా అభివృద్ధి చేస్తున్నారు.",
+   ee:"Deendayal (Kandla), Paradip, and Tuticorin ports were selected as initial Green Hydrogen Hubs for production, storage, and export/bunkering."},
+  {c:0, qt:"బొగ్గు గ్యాసిఫికేషన్ ద్వారా ఉత్పత్తి చేసే హైడ్రోజన్‌ను సాధారణంగా ఏ రంగు కోడ్‌తో సూచిస్తారు?", qe:"Hydrogen produced via coal gasification is commonly referred to as:",
+   ot:["బ్లాక్ / బ్రౌన్ హైడ్రోజన్","గ్రీన్ హైడ్రోజన్","పింక్ హైడ్రోజన్","వైట్ హైడ్రోజన్"],
+   oe:["Black / Brown hydrogen","Green hydrogen","Pink hydrogen","White hydrogen"], a:0,
+   et:"బిటుమినస్ బొగ్గు నుండి అయితే బ్లాక్ హైడ్రోజన్ అని, లిగ్నైట్ బొగ్గు నుండి అయితే బ్రౌన్ హైడ్రోజన్ అని పిలుస్తారు.",
+   ee:"Coal gasification yields black hydrogen (from bituminous coal) or brown hydrogen (from lignite) with high CO2 emissions unless captured."},
+  {c:0, qt:"గ్రీన్ హైడ్రోజన్ రంగంలో పరిశోధన మరియు అభివృద్ధి కోసం NGHM కింద ప్రారంభించిన మిషన్ ఏది?", qe:"What is the R&D innovation framework under NGHM that links industry, academia, and government?",
+   ot:["SHIP (Strategic Hydrogen Innovation Partnership)","SHANTI","SAMARTH","SURYA"],
+   oe:["SHIP (Strategic Hydrogen Innovation Partnership)","SHANTI","SAMARTH","SURYA"], a:0,
+   et:"ప్రభుత్వ-ప్రైవేట్ భాగస్వామ్యంతో R&D ప్రోత్సాహానికి Strategic Hydrogen Innovation Partnership (SHIP) ఏర్పాటు చేయబడింది.",
+   ee:"SHIP fosters public-private R&D collaboration to advance electrolysers, storage, fuel cells, and green hydrogen applications."},
+
+  // CHAPTER 26: Advanced Materials, Composites & Smart Materials (25 MCQs)
+  {c:1, qt:"2010లో భౌతిక శాస్త్రంలో నోబెల్ బహుమతి పొందిన ఆండ్రీ గీమ్ మరియు కాన్‌స్టాంటిన్ నోవోసెలోవ్ ఏ పదార్థాన్ని వేరు చేశారు?", qe:"Which two-dimensional material earned Andre Geim and Konstantin Novoselov the 2010 Nobel Prize in Physics?",
+   ot:["కార్బన్ నానోట్యూబ్స్","గ్రాఫీన్","నిటినోల్","PZT"],
+   oe:["Carbon nanotubes","Graphene","Nitinol","PZT"], a:1,
+   et:"2004లో స్కాచ్ టేప్ పద్ధతి ద్వారా గ్రాఫైట్ నుండి ఒకే పరమాణు మందం గల గ్రాఫీన్ పొరను వేరు చేసినందుకు వీరికి 2010 నోబెల్ బహుమతి లభించింది.",
+   ee:"Geim and Novoselov won the 2010 Physics Nobel for isolating single-atom-thick graphene sheets from graphite."},
+  {c:1, qt:"గ్రాఫీన్ పరమాణు నిర్మాణం ఏ ఆకారంలో ఉంటుంది?", qe:"What is the atomic lattice geometry of graphene?",
+   ot:["త్రిమితీయ ఘన ఆకారం","ద్విమితీయ షట్కోణ (తేనెపట్టు / Honeycomb) జాలకం","సర్పిలాకార గొలుసు","చతురస్రాకార జాలకం"],
+   oe:["3D cubic solid","2D hexagonal (honeycomb) lattice of sp2-bonded carbon atoms","Helical chain","Square lattice"], a:1,
+   et:"గ్రాఫీన్ అనేది ఒకే పరమాణు మందంతో ద్విమితీయ షట్కోణ (Hexagonal) జాలకంలో అమర్చబడిన కార్బన్ పరమాణువుల పొర.",
+   ee:"Graphene consists of carbon atoms arranged in a single-layer 2D hexagonal honeycomb lattice."},
+  {c:1, qt:"గ్రాఫీన్ వాయు పారగమ్యత (Gas permeability) గురించి సరైన ప్రకటన ఏది?", qe:"Which statement is accurate regarding the gas impermeability of pristine graphene?",
+   ot:["ఇది అన్ని వాయువులను సులభంగా పంపిస్తుంది","ఇది అతి చిన్న వాయు పరమాణువైన హీలియంకు కూడా అభేద్యంగా (Impermeable) ఉంటుంది","ఇది ఆక్సిజన్‌ను మాత్రమే పంపిస్తుంది","ఇది రంధ్రాలతో నిండి ఉంటుంది"],
+   oe:["It lets all gases pass freely","Pristine graphene is impermeable even to the smallest gas atoms like helium","It passes only oxygen","It is full of large holes"], a:1,
+   et:"గ్రాఫీన్ ఎంత దృఢమైనదంటే, అతి చిన్న వాయు పరమాణువైన హీలియం కూడా దాని గుండా ప్రయాణించలేదు.",
+   ee:"Defect-free graphene's dense electron cloud makes it impermeable even to helium atoms."},
+  {c:1, qt:"1991లో మల్టీ-వాల్డ్ కార్బన్ నానోట్యూబ్స్ (MWCNT) కనుగొన్న శాస్త్రవేత్త ఎవరు?", qe:"Who is widely credited with reporting Multi-Walled Carbon Nanotubes (MWCNTs) in 1991?",
+   ot:["సుమియో ఇజిమా","ఆండ్రీ గీమ్","విలియం బ్యూహ్లర్","సి.ఎన్.ఆర్. రావు"],
+   oe:["Sumio Iijima","Andre Geim","William Buehler","C.N.R. Rao"], a:0,
+   et:"NEC కార్పొరేషన్‌కు చెందిన సుమియో ఇజిమా 1991లో ఆర్క్-డిశ్చార్జ్ పద్ధతి ద్వారా కార్బన్ నానోట్యూబ్‌లను కనుగొన్నారు.",
+   ee:"Sumio Iijima reported MWCNTs in 1991, spurring major research into carbon nanotube electronics and composites."},
+  {c:1, qt:"కార్బన్ నానోట్యూబ్స్ (CNT) విద్యుత్ లక్షణాలు గ్రాఫీన్ కంటే ఎలా భిన్నంగా ఉంటాయి?", qe:"How can the electrical behaviour of Carbon Nanotubes (CNTs) vary compared to flat graphene?",
+   ot:["CNT లు ఎల్లప్పుడూ అవాహకాలు","చుట్టబడిన కోణం (Chirality) ఆధారంగా CNT లు లోహ వాహకాలుగా లేదా అర్ధవాహకాలుగా (Semiconductors) పనిచేస్తాయి","రెండింటికీ ఒకే లక్షణాలు ఉంటాయి","CNT లు విద్యుత్ ప్రవహించనివ్వవు"],
+   oe:["CNTs are always insulators","Depending on chirality (roll-up vector/diameter), CNTs can be metallic conductors or semiconductors","Identical in all cases","CNTs block all current"], a:1,
+   et:"గ్రాఫీన్ సెమీ-మెటాలిక్ కాగా, కార్బన్ నానోట్యూబ్స్ వాటి కైరాలిటీ (Chirality) ఆధారంగా మెటాలిక్ లేదా సెమీకండక్టింగ్ లక్షణాలను ప్రదర్శిస్తాయి.",
+   ee:"A CNT's chirality determines whether it behaves as a metallic conductor or a semiconductor."},
+  {c:1, qt:"భారతదేశపు స్వదేశీ తేలికపాటి యుద్ధ విమానం 'HAL తేజస్' ఎయిర్‌ఫ్రేమ్‌లో బరువు తగ్గించడానికి ఏ కాంపోజిట్ పదార్థాన్ని విస్తృతంగా వాడారు?", qe:"Which lightweight, high-strength composite material is extensively used in the airframe of India's LCA Tejas to save weight?",
+   ot:["CFRP (కార్బన్ ఫైబర్ రీన్‌ఫోర్స్డ్ పాలిమర్)","సాధారణ ఉక్కు","కాంక్రీట్","రాగి మిశ్రమం"],
+   oe:["CFRP (Carbon Fibre Reinforced Polymer)","Plain carbon steel","Concrete","Copper alloy"], a:0,
+   et:"DRDO మరియు NAL సహకారంతో HAL తేజస్ యుద్ధ విమానంలో తేలికైన, అత్యంత బలమైన CFRP కాంపోజిట్లను ఉపయోగించారు.",
+   ee:"Carbon Fibre Reinforced Polymer (CFRP) composites provide high strength-to-weight ratios in LCA Tejas structures."},
+  {c:1, qt:"షేప్ మెమరీ అల్లాయ్ అయిన 'నిటినోల్ (Nitinol)' ఏ రెండు లోహాల మిశ్రమం?", qe:"Which two metals form the shape-memory alloy 'Nitinol'?",
+   ot:["నికెల్ మరియు టైటానియం","నైట్రోజన్ మరియు టంగ్‌స్టన్","నియోబియం మరియు టిన్","నికెల్ మరియు టాంటాలమ్"],
+   oe:["Nickel and Titanium","Nitrogen and Tungsten","Niobium and Tin","Nickel and Tantalum"], a:0,
+   et:"నిటినోల్ (Nickel Titanium Naval Ordnance Laboratory) లో సుమారు 50-55% నికెల్ మరియు మిగిలినది టైటానియం ఉంటుంది.",
+   ee:"Nitinol is a near-equiatomic alloy of Nickel and Titanium exhibiting shape memory and superelasticity."},
+  {c:1, qt:"షేప్ మెమరీ అల్లాయ్స్ వేడి చేసినప్పుడు తమ అసలు ఆకారాన్ని తిరిగి పొందడానికి కారణమయ్యే దశల మార్పు ఏది?", qe:"Which solid-state phase transformation enables shape-memory alloys to recover their original shape upon heating?",
+   ot:["ఆస్టెనైట్ (Austenite) మరియు మార్టెన్‌సైట్ (Martensite) దశల మధ్య మార్పు","ద్రవ మరియు వాయు దశల మార్పు","ఆల్ఫా మరియు గామా వికిరణం","అయనీకరణ ప్రక్రియ"],
+   oe:["Thermoelastic reversible phase transformation between Martensite and Austenite","Liquid-to-gas boiling","Alpha-gamma decay","Ionisation"], a:0,
+   et:"తక్కువ ఉష్ణోగ్రత వద్ద ఉండే మార్టెన్‌సైట్ దశ నుండి అధిక ఉష్ణోగ్రత వద్ద ఉండే ఆస్టెనైట్ దశకు మారడం వల్ల షేప్ మెమరీ ప్రభావం కలుగుతుంది.",
+   ee:"Reversible transformation from martensite to austenite restores the pre-set parent shape when heated above transformation temperature."},
+  {c:1, qt:"వైద్య రంగంలో నిటినోల్ (Nitinol) యొక్క అత్యంత ముఖ్యమైన వాణిజ్య ఉపయోగం ఏమిటి?", qe:"What is a major biomedical application of Nitinol?",
+   ot:["కార్డియోవాస్కులర్ స్టెంట్లు (గుండె రక్తనాళాల స్టెంట్లు) మరియు ఆర్థోడోంటిక్ వైర్లు","ఎక్స్-రే యంత్రాలు","శస్త్రచికిత్స కత్తులు","కృత్రిమ కళ్ళు"],
+   oe:["Self-expanding vascular stents, guidewires, and orthodontic wires","X-ray tubes","Scalpels","Glass eyes"], a:0,
+   et:"గది ఉష్ణోగ్రత వద్ద కుదించబడిన స్టెంట్, శరీర ఉష్ణోగ్రత (37°C) వద్ద తన అసలు ఆకారానికి విస్తరించి రక్తనాళాలను తెరిచి ఉంచుతుంది.",
+   ee:"Nitinol's superelasticity and body-temperature shape recovery make it ideal for minimally invasive stents and medical guidewires."},
+  {c:1, qt:"యాంత్రిక ఒత్తిడి (Mechanical Stress) ప్రయోగించినప్పుడు విద్యుత్ ఆవేశాన్ని ఉత్పత్తి చేసే పదార్థాలను ఏమంటారు?", qe:"Materials that generate electric charge/voltage when subjected to mechanical stress or deformation exhibit the:",
+   ot:["పీజోఎలక్ట్రిక్ ప్రభావం (Direct Piezoelectric Effect)","థర్మోప్లాస్టిక్ ప్రభావం","సూపర్ కండక్టివిటీ","ఫెర్రోమాగ్నెటిజం"],
+   oe:["Direct Piezoelectric Effect","Thermoplastic effect","Superconductivity","Ferromagnetism"], a:0,
+   et:"పీజోఎలక్ట్రిక్ పదార్థాలు యాంత్రిక ఒత్తిడికి గురైనప్పుడు విద్యుత్‌ను ఉత్పత్తి చేస్తాయి (డైరెక్ట్ పీజోఎలక్ట్రిక్ ఎఫెక్ట్).",
+   ee:"The direct piezoelectric effect converts mechanical stress into electrical charge in non-centrosymmetric crystals and ceramics."},
+  {c:1, qt:"పారిశ్రామిక మరియు వైద్య అల్ట్రాసౌండ్ పరికరాలలో అత్యధికంగా వాడే కృత్రిమ పీజోఎలక్ట్రిక్ పదార్థం ఏది?", qe:"Which synthetic piezoelectric ceramic is widely used in ultrasonic transducers, actuators, and sensors?",
+   ot:["PZT (లెడ్ జిర్కోనేట్ టైటనేట్)","గ్రాఫీన్ ఆక్సైడ్","బోరాన్ నైట్రైడ్","సిలికాన్ కార్బైడ్"],
+   oe:["PZT (Lead Zirconate Titanate)","Graphene oxide","Boron nitride","Silicon carbide"], a:0,
+   et:"PZT (Lead Zirconate Titanate) అత్యంత ముఖ్యమైన కృత్రిమ పీజోఎలక్ట్రిక్ పదార్థం; ఇందులో సీసం (Lead) ఉండటం వల్ల RoHS నిబంధనలు వర్తిస్తాయి.",
+   ee:"Lead Zirconate Titanate (PZT) offers strong piezoelectric coupling, prompting ongoing R&D into lead-free alternatives."},
+  {c:1, qt:"ఇంక్‌జెట్ ప్రింటర్ హెడ్‌లు ఖచ్చితమైన సిరా చుక్కలను వెదజల్లడానికి పీజోఎలక్ట్రిక్ పదార్థాల ఏ ప్రభావాన్ని ఉపయోగిస్తాయి?", qe:"Which piezoelectric phenomenon causes an actuator to deform when a voltage is applied, as used in piezoelectric inkjet nozzles?",
+   ot:["కాన్వర్స్ పీజోఎలక్ట్రిక్ ఎఫెక్ట్ (Converse Piezoelectric Effect)","డైరెక్ట్ పీజోఎలక్ట్రిక్ ఎఫెక్ట్","ఫోటోఎలక్ట్రిక్ ఎఫెక్ట్","హాల్ ఎఫెక్ట్"],
+   oe:["Converse Piezoelectric Effect","Direct piezoelectric effect","Photoelectric effect","Hall effect"], a:0,
+   et:"విద్యుత్ క్షేత్రాన్ని ప్రయోగించినప్పుడు పదార్థం ఆకారం మారే 'కాన్వర్స్ పీజోఎలక్ట్రిక్ ఎఫెక్ట్' ద్వారా ఇంక్ చుక్కలు వెలువడతాయి.",
+   ee:"The converse piezoelectric effect converts an applied electric field into mechanical strain/displacement."},
+  {c:1, qt:"మెటామెటీరియల్స్ (Metamaterials) తమ అసాధారణ లక్షణాలను వేటి నుండి పొందుతాయి?", qe:"From what do 'Metamaterials' derive their unusual electromagnetic or acoustic properties?",
+   ot:["వాటి సహజ రసాయన సమ్మేళనం నుండి","కృత్రిమంగా రూపొందించిన భౌతిక నిర్మాణం (Sub-wavelength Structure) నుండి","రేడియోధార్మిక మూలకాల నుండి","అధిక ఉష్ణోగ్రత నుండి"],
+   oe:["Chemical composition alone","Artificially engineered sub-wavelength periodic structures/geometries rather than base chemistry alone","Radioactive decay","High temperature"], a:1,
+   et:"మెటామెటీరియల్స్ వాటి రసాయన కూర్పు కంటే, సూక్ష్మ స్థాయిలో కృత్రిమంగా నిర్మించిన భౌతిక ఆకృతి వల్ల విలక్షణ లక్షణాలను పొందుతాయి.",
+   ee:"Metamaterials achieve tailored wave responses through engineered sub-wavelength unit cells."},
+  {c:1, qt:"కాంతిని సహజ విధానానికి వ్యతిరేక దిశలో వంచే మెటామెటీరియల్స్ లక్షణాన్ని ఏమంటారు?", qe:"The ability of certain engineered metamaterials to bend electromagnetic waves in ways not found in natural media is associated with:",
+   ot:["నెగటివ్ రిఫ్రాక్టివ్ ఇండెక్స్ (Negative Refractive Index)","జీరో బ్యాండ్‌గ్యాప్","సంపూర్ణ పరావర్తనం","ఫోటోల్యూమినిసెన్స్"],
+   oe:["Negative refractive index","Zero bandgap","Total internal reflection","Photoluminescence"], a:0,
+   et:"రుణాత్మక పెర్మిటివిటీ మరియు పెర్మియబిలిటీ కారణంగా మెటామెటీరియల్స్ నెగటివ్ రిఫ్రాక్టివ్ ఇండెక్స్ కలిగి ఉంటాయి.",
+   ee:"Simultaneously negative permittivity and permeability can yield a negative refractive index for wave manipulation."},
+  {c:1, qt:"గ్రాఫీన్ వలె కాకుండా, డైరెక్ట్ బ్యాండ్‌గ్యాప్ కలిగి ఉండి ట్రాన్సిస్టర్లకు అనువైన 2D అర్ధవాహక (Semiconductor) పదార్థం ఏది?", qe:"Which 2D layered material is a semiconductor (unlike gapless graphene) explored for ultra-thin transistors and optoelectronics?",
+   ot:["మాలిబ్డినం డైసల్ఫైడ్ (MoS2)","క్వార్ట్జ్","నిటినోల్","టూర్మలైన్"],
+   oe:["Molybdenum Disulphide (MoS2)","Quartz","Nitinol","Tourmaline"], a:0,
+   et:"MoS2 (Molybdenum Disulphide) 3-4 పరమాణువుల మందం కలిగిన 2D సెమీకండక్టర్ పదార్థం.",
+   ee:"Monolayer MoS2 is a 2D transition metal dichalcogenide (TMD) semiconductor with a direct bandgap."},
+  {c:1, qt:"వివిధ 2D పదార్థాలను ఒకదానిపై ఒకటి పొరలుగా పేర్చడం ద్వారా రూపొందించే కొత్త పదార్థాలను ఏమంటారు?", qe:"Artificial stacks built by layering different 2D atomic crystals (such as graphene and h-BN) held together by weak forces are called:",
+   ot:["వాన్ డెర్ వాల్స్ హెటెరోస్ట్రక్చర్స్ (Van der Waals Heterostructures)","ఆల్కలాయిడ్స్","ఐసోటోపులు","బయోపాలిమర్లు"],
+   oe:["Van der Waals Heterostructures","Alkaloids","Isotopes","Biopolymers"], a:0,
+   et:"గ్రాఫీన్, h-BN, MoS2 వంటి భిన్న 2D పొరలను పేర్చడం ద్వారా వాన్ డెర్ వాల్స్ హెటెరోస్ట్రక్చర్లను తయారు చేస్తారు.",
+   ee:"Van der Waals heterostructures combine distinct 2D layers without requiring lattice matching."},
+  {c:1, qt:"బెంగళూరులోని JNCASR సంస్థ ద్వారా 2D మెటీరియల్స్ & నానోట్యూబ్స్ పరిశోధనలకు ప్రసిద్ధి చెందిన భారతరత్న శాస్త్రవేత్త ఎవరు?", qe:"Which Bharat Ratna chemist and materials scientist founded JNCASR in Bengaluru and contributed extensively to nanomaterials and solid-state chemistry?",
+   ot:["ప్రొఫెసర్ సి.ఎన్.ఆర్. రావు","సి.వి. రామన్","హోమీ భాభా","సతీష్ ధావన్"],
+   oe:["Prof. C.N.R. Rao","C.V. Raman","Homi Bhabha","Satish Dhawan"], a:0,
+   et:"భారతరత్న ప్రొఫెసర్ సి.ఎన్.ఆర్. రావు JNCASR స్థాపకులు మరియు ప్రపంచ ప్రఖ్యాత మెటీరియల్స్ శాస్త్రవేత్త.",
+   ee:"Bharat Ratna Prof. C.N.R. Rao is a prominent Indian solid-state and materials chemist and founder of JNCASR."},
+  {c:1, qt:"జెట్ ఇంజిన్ హాట్ సెక్షన్లు మరియు రీ-ఎంట్రీ వాహనాల థర్మల్ ప్రొటెక్షన్ కోసం వాడే అధిక ఉష్ణోగ్రత తట్టుకునే పదార్థాలు ఏవి?", qe:"Which class of advanced composite materials withstands extreme temperatures in jet engine hot sections and aerospace thermal protection?",
+   ot:["సెరామిక్ మ్యాట్రిక్స్ కాంపోజిట్స్ (CMC)","GFRP (ఫైబర్‌గ్లాస్)","PVC ప్లాస్టిక్","సాధారణ అల్యూమినియం"],
+   oe:["Ceramic Matrix Composites (CMCs)","Glass-fibre plastics (GFRP)","PVC","Plain aluminium"], a:0,
+   et:"CMC లు విపరీతమైన ఉష్ణోగ్రతలను తట్టుకోగలవు; వీటిని GE LEAP విమాన ఇంజిన్లలో వాడుతున్నారు.",
+   ee:"Ceramic Matrix Composites (CMCs) combine high temperature resistance with improved fracture toughness over monolithic ceramics."},
+  {c:1, qt:"భూమి నుండి జియోస్టేషనరీ కక్ష్యకు అనుసంధానించే 'స్పేస్ ఎలివేటర్' కేబుల్ కోసం సిద్ధాంతపరంగా సరిపోయే ఏకైక పదార్థం ఏది?", qe:"Which ultra-high-tensile-strength, low-mass material is often discussed theoretically for extreme tether/structural concepts like space tethers?",
+   ot:["కార్బన్ నానోట్యూబ్స్ (CNT)","కెవ్లార్","టైటానియం ఉక్కు","ఫైబర్ ఆప్టిక్స్"],
+   oe:["Carbon Nanotubes (CNTs)","Kevlar","Titanium steel","Optical fibre"], a:0,
+   et:"అత్యధిక తన్యత బలం (Tensile Strength) మరియు తక్కువ బరువు కలిగిన కార్బన్ నానోట్యూబ్స్ మాత్రమే స్పేస్ ఎలివేటర్ కేబుల్‌కు సాధ్యమైన అభ్యర్థి.",
+   ee:"Individual CNTs possess extraordinarily high tensile strength and low density, though scaling macroscopic defect-free lengths remains challenging."},
+  {c:1, qt:"గ్రాఫీన్ పరికరాలకు అత్యుత్తమ ఇన్సులేటర్ సబ్‌స్ట్రేట్‌గా (Substrate) ఉపయోగించే 2D పదార్థం ఏది?", qe:"Which atomically flat 2D insulating material is often called 'white graphene' and used as a dielectric substrate for graphene devices?",
+   ot:["హెక్సాగోనల్ బోరాన్ నైట్రైడ్ (h-BN)","రాగి రేకు","గ్రాఫైట్","సిలికాన్"],
+   oe:["Hexagonal Boron Nitride (h-BN)","Copper foil","Graphite","Silicon"], a:0,
+   et:"హెక్సాగోనల్ బోరాన్ నైట్రైడ్ (h-BN) ను 'వైట్ గ్రాఫీన్' అని కూడా పిలుస్తారు; ఇది అద్భుతమైన విద్యుత్ నిరోధకం.",
+   ee:"Hexagonal boron nitride (h-BN) is an wide-bandgap electrical insulator with a layered hexagonal structure similar to graphene."},
+  {c:1, qt:"భూకంప తరంగాలను భవనాల చుట్టూ దారి మళ్లించడానికి పరిశోధన జరుగుతున్న మెటామెటీరియల్స్ ఏవి?", qe:"Engineered subsurface structures designed to deflect or attenuate seismic surface waves around critical infrastructure are termed:",
+   ot:["సీస్మిక్ మెటామెటీరియల్స్ (Seismic Metamaterials)","ఆప్టికల్ ఫైబర్లు","పీజోఎలక్ట్రిక్ స్పటికాలు","లిక్విడ్ క్రిస్టల్స్"],
+   oe:["Seismic Metamaterials","Optical fibres","Piezoelectric crystals","Liquid crystals"], a:0,
+   et:"సీస్మిక్ మెటామెటీరియల్స్ భూమిలో అమర్చిన నిర్మాణాల ద్వారా భూకంప ఉపరితల తరంగాలను మళ్లించగలవు.",
+   ee:"Seismic metamaterials use periodic subsurface inclusions/resonators to scatter or attenuate seismic Rayleigh/surface waves."},
+  {c:1, qt:"క్రింది వాటిలో సహజ పీజోఎలక్ట్రిక్ పదార్థానికి ఉదాహరణ ఏది?", qe:"Which of the following is a naturally occurring piezoelectric crystal?",
+   ot:["క్వార్ట్జ్ మరియు రోషెల్ సాల్ట్","PZT","నైలాన్","టెఫ్లాన్"],
+   oe:["Quartz and Rochelle salt","PZT","Nylon","PTFE (Teflon)"], a:0,
+   et:"క్వార్ట్జ్, రోషెల్ సాల్ట్ మరియు టూర్మలైన్ సహజ సిద్ధమైన పీజోఎలక్ట్రిక్ పదార్థాలు.",
+   ee:"Quartz (SiO2) is a classic natural piezoelectric crystal widely used in precision oscillators and sensors."},
+  {c:1, qt:"బోయింగ్ 787 డ్రీమ్‌లైనర్ మరియు ఎయిర్‌బస్ A350 విమానాలలో బరువు పరంగా సుమారు ఎంత శాతం కాంపోజిట్ పదార్థాలు ఉంటాయి?", qe:"Approximately what share of structural weight in modern composite airliners like the Boeing 787 and Airbus A350 comes from composite materials?",
+   ot:["10%","25%","50% నుండి 53%","90%"],
+   oe:["10%","25%","Roughly 50% to 53% by weight","90%"], a:2,
+   et:"బోయింగ్ 787 లో 50% మరియు ఎయిర్‌బస్ A350 లో 53% కాంపోజిట్ పదార్థాలు ఉండటం వల్ల ఇంధన సామర్థ్యం గణనీయంగా పెరిగింది.",
+   ee:"Composites make up ~50% of the Boeing 787 and ~53% of the Airbus A350 airframe weight, improving fuel burn and corrosion resistance."},
+  {c:1, qt:"గ్రాఫీన్ యొక్క ఉష్ణ వాహకత (Thermal Conductivity) గురించి నిజం ఏమిటి?", qe:"Which statement is true about the in-plane thermal conductivity of single-layer graphene?",
+   ot:["ఇది ఉష్ణ నిరోధకం","తెలిసిన అన్ని పదార్థాలలో అత్యధిక ఉష్ణ వాహకత కలిగి ఉంది","ఇది రాగి కంటే తక్కువ ఉష్ణాన్ని ప్రసరిస్తుంది","ఇది అధిక వేడికి కరిగిపోతుంది"],
+   oe:["It is a thermal insulator","It exhibits exceptionally high thermal conductivity (among the highest measured in any material at room temperature)","Lower than copper","Melts at low heat"], a:1,
+   et:"గ్రాఫీన్ తెలిసిన అన్ని పదార్థాల కంటే అత్యధిక ఉష్ణ వాహకతను కలిగి ఉంది.",
+   ee:"In-plane thermal conductivity of suspended graphene reaches thousands of W/m·K, aiding thermal management research."},
+  {c:1, qt:"గ్యాస్ లైటర్లలో నిప్పురవ్వ (Spark) ఉత్పత్తి చేయడానికి ఏ పీజోఎలక్ట్రిక్ ప్రభావం పనిచేస్తుంది?", qe:"In a piezoelectric push-button gas lighter, what generates the high-voltage spark when the button is pressed?",
+   ot:["డైరెక్ట్ పీజోఎలక్ట్రిక్ ఎఫెక్ట్","కాన్వర్స్ పీజోఎలక్ట్రిక్ ఎఫెక్ట్","థర్మోఎలక్ట్రిక్ ఎఫెక్ట్","మాగ్నెటోస్ట్రిక్షన్"],
+   oe:["Direct piezoelectric effect (mechanical impact/compression producing high voltage)","Converse piezoelectric effect","Thermoelectric effect","Magnetostriction"], a:0,
+   et:"లైటర్ బటన్ నొక్కినప్పుడు స్పటికంపై పడే యాంత్రిక ఒత్తిడి వల్ల అధిక వోల్టేజ్ నిప్పురవ్వ ఏర్పడుతుంది (డైరెక్ట్ ఎఫెక్ట్).",
+   ee:"Spring-loaded mechanical impact compresses a piezoelectric element, generating a high-voltage spark across a gap."},
+
+  // CHAPTER 27: Intellectual Property Rights (25 MCQs)
+  {c:2, qt:"భారత పేటెంట్ల చట్టం, 1970 ప్రకారం ఒక పేటెంట్ కాలపరిమితి దాఖలు చేసిన తేదీ నుండి ఎన్ని సంవత్సరాలు?", qe:"Under India's Patents Act, 1970, what is the standard term of a patent from the date of filing?",
+   ot:["10 సంవత్సరాలు","15 సంవత్సరాలు","20 సంవత్సరాలు","60 సంవత్సరాలు"],
+   oe:["10 years","15 years","20 years","60 years"], a:2,
+   et:"భారతదేశంలో పేటెంట్ కాలపరిమితి దాఖలు చేసిన తేదీ నుండి 20 సంవత్సరాలు (పునరుద్ధరించబడదు).",
+   ee:"The term of every patent granted under the Indian Patents Act is 20 years from the date of filing."},
+  {c:2, qt:"ఔషధాలు మరియు వ్యవసాయ రసాయనాలకు 'ఉత్పత్తి పేటెంట్లను (Product Patents)' ప్రవేశపెడుతూ భారత పేటెంట్ల చట్టాన్ని ఏ సంవత్సరంలో సవరించింది?", qe:"In which year did India amend the Patents Act, 1970 to introduce product patents for pharmaceuticals and agrochemicals in compliance with TRIPS?",
+   ot:["1999","2002","2005","2013"],
+   oe:["1999","2002","2005","2013"], a:2,
+   et:"TRIPS ఒప్పందానికి అనుగుణంగా 2005 సవరణ ద్వారా ఔషధ రంగానికి ఉత్పత్తి పేటెంట్లను ప్రవేశపెట్టారు.",
+   ee:"The Patents (Amendment) Act, 2005 introduced product patents for food, medicines, and chemicals to meet TRIPS obligations."},
+  {c:2, qt:"భారత పేటెంట్ల చట్టంలోని ఏ సెక్షన్ 'ఎవర్‌గ్రీనింగ్ (Evergreening)' ను నిరోధిస్తుంది?", qe:"Which provision of the Indian Patents Act, 1970 is specifically known as the 'anti-evergreening' clause?",
+   ot:["సెక్షన్ 3(b)","సెక్షన్ 3(d)","సెక్షన్ 3(k)","సెక్షన్ 84"],
+   oe:["Section 3(b)","Section 3(d)","Section 3(k)","Section 84"], a:1,
+   et:"సెక్షన్ 3(d) ప్రకారం తెలిసిన పదార్థం యొక్క చికిత్సా సామర్థ్యంలో (Therapeutic efficacy) గణనీయమైన పెరుగుదల లేకపోతే కొత్త రూపాలకు పేటెంట్ ఇవ్వబడదు.",
+   ee:"Section 3(d) bars patents on new forms of known substances unless they demonstrate significant enhancement of efficacy."},
+  {c:2, qt:"2013 సుప్రీంకోర్టు తీర్పు 'నోవార్టిస్ AG vs యూనియన్ ఆఫ్ ఇండియా' ఏ క్యాన్సర్ ఔషధానికి సంబంధించినది?", qe:"The landmark 2013 Supreme Court ruling in 'Novartis AG v. Union of India' concerned which cancer drug?",
+   ot:["నెక్సావర్ (Nexavar)","గ్లీవెక్ (Glivec - ఇమాటినిబ్ మెసిలేట్)","రెమ్‌డెసివిర్","హెర్సెప్టిన్"],
+   oe:["Nexavar (sorafenib tosylate)","Glivec / Gleevec (imatinib mesylate)","Remdesivir","Herceptin"], a:1,
+   et:"CML క్యాన్సర్ ఔషధమైన గ్లీవెక్ (బీటా-క్రిస్టలైన్ రూపం) కు చికిత్సా సామర్థ్యం పెరగలేదని సుప్రీంకోర్టు పేటెంట్ నిరాకరించింది.",
+   ee:"The Supreme Court upheld the refusal of a patent for the beta-crystalline form of imatinib mesylate (Glivec) under Section 3(d)."},
+  {c:2, qt:"2012లో భారతదేశపు మొట్టమొదటి 'కంపల్సరీ లైసెన్స్ (Compulsory Licence)' ఏ ఔషధం కోసం మరియు ఏ కంపెనీకి మంజూరు చేయబడింది?", qe:"In March 2012, India granted its first Compulsory Licence (under Section 84) to which company and for which patented cancer drug?",
+   ot:["నెక్సావర్ — నాట్కో ఫార్మా (Natco Pharma)","గ్లీవెక్ — సిప్లా","టామిఫ్లూ — సన్ ఫార్మా","కోవిషీల్డ్ — సీరం ఇన్‌స్టిట్యూట్"],
+   oe:["Nexavar (sorafenib tosylate) — Natco Pharma","Glivec — Cipla","Tamiflu — Sun Pharma","Covishield — Serum Institute"], a:0,
+   et:"పేటెంట్ల చట్టం సెక్షన్ 84 కింద బేయర్ సంస్థకు చెందిన క్యాన్సర్ ఔషధం నెక్సావర్‌పై నాట్కో ఫార్మాకు తొలి కంపల్సరీ లైసెన్స్ లభించింది.",
+   ee:"Natco Pharma was granted a compulsory licence to manufacture generic sorafenib tosylate (Nexavar) at an affordable monthly price with royalty to Bayer."},
+  {c:2, qt:"పేటెంట్ల చట్టంలోని సెక్షన్ 3(k) ప్రకారం కింది వాటిలో దేనికి భారతదేశంలో పేటెంట్ లభించదు?", qe:"Under Section 3(k) of the Indian Patents Act, which of the following is excluded from patentability per se?",
+   ot:["కంప్యూటర్ ప్రోగ్రామ్‌లు (Per se) మరియు అల్గారిథమ్‌లు","వైద్య పరికరాలు","రసాయన సమ్మేళనాలు","సూక్ష్మజీవులు"],
+   oe:["Computer programmes per se, algorithms, and business/mathematical methods","Medical devices","Chemical compounds","Microorganisms"], a:0,
+   et:"సెక్షన్ 3(k) ప్రకారం గణిత పద్ధతులు, వ్యాపార పద్ధతులు, అల్గారిథమ్‌లు మరియు కంప్యూటర్ ప్రోగ్రామ్‌లకు (per se) పేటెంట్ ఇవ్వబడదు.",
+   ee:"Section 3(k) excludes mathematical or business methods, algorithms, and computer programmes per se from patent protection."},
+  {c:2, qt:"TRIPS ఒప్పందాన్ని ఏ అంతర్జాతీయ సంస్థ నిర్వహిస్తుంది?", qe:"Which international organisation administers the TRIPS (Trade-Related Aspects of Intellectual Property Rights) Agreement?",
+   ot:["WIPO","WTO (ప్రపంచ వాణిజ్య సంస్థ)","WHO","UNESCO"],
+   oe:["WIPO","World Trade Organization (WTO)","WHO","UNESCO"], a:1,
+   et:"TRIPS ఒప్పందం 1 జనవరి 1995 నుండి ప్రపంచ వాణిజ్య సంస్థ (WTO) ఆధ్వర్యంలో అమల్లోకి వచ్చింది.",
+   ee:"TRIPS is administered by the World Trade Organization (WTO) and came into effect on 1 January 1995."},
+  {c:2, qt:"TRIPS మరియు ప్రజారోగ్యంపై 'దోహా డిక్లరేషన్ (Doha Declaration)' ఏ సంవత్సరంలో ఆమోదించబడింది?", qe:"In which year was the 'Doha Declaration on the TRIPS Agreement and Public Health' adopted by WTO members?",
+   ot:["1995","2001","2005","2017"],
+   oe:["1995","2001","2005","2017"], a:1,
+   et:"నవంబర్ 2001లో ఖతార్‌లోని దోహా WTO సదస్సులో ప్రజారోగ్య రక్షణకు కంపల్సరీ లైసెన్సింగ్ వంటి TRIPS వెసులుబాట్లను వాడుకునే హక్కును పునరుద్ఘాటించారు.",
+   ee:"Adopted on 14 November 2001 at Doha, it affirmed members' right to interpret and use TRIPS flexibilities to protect public health."},
+  {c:2, qt:"తయారీ సామర్థ్యం లేని పేద దేశాలకు కంపల్సరీ లైసెన్స్ కింద జనరిక్ ఔషధాలను ఎగుమతి చేయడానికి వీలు కల్పించే TRIPS సవరణ ఏది?", qe:"Which article added to TRIPS (effective 2017, implementing the 'Paragraph 6' solution) allows export of medicines made under compulsory licence to countries lacking manufacturing capacity?",
+   ot:["ఆర్టికల్ 27","ఆర్టికల్ 31bis (పేరాగ్రాఫ్ 6 పరిష్కారం)","ఆర్టికల్ 356","ఆర్టికల్ 14"],
+   oe:["Article 27","Article 31bis (Paragraph 6 system)","Article 356","Article 14"], a:1,
+   et:"2017లో అమల్లోకి వచ్చిన ఆర్టికల్ 31bis ద్వారా ఔషధ తయారీ సామర్థ్యం లేని దేశాలకు జనరిక్ మందులు ఎగుమతి చేయవచ్చు.",
+   ee:"Article 31bis permits production and export of pharmaceutical products under compulsory licence to eligible import-needy WTO members."},
+  {c:2, qt:"భారతదేశంలో మొట్టమొదటి భౌగోళిక సూచిక (GI Tag) పొందిన ఉత్పత్తి ఏది?", qe:"Which product was the first to receive a Geographical Indication (GI) tag in India?",
+   ot:["తిరుపతి లడ్డూ","డార్జిలింగ్ టీ (2004-05)","బాస్మతి బియ్యం","కంచి పట్టు"],
+   oe:["Tirupati Laddu","Darjeeling Tea (2004-05)","Basmati Rice","Kancheepuram Silk"], a:1,
+   et:"పశ్చిమ బెంగాల్‌కు చెందిన డార్జిలింగ్ టీ 2004-05లో భారతదేశపు తొలి GI ట్యాగ్ పొందింది.",
+   ee:"Darjeeling Tea was registered as India's first GI tag (2004-05)."},
+  {c:2, qt:"భారతదేశంలో GI ట్యాగ్ రిజిస్ట్రీ కార్యాలయం ఎక్కడ ఉంది?", qe:"Where is India's Geographical Indications Registry located?",
+   ot:["న్యూఢిల్లీ","ముంబై","చెన్నై","కోల్‌కతా"],
+   oe:["New Delhi","Mumbai","Chennai","Kolkata"], a:2,
+   et:"భారతదేశపు భౌగోళిక సూచికల రిజిస్ట్రీ (GI Registry) చెన్నైలో ఉంది.",
+   ee:"The Geographical Indications Registry is located in Chennai."},
+  {c:2, qt:"పేటెంట్ మరియు GI ట్యాగ్ మధ్య ప్రధాన యాజమాన్య వ్యత్యాసం ఏమిటి?", qe:"How does ownership of a Geographical Indication (GI) tag differ from a standard patent?",
+   ot:["పేటెంట్ సమిష్టి ఆస్తి; GI వ్యక్తిగత ఆస్తి","పేటెంట్ వ్యక్తి/సంస్థకు చెందుతుంది; GI ట్యాగ్ ఆ ప్రాంత ఉత్పత్తిదారుల సమిష్టి (Community) ఆస్తి మరియు విక్రయించలేనిది","రెండింటి కాలపరిమితి 20 ఏళ్లు","GI ట్యాగ్‌ను వేరే దేశానికి అమ్మవచ్చు"],
+   oe:["Patents are collective; GIs are individual","GI tags belong collectively to eligible producers/communities in the region and cannot be freely sold/assigned like a patent","Both last 20 years","GIs can be sold to foreign states"], a:1,
+   et:"GI ట్యాగ్ అనేది నిర్దిష్ట భౌగోళిక ప్రాంతంలోని ఉత్పత్తిదారుల సమిష్టి హక్కు; దీనిని ఇతరులకు విక్రయించలేము లేదా లైసెన్స్ ఇవ్వలేము.",
+   ee:"GI rights are collective producer/community rights tied to geographical origin and cannot be assigned/transferred like private patents."},
+  {c:2, qt:"1995-97 మధ్య పసుపు (Turmeric) గాయాలను నయం చేసే గుణంపై అమెరికా పేటెంట్‌ను రద్దు చేయించిన భారత సంస్థ ఏది?", qe:"Which Indian institution successfully challenged and got a US patent on wound-healing properties of turmeric revoked in 1997 using prior art?",
+   ot:["ISRO","CSIR","ICAR","DRDO"],
+   oe:["ISRO","CSIR","ICAR","DRDO"], a:1,
+   et:"ప్రాచీన సంస్కృత గ్రంథాల ఆధారాలను చూపి CSIR సంస్థ USPTO ఇచ్చిన పసుపు పేటెంట్‌ను 1997లో రద్దు చేయించింది.",
+   ee:"CSIR presented prior-art evidence from traditional Indian texts to get the USPTO turmeric patent revoked in 1997."},
+  {c:2, qt:"బయోపైరసీని నిరోధించడానికి CSIR రూపొందించిన 'ట్రెడిషనల్ నాలెడ్జ్ డిజిటల్ లైబ్రరీ (TKDL)' ఎన్ని అంతర్జాతీయ భాషలలో అనువదించబడింది?", qe:"Into how many international languages is India's Traditional Knowledge Digital Library (TKDL) translated to aid prior-art patent examination?",
+   ot:["2 భాషలు","3 భాషలు","5 భాషలు (ఇంగ్లీష్, ఫ్రెంచ్, జర్మన్, స్పానిష్, జపనీస్)","10 భాషలు"],
+   oe:["2 languages","3 languages","5 international languages (English, French, German, Spanish, Japanese)","10 languages"], a:2,
+   et:"ఆయుర్వేదం, యునాని, సిద్ధ, యోగా గ్రంథాలలోని 4.5 లక్షలకు పైగా ఫార్ములేషన్లను 5 అంతర్జాతీయ భాషలలో TKDL అందిస్తుంది.",
+   ee:"TKDL documents traditional formulations (Ayurveda, Unani, Siddha, Yoga) and translates them into 5 UN/international languages (English, French, German, Spanish, Japanese)."},
+  {c:2, qt:"జాతీయ మేధో సంపత్తి హక్కుల విధానం (National IPR Policy) ఏ సంవత్సరంలో ఆమోదించబడింది?", qe:"In which year did the Union Cabinet approve India's National Intellectual Property Rights (IPR) Policy?",
+   ot:["2014","2016","2019","2022"],
+   oe:["2014","2016","2019","2022"], a:1,
+   et:"'క్రియేటివ్ ఇండియా; ఇన్నోవేటివ్ ఇండియా' నినాదంతో 12 మే 2016న కేంద్ర మంత్రివర్గం జాతీయ IPR విధానాన్ని ఆమోదించింది.",
+   ee:"Approved on 12 May 2016 under DPIIT, the National IPR Policy aims for 'Creative India; Innovative India' across seven objectives."},
+  {c:2, qt:"మొక్కల రకాలు మరియు రైతుల హక్కుల రక్షణ చట్టం (PPVFRA, 2001) కింద రైతులకు గల ప్రత్యేక హక్కు ఏమిటి?", qe:"Under Section 39 of India's PPVFRA, 2001, what right do farmers hold regarding seeds/farm produce of a registered variety?",
+   ot:["రైతులు రక్షిత రకాల విత్తనాలను దాచుకోవచ్చు, మళ్ళీ విత్తుకోవచ్చు మరియు బ్రాండ్ పేరు లేకుండా మార్పిడి/విక్రయం చేయవచ్చు","రైతులు బ్రాండెడ్ విత్తనాలను అమ్మవచ్చు","రైతులకు ఎలాంటి హక్కులు లేవు","పంటల కాలపరిమితి 50 ఏళ్లు"],
+   oe:["Farmers can save, use, sow, re-sow, exchange, share, and sell farm produce including seed (except selling branded seed of a protected variety)","Farmers can sell branded seed","Farmers have no rights","50-year duration"], a:0,
+   et:"సెక్షన్ 39 ప్రకారం రైతులు విత్తనాలను దాచుకోవడానికి, మార్పిడి చేసుకోవడానికి హక్కు కలిగి ఉంటారు (కానీ బ్రాండెడ్ విత్తనాలుగా అమ్మకూడదు).",
+   ee:"PPVFRA balances breeder rights with farmers' traditional right to save, exchange, and sell non-branded farm-saved seed."},
+  {c:2, qt:"భారత కాపీరైట్ చట్టం, 1957 ప్రకారం సాహిత్య, సంగీత, కళాత్మక రచనలకు కాపీరైట్ కాలపరిమితి ఎంత?", qe:"Under India's Copyright Act, 1957, what is the general term of copyright for literary, dramatic, musical, and artistic works?",
+   ot:["ప్రచురణ నుండి 20 ఏళ్లు","రచయిత జీవితకాలం + మరణించిన తర్వాత 60 సంవత్సరాలు","10 సంవత్సరాలు","50 సంవత్సరాలు"],
+   oe:["20 years from publication","Lifetime of the author plus 60 years","10 years","50 years"], a:1,
+   et:"సాహిత్య, నాటక, సంగీత, కళాత్మక కృతులకు రచయిత జీవితకాలం + 60 సంవత్సరాలు కాపీరైట్ ఉంటుంది.",
+   ee:"Copyright in literary, dramatic, musical, and artistic works generally lasts for the author's lifetime plus 60 years."},
+  {c:2, qt:"దృష్టి లోపం ఉన్న వ్యక్తులకు ముద్రిత పుస్తకాలను అందుబాటులోకి తెచ్చే ఏ అంతర్జాతీయ ఒప్పందాన్ని భారత్ ఆమోదించింది?", qe:"Which treaty—ratified by India in 2014—facilitates accessible book formats for persons who are blind, visually impaired, or print-disabled?",
+   ot:["మర్రకేష్ ఒప్పందం (Marrakesh Treaty)","దోహా ఒప్పందం","పారిస్ ఒప్పందం","క్యోటో ప్రోటోకాల్"],
+   oe:["Marrakesh Treaty","Doha Declaration","Paris Agreement","Kyoto Protocol"], a:0,
+   et:"2014లో మర్రకేష్ ఒప్పందాన్ని ఆమోదించిన మొదటి దేశాలలో భారతదేశం ఒకటి.",
+   ee:"India ratified the WIPO Marrakesh Treaty in 2014 to ease cross-border exchange of accessible-format books for print-disabled persons."},
+  {c:2, qt:"'డేటా ఎక్స్‌క్లూజివిటీ (Data Exclusivity)' విషయంలో భారతదేశ ప్రస్తుత వైఖరి ఏమిటి?", qe:"What is India's current stance on 'Data Exclusivity' for pharmaceutical clinical trial data?",
+   ot:["భారతదేశం డేటా ఎక్స్‌క్లూజివిటీని అందిస్తుంది","భారతదేశం డేటా ఎక్స్‌క్లూజివిటీని అందించదు, ఎందుకంటే ఇది జనరిక్ ఔషధాల ప్రవేశాన్ని ఆలస్యం చేసి ధరలను పెంచుతుంది","TRIPS ప్రకారం ఇది తప్పనిసరి","కేవలం విదేశీ కంపెనీలకు మాత్రమే వర్తిస్తుంది"],
+   oe:["India does NOT grant data exclusivity, as it is not mandated by TRIPS and could delay affordable generic drug entry","India grants it","Mandatory under TRIPS","Applies only to foreign firms"], a:1,
+   et:"TRIPS ఒప్పందంలో డేటా ఎక్స్‌క్లూజివిటీ తప్పనిసరి కాదు; దీనిని అమలు చేస్తే జనరిక్ మందుల తయారీ దెబ్బతింటుందని భారత్ తిరస్కరించింది.",
+   ee:"India opposes data exclusivity demands as TRIPS does not require it and it could delay generic competition and raise drug prices."},
+  {c:2, qt:"ట్రేడ్ సీక్రెట్స్ (Trade Secrets) భారతదేశంలో ఏ ప్రత్యేక చట్టం కింద నమోదు చేయబడతాయి?", qe:"How are 'Trade Secrets' protected in India?",
+   ot:["ట్రేడ్ సీక్రెట్స్ చట్టం, 2000","ప్రత్యేక చట్టం లేదా రిజిస్ట్రేషన్ లేదు; కాంట్రాక్ట్ చట్టం మరియు కామన్ లా ద్వారా రక్షించబడతాయి","పేటెంట్ల చట్టం, 1970","GI చట్టం, 1999"],
+   oe:["Trade Secrets Act, 2000","No separate registration statute; protected via contract law, confidentiality agreements, and equitable/common law principles","Patents Act, 1970","GI Act, 1999"], a:1,
+   et:"ట్రేడ్ సీక్రెట్లకు రిజిస్ట్రేషన్ అవసరం లేదు; గోప్యత ఉన్నంత కాలం కాంట్రాక్ట్ చట్టం కింద రక్షణ ఉంటుంది.",
+   ee:"Trade secrets do not require registration and remain protected only so long as secrecy is preserved."},
+  {c:2, qt:"ట్రేడ్‌మార్క్ (Trademark) మరియు ఇండస్ట్రియల్ డిజైన్ (Industrial Design) గరిష్ట కాలపరిమితి వరుసగా ఎంత?", qe:"What are the statutory durations (with renewals/extensions) for Trademarks and Industrial Designs in India respectively?",
+   ot:["10 ఏళ్లు (నిరవధికంగా పొడిగించవచ్చు) మరియు 15 ఏళ్లు (10+5 ఏళ్లు)","రెండింటికీ 20 ఏళ్లు","5 ఏళ్లు మరియు 10 ఏళ్లు","60 ఏళ్లు మరియు 20 ఏళ్లు"],
+   oe:["Trademarks: 10 years, renewable indefinitely; Designs: 10 years, extendable by 5 years (15 years total)","20 years each","5 years and 10 years","60 years and 20 years"], a:0,
+   et:"ట్రేడ్‌మార్క్ 10 ఏళ్లకోసారి నిరవధికంగా పునరుద్ధరించవచ్చు; ఇండస్ట్రియల్ డిజైన్ గరిష్టంగా 15 ఏళ్లు (10+5) ఉంటుంది.",
+   ee:"Trademarks last 10 years per renewal cycle indefinitely, whereas design protection runs up to 15 years (initial 10 + 5 extension)."},
+  {c:2, qt:"సెమీకండక్టర్ ఇంటిగ్రేటెడ్ సర్క్యూట్స్ లేఅవుట్-డిజైన్ చట్టం, 2000 కింద రక్షణ కాలపరిమితి ఎంత?", qe:"What is the duration of protection for a registered layout-design under India's Semiconductor Integrated Circuits Layout-Design Act, 2000?",
+   ot:["5 సంవత్సరాలు","10 సంవత్సరాలు","20 సంవత్సరాలు","25 సంవత్సరాలు"],
+   oe:["5 years","10 years from filing","20 years","25 years"], a:1,
+   et:"సెమీకండక్టర్ లేఅవుట్ డిజైన్లకు దాఖలు చేసిన తేదీ నుండి 10 సంవత్సరాల రక్షణ ఉంటుంది.",
+   ee:"Protection under the SICLD Act, 2000 lasts for 10 years from the date of filing an application."},
+  {c:2, qt:"WIPO మేధో సంపత్తి సూచికల ప్రకారం 2024లో ప్రపంచంలో అత్యధిక పేటెంట్లు దాఖలు చేసిన దేశాలలో భారతదేశం స్థానం ఎంత?", qe:"In recent WIPO IP Indicators data, where did India rank globally among patent filing origins?",
+   ot:["2వ స్థానం","4వ స్థానం","6వ స్థానం","10వ స్థానం"],
+   oe:["2nd","4th","6th","10th"], a:2,
+   et:"భారతదేశం ప్రపంచంలో 6వ అతిపెద్ద పేటెంట్ ఫైలర్‌గా నిలిచింది; ఇందులో దేశీయ దరఖాస్తుల వాటా 55% దాటింది.",
+   ee:"India ranked 6th globally in patent filings with domestic/resident filings exceeding non-resident filings."},
+  {c:2, qt:"పేటెంట్ల చట్టం సెక్షన్ 3(i) ప్రకారం కింది వాటిలో ఏది పేటెంట్‌కు అర్హం కాదు?", qe:"Under Section 3(i) of the Indian Patents Act, which of the following is NOT patentable?",
+   ot:["మానవులు లేదా జంతువులకు చేసే వైద్య, శస్త్రచికిత్స లేదా రోగనిర్ధారణ చికిత్సా పద్ధతులు","కొత్త ఔషధ అణువు","ఆసుపత్రి పడకల డిజైన్","సూక్ష్మజీవి కిణ్వ ప్రక్రియ"],
+   oe:["Methods of medicinal, surgical, curative, prophylactic, diagnostic, or therapeutic treatment of human beings or animals","New drug molecule","Hospital bed design","Microbial process"], a:0,
+   et:"సెక్షన్ 3(i) ప్రకారం చికిత్సా మరియు శస్త్రచికిత్సా పద్ధతులకు (Methods of treatment) పేటెంట్ ఇవ్వబడదు.",
+   ee:"Section 3(i) excludes medical and surgical methods of treatment of humans or animals from patentability."},
+  {c:2, qt:"DPIIT కింద IPR అవగాహన మరియు పైరసీ నిరోధక కార్యక్రమాలను అమలు చేసే ప్రత్యేక విభాగం ఏది?", qe:"Which body under DPIIT was set up to drive IP awareness, outreach, and implementation of the 2016 National IPR Policy?",
+   ot:["CIPAM (Cell for IPR Promotion and Management)","NITI Aayog","TRAI","SEBI"],
+   oe:["CIPAM (Cell for IPR Promotion and Management)","NITI Aayog","TRAI","SEBI"], a:0,
+   et:"జాతీయ IPR విధానం 2016 అమలు కోసం DPIIT ఆధ్వర్యంలో CIPAM ఏర్పాటు చేయబడింది.",
+   ee:"CIPAM (Cell for IPR Promotion and Management) operates under DPIIT to promote IP awareness and policy execution."},
+
+  // CHAPTER 28: Scientific Research Institutions & Governance (25 MCQs)
+  {c:3, qt:"భారతదేశం యొక్క స్థూల పరిశోధన మరియు అభివృద్ధి వ్యయం (GERD) GDP లో సుమారు ఎంత శాతంగా ఉంది?", qe:"What approximate share of GDP does India's Gross Expenditure on R&D (GERD) stand at in recent official figures?",
+   ot:["0.64%","1.80%","2.40%","3.50%"],
+   oe:["~0.64%","~1.80%","~2.40%","~3.50%"], a:0,
+   et:"భారతదేశ R&D వ్యయం గత దశాబ్ద కాలంగా GDP లో 0.64% వద్ద నిలిచిపోయింది (అమెరికా 3.5%, దక్షిణ కొరియా 4.8%).",
+   ee:"India's GERD has remained around 0.64% of GDP, well below major R&D-intensive economies."},
+  {c:3, qt:"అనుసంధాన్ నేషనల్ రీసెర్చ్ ఫౌండేషన్ (ANRF) ఏ సంస్థ స్థానంలో ఏర్పాటు చేయబడింది?", qe:"The Anusandhan National Research Foundation (ANRF), established under the ANRF Act, 2023, subsumes/replaces which body?",
+   ot:["SERB (సైన్స్ అండ్ ఇంజనీరింగ్ రీసెర్చ్ బోర్డ్)","CSIR","DRDO","ISRO"],
+   oe:["SERB (Science and Engineering Research Board)","CSIR","DRDO","ISRO"], a:0,
+   et:"ANRF చట్టం, 2023 ద్వారా 2008లో స్థాపించబడిన SERB స్థానంలో ANRF ఏర్పాటైంది.",
+   ee:"The ANRF Act, 2023 established ANRF replacing the Science and Engineering Research Board (SERB) set up in 2008."},
+  {c:3, qt:"ANRF కోసం 5 సంవత్సరాలకు కేటాయించిన ₹50,000 కోట్ల బడ్జెట్‌లో ప్రైవేట్, దాతృత్వ & అంతర్జాతీయ వనరుల వాటా ఎంత?", qe:"Out of ANRF's planned 5-year outlay of ₹50,000 crore, what share is projected from non-governmental sources (industry, philanthropy, international)?",
+   ot:["₹14,000 కోట్లు (28%)","₹25,000 కోట్లు (50%)","₹36,000 కోట్లు (72%)","₹45,000 కోట్లు (90%)"],
+   oe:["₹14,000 crore (28%)","₹25,000 crore (50%)","₹36,000 crore (72%)","₹45,000 crore (90%)"], a:2,
+   et:"మొత్తం ₹50,000 కోట్లలో ప్రభుత్వం ₹14,000 కోట్లు (28%), ప్రైవేట్/దాతృత్వ రంగాలు ₹36,000 కోట్లు (72%) సమకూరుస్తాయి.",
+   ee:"Out of ₹50,000 crore over five years, ₹14,000 crore (28%) is government contribution and ₹36,000 crore (72%) is sought from non-government sources."},
+  {c:3, qt:"ANRF గవర్నింగ్ బోర్డుకు పదవీ రీత్యా (Ex-officio) అధ్యక్షులుగా ఎవరు వ్యవహరిస్తారు?", qe:"Who serves as the ex-officio President of the Governing Board of ANRF?",
+   ot:["భారత రాష్ట్రపతి","భారత ప్రధాన మంత్రి","కేంద్ర శాస్త్ర సాంకేతిక శాఖ మంత్రి","నీతి ఆయోగ్ CEO"],
+   oe:["President of India","Prime Minister of India","Union Minister of Science and Technology","CEO, NITI Aayog"], a:1,
+   et:"ప్రధాన మంత్రి ANRF గవర్నింగ్ బోర్డుకు పదవీ రీత్యా అధ్యక్షులుగా ఉంటారు.",
+   ee:"The Prime Minister of India is the ex-officio President of ANRF's Governing Board."},
+  {c:3, qt:"కౌన్సిల్ ఆఫ్ సైంటిఫిక్ అండ్ ఇండస్ట్రియల్ రీసెర్చ్ (CSIR) ఏ సంవత్సరంలో స్థాపించబడింది?", qe:"In which year was the Council of Scientific and Industrial Research (CSIR) established?",
+   ot:["1942","1947","1954","1971"],
+   oe:["1942 (26 September 1942)","1947","1954","1971"], a:0,
+   et:"CSIR 26 సెప్టెంబర్ 1942న స్థాపించబడింది; దీనికి కూడా ప్రధాన మంత్రి Ex-officio అధ్యక్షులుగా ఉంటారు.",
+   ee:"CSIR was founded on 26 September 1942, with the Prime Minister serving as ex-officio President."},
+  {c:3, qt:"హైదరాబాద్‌లో ఉన్న CSIR ప్రయోగశాలల సరైన సమూహం ఏది?", qe:"Which set of CSIR laboratories is located in Hyderabad?",
+   ot:["CCMB, IICT మరియు NGRI","NCL, NIV మరియు NIO","CDRI, IIP మరియు NEERI","NAL, CLRI మరియు CEERI"],
+   oe:["CSIR-CCMB, CSIR-IICT, and CSIR-NGRI","NCL, NIV, and NIO","CDRI, IIP, and NEERI","NAL, CLRI, and CEERI"], a:0,
+   et:"CCMB (సెల్యులార్ బయాలజీ), IICT (కెమికల్ టెక్నాలజీ), మరియు NGRI (జియోఫిజికల్ రీసెర్చ్) హైదరాబాద్‌లో ఉన్నాయి.",
+   ee:"Hyderabad hosts CSIR-CCMB (cellular/molecular biology), CSIR-IICT (chemical technology), and CSIR-NGRI (geophysics)."},
+  {c:3, qt:"రోజుకు 2 డాలర్ల కంటే తక్కువ ఆదాయంతో జీవించే 80 కోట్ల మంది ప్రజలకు ఉపయోగపడే ఆవిష్కరణల కోసం CSIR ప్రారంభించిన కార్యక్రమం ఏది?", qe:"Which CSIR initiative targets affordable innovations benefiting low-income populations ('800 million' / grassroots livelihoods)?",
+   ot:["CSIR-800","INSPIRE","KIRAN","NIDHI"],
+   oe:["CSIR-800","INSPIRE","KIRAN","NIDHI"], a:0,
+   et:"CSIR-800 కార్యక్రమం అట్టడుగు వర్గాల జీవన ప్రమాణాలను మెరుగుపరిచే సాంకేతికతలపై దృష్టి పెడుతుంది.",
+   ee:"CSIR-800 focuses on inclusive, low-cost technologies to improve livelihoods and living standards for underprivileged communities."},
+  {c:3, qt:"డిపార్ట్‌మెంట్ ఆఫ్ సైన్స్ అండ్ టెక్నాలజీ (DST) కింద 'నేషనల్ సూపర్‌కంప్యూటింగ్ మిషన్ (NSM)' లక్ష్య సామర్థ్యం ఎంత?", qe:"What computing capacity target was set under the National Supercomputing Mission (NSM)?",
+   ot:["10 పెటాఫ్లాప్స్","32 పెటాఫ్లాప్స్","64 పెటాఫ్లాప్స్","100 పెటాఫ్లాప్స్"],
+   oe:["10 petaflops","32 petaflops","64 petaflops","100 petaflops"], a:2,
+   et:"DST మరియు MeitY సంయుక్తంగా నిర్వహిస్తున్న NSM కింద దేశవ్యాప్తంగా 64 పెటాఫ్లాప్స్ సూపర్ కంప్యూటింగ్ సామర్థ్యాన్ని నిర్మిస్తున్నారు.",
+   ee:"NSM (jointly steered by DST and MeitY) aims to build a nationwide supercomputing grid targeting ~64 petaflops capacity."},
+  {c:3, qt:"సైన్స్ రంగంలో మహిళా శాస్త్రవేత్తలను ప్రోత్సహించడానికి DST అమలు చేస్తున్న పథకం ఏది?", qe:"Which DST initiative promotes women scientists and researchers in science and technology?",
+   ot:["KIRAN","ICAR","ICMR","BIRAC"],
+   oe:["KIRAN (Knowledge Involvement in Research Advancement)","ICAR","ICMR","BIRAC"], a:0,
+   et:"KIRAN (Knowledge Involvement in Research Advancement through Nurturing) మహిళా శాస్త్రవేత్తలను ప్రోత్సహిస్తుంది.",
+   ee:"KIRAN supports women researchers through fellowships, mobility, and career-reentry opportunities in S&T."},
+  {c:3, qt:"భారత్ బయోటెక్ 'కొవాగ్జిన్' అభివృద్ధి కోసం SARS-CoV-2 వైరస్ స్ట్రెయిన్‌ను వేరు చేసిన ICMR సంస్థ ఏది?", qe:"Which ICMR institute isolated the SARS-CoV-2 virus strain used in developing Covaxin?",
+   ot:["నేషనల్ ఇన్‌స్టిట్యూట్ ఆఫ్ వైరాలజీ (NIV), పూణే","నేషనల్ ఇన్‌స్టిట్యూట్ ఆఫ్ న్యూట్రిషన్ (NIN), హైదరాబాద్","నేషనల్ ఇన్‌స్టిట్యూట్ ఆఫ్ మలేరియా రీసెర్చ్, ఢిల్లీ","నేషనల్ ఇన్‌స్టిట్యూట్ ఆఫ్ ఎపిడెమియాలజీ, చెన్నై"],
+   oe:["National Institute of Virology (ICMR-NIV), Pune","National Institute of Nutrition (NIN), Hyderabad","NIMR, Delhi","NIE, Chennai"], a:0,
+   et:"ICMR-NIV (పూణే) వైరస్ స్ట్రెయిన్‌ను వేరు చేసి భారత్ బయోటెక్‌కు అందించింది.",
+   ee:"ICMR-NIV in Pune isolated the virus strain shared with Bharat Biotech for Covaxin development."},
+  {c:3, qt:"ప్రపంచంలోనే అతిపెద్ద రైతు సలహా నెట్‌వర్క్ అయిన కృషి విజ్ఞాన కేంద్రాలు (KVKs) ఏ సంస్థ పరిధిలో పనిచేస్తాయి?", qe:"Krishi Vigyan Kendras (KVKs), forming a large agricultural extension network, operate under which body?",
+   ot:["ICAR (ఇండియన్ కౌన్సిల్ ఆఫ్ అగ్రికల్చరల్ రీసెర్చ్)","CSIR","DBT","DST"],
+   oe:["ICAR (Indian Council of Agricultural Research)","CSIR","DBT","DST"], a:0,
+   et:"ICAR నెట్‌వర్క్‌లో 113 సంస్థలు, 71 వ్యవసాయ విశ్వవిద్యాలయాలు మరియు 731 కృషి విజ్ఞాన కేంద్రాలు ఉన్నాయి.",
+   ee:"ICAR oversees hundreds of KVKs nationwide to deliver frontline agricultural extension, testing, and farmer training."},
+  {c:3, qt:"డిపార్ట్‌మెంట్ ఆఫ్ అటామిక్ ఎనర్జీ (DAE) పరిపాలనాపరంగా ఎవరికి నేరుగా నివేదిస్తుంది?", qe:"To whom does the Department of Atomic Energy (DAE) report directly?",
+   ot:["భారత ప్రధాన మంత్రికి (ఏ మంత్రిత్వ శాఖ కిందకు రాదు)","విద్యుత్ మంత్రిత్వ శాఖకు","రక్షణ మంత్రిత్వ శాఖకు","హోం మంత్రిత్వ శాఖకు"],
+   oe:["Directly to the Prime Minister (not under a regular cabinet ministry)","Ministry of Power","Ministry of Defence","Ministry of Home Affairs"], a:0,
+   et:"DAE మరియు అంతరిక్ష విభాగం (DoS) నేరుగా ప్రధాన మంత్రి ఆధ్వర్యంలో పనిచేస్తాయి.",
+   ee:"Like the Department of Space, DAE reports directly to the Prime Minister."},
+  {c:3, qt:"భారతదేశ మూడు దశల అణు కార్యక్రమంలో రెండవ దశకు చెందిన 'ప్రోటోటైప్ ఫాస్ట్ బ్రీడర్ రియాక్టర్ (PFBR)' ఎక్కడ ఉంది?", qe:"Where is India's Prototype Fast Breeder Reactor (PFBR) of the second nuclear stage located?",
+   ot:["కల్పక్కం (తమిళనాడు)","తారాపూర్ (మహారాష్ట్ర)","కుడంకుళం (తమిళనాడు)","కైగా (కర్ణాటక)"],
+   oe:["Kalpakkam, Tamil Nadu","Tarapur, Maharashtra","Kudankulam, Tamil Nadu","Kaiga, Karnataka"], a:0,
+   et:"కల్పక్కంలోని IGCAR వద్ద ఉన్న PFBR (500 MWe) ప్లూటోనియం ఆధారిత రెండవ దశ రియాక్టర్.",
+   ee:"PFBR is located at Kalpakkam, Tamil Nadu, representing Stage II of India's three-stage nuclear power programme."},
+  {c:3, qt:"ప్రపంచంలోని మొత్తం థోరియం నిల్వలలో సుమారు ఎంత శాతం భారతదేశంలో ఉన్నాయి?", qe:"Approximately what share of global thorium reserves is estimated to lie in India?",
+   ot:["5%","15%","25%","50%"],
+   oe:["~5%","~15%","~25%","~50%"], a:2,
+   et:"ప్రపంచ థోరియం నిల్వలలో సుమారు 25% భారత్‌లో ఉన్నాయి; ఇది మన అణు కార్యక్రమం 3వ దశకు కీలకం.",
+   ee:"India holds roughly 25% of the world's thorium reserves, underpinning long-term Stage III nuclear plans."},
+  {c:3, qt:"2019లో 'మిషన్ శక్తి' పేరుతో భారతదేశం విజయవంతంగా పరీక్షించిన రక్షణ సాంకేతికత ఏమిటి?", qe:"What capability did India demonstrate in 'Mission Shakti' (2019)?",
+   ot:["యాంటీ-శాటిలైట్ (ASAT) క్షిపణి సామర్థ్యం","హైపర్‌సోనిక్ క్రూయిజ్ క్షిపణి","అణు జలాంతర్గామి","లేజర్ ఆయుధం"],
+   oe:["Anti-Satellite (ASAT) missile interception capability","Hypersonic cruise missile","Nuclear submarine","Laser weapon"], a:0,
+   et:"DRDO నిర్వహించిన మిషన్ శక్తి ద్వారా భూ దిగువ కక్ష్యలోని ఉపగ్రహాన్ని క్షిపణితో కూల్చివేసి ASAT సామర్థ్యం పొందిన 4వ దేశంగా భారత్ నిలిచింది.",
+   ee:"Mission Shakti demonstrated ASAT missile capability against a target in low Earth orbit."},
+  {c:3, qt:"బయోటెక్నాలజీ స్టార్టప్‌లు మరియు పరిశ్రమల పరిశోధనలకు మద్దతు ఇచ్చే DBT విభాగం ఏది?", qe:"Which public enterprise/council under DBT supports biotech startups, innovation, and industry research?",
+   ot:["BIRAC (Biotechnology Industry Research Assistance Council)","NICRA","CERT-In","STPI"],
+   oe:["BIRAC (Biotechnology Industry Research Assistance Council)","NICRA","CERT-In","STPI"], a:0,
+   et:"BIRAC బయోటెక్నాలజీ ఆవిష్కరణలు మరియు స్టార్టప్‌లకు నిధులు, మార్గదర్శకత్వం అందిస్తుంది.",
+   ee:"BIRAC supports biotech entrepreneurship, translational funding, and incubators under DBT."},
+  {c:3, qt:"కేంద్ర బడ్జెట్ 2026-27లో ప్రకటించిన 'ఇండియా సెమీకండక్టర్ మిషన్ 2.0 (ISM 2.0)' మొత్తం వ్యయం ఎంత?", qe:"What outlay was announced for ISM 2.0 in the Union Budget 2026-27 notes?",
+   ot:["₹10,372 కోట్లు","₹26,816 కోట్లు","₹40,000 కోట్లు","₹76,000 కోట్లు"],
+   oe:["₹10,372 crore","₹26,816 crore","₹40,000 crore","₹76,000 crore"], a:2,
+   et:"2026-27 కేంద్ర బడ్జెట్‌లో ISM 2.0 కోసం ₹40,000 కోట్ల కేటాయింపు ప్రకటించబడింది.",
+   ee:"ISM 2.0 was noted with a ₹40,000 crore total outlay in the Union Budget 2026-27 summary."},
+  {c:3, qt:"గ్లోబల్ ఇన్నోవేషన్ ఇండెక్స్ (GII) 2025 లో భారతదేశం ఎన్నవ ర్యాంక్ సాధించింది?", qe:"What rank did India achieve in the Global Innovation Index (GII) 2025?",
+   ot:["81వ ర్యాంక్","48వ ర్యాంక్","40వ ర్యాంక్","38వ ర్యాంక్"],
+   oe:["81st","48th","40th","38th"], a:3,
+   et:"2015లో 81వ స్థానంలో ఉన్న భారత్, 2024లో 39వ స్థానానికి మరియు 2025లో 38వ స్థానానికి ఎదిగింది.",
+   ee:"India climbed from 81st in 2015 to 38th in GII 2025."},
+  {c:3, qt:"GII 2025 ప్రకారం ప్రపంచ టాప్-100 సైన్స్ & టెక్నాలజీ క్లస్టర్లలో చోటు దక్కించుకున్న 4 భారతీయ నగరాలు ఏవి?", qe:"Which four Indian S&T clusters ranked in the global top 100 in GII 2025?",
+   ot:["బెంగళూరు, ఢిల్లీ, ముంబై మరియు చెన్నై","హైదరాబాద్, పూణే, కోల్‌కతా మరియు అహ్మదాబాద్","బెంగళూరు, హైదరాబాద్, చెన్నై మరియు నోయిడా","ఢిల్లీ, ముంబై, సూరత్ మరియు జైపూర్"],
+   oe:["Bengaluru, Delhi, Mumbai, and Chennai","Hyderabad, Pune, Kolkata, and Ahmedabad","Bengaluru, Hyderabad, Chennai, and Noida","Delhi, Mumbai, Surat, and Jaipur"], a:0,
+   et:"GII 2025 లో బెంగళూరు (21), ఢిల్లీ (26), ముంబై (46), మరియు చెన్నై (84) ప్రపంచ టాప్-100 S&T క్లస్టర్లుగా నిలిచాయి.",
+   ee:"Bengaluru (21st), Delhi (26th), Mumbai (46th), and Chennai (84th) placed in the top 100 S&T clusters in GII 2025."},
+  {c:3, qt:"ప్రభుత్వ పరిశోధనా సంస్థలు రూపొందించిన పేటెంట్లలో సుమారు ఎంత శాతం మాత్రమే వాణిజ్యీకరించబడుతున్నాయి?", qe:"Approximately what share of patents generated by public research institutions in India are commercialised?",
+   ot:["5–10%","35–40%","60–70%","85%"],
+   oe:["~5–10%","~35–40%","~60–70%","~85%"], a:0,
+   et:"విద్యా-పరిశ్రమ సమన్వయ లోపం వల్ల ప్రభుత్వ సంస్థల పేటెంట్లలో కేవలం 5-10% మాత్రమే వాణిజ్యీకరించబడుతున్నాయి.",
+   ee:"Only around 5–10% of patents from public institutions are commercialised, reflecting industry-academia gaps."},
+  {c:3, qt:"రక్షణ రంగంలో స్టార్టప్‌లు మరియు MSME ల ఆవిష్కరణలను ప్రోత్సహించే కార్యక్రమం ఏది?", qe:"Which initiative supports defence innovation among startups and MSMEs?",
+   ot:["iDEX (Innovations for Defence Excellence)","INSACOG","NIDHI","AGRI-STACK"],
+   oe:["iDEX (Innovations for Defence Excellence)","INSACOG","NIDHI","AGRI-STACK"], a:0,
+   et:"రక్షణ మంత్రిత్వ శాఖ యొక్క iDEX పథకం రక్షణ సాంకేతిక పరిష్కారాల కోసం స్టార్టప్‌లకు గ్రాంట్లు అందిస్తుంది.",
+   ee:"iDEX fosters defence innovation by engaging startups and MSMEs for defence technology solutions."},
+  {c:3, qt:"భారతదేశంలో ప్రతి మిలియన్ (10 లక్షల) జనాభాకు సుమారు ఎంత మంది పరిశోధకులు ఉన్నారు?", qe:"Approximately how many researchers per million population does India have compared to major R&D economies?",
+   ot:["255 మంది","1,500 మంది","4,800 మంది","8,700 మంది"],
+   oe:["~255 per million","1,500+","4,800+","8,700+"], a:0,
+   et:"భారత్‌లో ప్రతి మిలియన్ జనాభాకు కేవలం 255 మంది పరిశోధకులు ఉన్నారు (దక్షిణ కొరియాలో 8,700+).",
+   ee:"India has roughly 255 researchers per million population, well below China, the US, and South Korea."},
+  {c:3, qt:"నీతి ఆయోగ్ ఆధ్వర్యంలో 10,000 పాఠశాలల్లో ఏర్పాటైన 'అటల్ టింకరింగ్ ల్యాబ్స్ (ATLs)' ను వచ్చే 5 ఏళ్లలో ఎంతకు పెంచాలని ప్రభుత్వం యోచిస్తోంది?", qe:"How many new Atal Tinkering Labs (ATLs) were planned over the next five years following the initial 10,000 ATLs?",
+   ot:["20,000","30,000","50,000","1,00,000"],
+   oe:["20,000","30,000","50,000","1,00,000"], a:2,
+   et:"AIM 2.0 కింద వచ్చే 5 ఏళ్లలో 50,000 కొత్త అటల్ టింకరింగ్ ల్యాబ్‌లను ఏర్పాటు చేయాలని లక్ష్యంగా పెట్టుకున్నారు.",
+   ee:"Plans were noted to establish 50,000 new ATLs over five years alongside the 10,000 already set up."},
+  {c:3, qt:"భారతదేశ మొత్తం R&D వ్యయంలో ప్రభుత్వ వాటా మరియు ప్రైవేట్ రంగం వాటా వరుసగా ఎంత?", qe:"What is the approximate split between government and private sector shares in India's total R&D spending?",
+   ot:["ప్రభుత్వం 55–60%, ప్రైవేట్ 36–40%","ప్రభుత్వం 20%, ప్రైవేట్ 80%","ప్రభుత్వం 90%, ప్రైవేట్ 10%","రెండూ చెరిసగం 50%"],
+   oe:["Government ~55–60%, Private sector ~36–40%","Government 20%, Private 80%","Government 90%, Private 10%","50% each"], a:0,
+   et:"అభివృద్ధి చెందిన దేశాల్లో ప్రైవేట్ వాటా 70% ఉండగా, భారత్‌లో ప్రభుత్వం 55-60%, ప్రైవేట్ రంగం 36-40% ఖర్చు చేస్తున్నాయి.",
+   ee:"Government accounts for ~55–60% and the private sector for ~36–40% of India's total R&D expenditure."},
+  {c:3, qt:"అటల్ ఇన్నోవేషన్ మిషన్ 2.0 (AIM 2.0) కోసం ఆమోదించబడిన బడ్జెట్ ఎంత?", qe:"What budget was approved for Atal Innovation Mission 2.0 (AIM 2.0)?",
+   ot:["₹1,000 కోట్లు","₹2,750 కోట్లు","₹6,765 కోట్లు","₹14,000 కోట్లు"],
+   oe:["₹1,000 crore","₹2,750 crore","₹6,765 crore","₹14,000 crore"], a:1,
+   et:"కేంద్ర మంత్రివర్గం AIM 2.0 కోసం ₹2,750 కోట్ల బడ్జెట్‌ను ఆమోదించింది.",
+   ee:"AIM 2.0 was approved with a ₹2,750 crore budget."},
+
+  // CHAPTER 29: Indian Scientists & S&T Achievements (25 MCQs)
+  {c:4, qt:"సి.వి. రామన్ 'రామన్ ఎఫెక్ట్ (Raman Effect)' ను ఏ సంస్థలో పనిచేస్తున్నప్పుడు కనుగొన్నారు?", qe:"At which institution in Kolkata was C.V. Raman working when he discovered the Raman Effect in 1928?",
+   ot:["ఇండియన్ అసోసియేషన్ ఫర్ ది కల్టివేషన్ ఆఫ్ సైన్స్ (IACS), కోల్‌కతా","TIFR, ముంబై","BARC, ట్రాంబే","PRL, అహ్మదాబాద్"],
+   oe:["Indian Association for the Cultivation of Science (IACS), Kolkata","TIFR, Mumbai","BARC, Trombay","PRL, Ahmedabad"], a:0,
+   et:"28 ఫిబ్రవరి 1928న కోల్‌కతాలోని IACS లో రామన్ ఎఫెక్ట్ కనుగొనబడింది; ఈ రోజును జాతీయ సైన్స్ దినోత్సవంగా జరుపుకుంటారు.",
+   ee:"C.V. Raman discovered inelastic scattering of light (Raman Effect) at IACS Kolkata on 28 February 1928, celebrated as National Science Day."},
+  {c:4, qt:"సైన్స్ రంగంలో నోబెల్ బహుమతి పొందిన మొట్టమొదటి ఆసియా వ్యక్తి ఎవరు?", qe:"Who was the first Asian and first non-white person to win a Nobel Prize in any branch of science?",
+   ot:["సి.వి. రామన్ (1930)","ఎస్. చంద్రశేఖర్ (1983)","హరగోవింద్ ఖురానా (1968)","వెంకటరామన్ రామకృష్ణన్ (2009)"],
+   oe:["C.V. Raman (Physics, 1930)","S. Chandrasekhar (Physics, 1983)","Har Gobind Khorana (Medicine, 1968)","Venkatraman Ramakrishnan (Chemistry, 2009)"], a:0,
+   et:"1930లో భౌతిక శాస్త్రంలో నోబెల్ పొందిన సి.వి. రామన్, సైన్స్‌లో నోబెల్ గెలిచిన తొలి ఆసియా మరియు తొలి శ్వేతేతర వ్యక్తి.",
+   ee:"Awarded the 1930 Nobel Prize in Physics, C.V. Raman became the first Asian laureate in science."},
+  {c:4, qt:"ఒక స్థిరమైన తెల్ల మరగుజ్జు నక్షత్రం (White Dwarf) యొక్క గరిష్ట ద్రవ్యరాశిని సూచించే 'చంద్రశేఖర్ పరిమితి (Chandrasekhar Limit)' విలువ ఎంత?", qe:"What is the approximate value of the 'Chandrasekhar Limit' for a non-rotating white dwarf star's maximum mass?",
+   ot:["1.44 సౌర ద్రవ్యరాశులు (Solar Masses)","2.50 సౌర ద్రవ్యరాశులు","0.85 సౌర ద్రవ్యరాశులు","3.14 సౌర ద్రవ్యరాశులు"],
+   oe:["~1.44 solar masses","2.50 solar masses","0.85 solar masses","3.14 solar masses"], a:0,
+   et:"1.44 సౌర ద్రవ్యరాశుల కంటే ఎక్కువ బరువున్న నక్షత్రాలు సూపర్‌నోవా తర్వాత న్యూట్రాన్ నక్షత్రం లేదా బ్లాక్ హోల్‌గా మారతాయని ఎస్. చంద్రశేఖర్ నిరూపించారు.",
+   ee:"Subrahmanyan Chandrasekhar showed that electron degeneracy pressure cannot support a white dwarf above ~1.44 solar masses."},
+  {c:4, qt:"ఎస్. చంద్రశేఖర్ గౌరవార్థం 1999లో నాసా (NASA) ప్రయోగించిన అంతరిక్ష వేధశాల పేరు ఏమిటి?", qe:"Which NASA flagship space telescope launched in 1999 was named in honour of Subrahmanyan Chandrasekhar?",
+   ot:["చంద్ర ఎక్స్-రే అబ్జర్వేటరీ (Chandra X-ray Observatory)","హబుల్ టెలిస్కోప్","జేమ్స్ వెబ్ టెలిస్కోప్","కెస్లర్ మిషన్"],
+   oe:["Chandra X-ray Observatory","Hubble Space Telescope","James Webb Space Telescope","Kepler Mission"], a:0,
+   et:"నాసా తన ప్రధాన ఎక్స్-రే అంతరిక్ష టెలిస్కోప్‌కు ఎస్. చంద్రశేఖర్ పేరు పెట్టింది.",
+   ee:"NASA named its premier X-ray space observatory the Chandra X-ray Observatory after S. Chandrasekhar."},
+  {c:4, qt:"ఆసియాలోనే మొట్టమొదటి అణు పరిశోధనా రియాక్టర్ 'అప్సర (APSARA)' 1956లో ఎక్కడ ప్రారంభించబడింది?", qe:"Where did Asia's first nuclear research reactor, 'Apsara', achieve criticality in 1956?",
+   ot:["ట్రాంబే (BARC), ముంబై","కల్పక్కం","నరోరా","రావత్‌భటా"],
+   oe:["Trombay (BARC), Mumbai","Kalpakkam","Narora","Rawatbhata"], a:0,
+   et:"హోమీ భాభా నేతృత్వంలో 1956లో ట్రాంబేలో ఆసియా తొలి రియాక్టర్ 'అప్సర' ప్రారంభించబడింది.",
+   ee:"Under Homi J. Bhabha's leadership, Apsara went critical at Trombay in August 1956."},
+  {c:4, qt:"హోమీ జహంగీర్ భాభా 1945లో ముంబైలో స్థాపించిన ప్రముఖ ప్రాథమిక పరిశోధనా సంస్థ ఏది?", qe:"Which premier fundamental research institute in Mumbai did Homi Jehangir Bhabha establish in 1945?",
+   ot:["టాటా ఇన్‌స్టిట్యూట్ ఆఫ్ ఫండమెంటల్ రీసెర్చ్ (TIFR)","ఫిజికల్ రీసెర్చ్ లాబొరేటరీ (PRL)","బోస్ ఇన్‌స్టిట్యూట్","రామన్ రీసెర్చ్ ఇన్‌స్టిట్యూట్"],
+   oe:["Tata Institute of Fundamental Research (TIFR)","Physical Research Laboratory (PRL)","Bose Institute","Raman Research Institute"], a:0,
+   et:"1945లో హోమీ భాభా TIFR ను స్థాపించారు; 1948లో అణుశక్తి కమిషన్ తొలి ఛైర్మన్ అయ్యారు.",
+   ee:"Homi Bhabha founded TIFR in 1945 and became the first Chairman of India's Atomic Energy Commission in 1948."},
+  {c:4, qt:"భారత అంతరిక్ష కార్యక్రమ పితామహుడు విక్రమ్ సారాభాయ్ 1947లో అహ్మదాబాద్‌లో స్థాపించిన సంస్థ ఏది?", qe:"Which research institution in Ahmedabad was founded in 1947 by Vikram Sarabhai, widely regarded as the father of India's space programme?",
+   ot:["ఫిజికల్ రీసెర్చ్ లాబొరేటరీ (PRL)","సతీష్ ధావన్ స్పేస్ సెంటర్","VSSC","ISRO ప్రధాన కార్యాలయం"],
+   oe:["Physical Research Laboratory (PRL)","Satish Dhawan Space Centre","VSSC","ISRO HQ"], a:0,
+   et:"స్వాతంత్ర్యానికి ముందే 1947లో విక్రమ్ సారాభాయ్ అహ్మదాబాద్‌లో PRL ను స్థాపించారు.",
+   ee:"Vikram Sarabhai established the Physical Research Laboratory (PRL) in Ahmedabad in 1947."},
+  {c:4, qt:"నవంబర్ 1963లో భారతదేశపు మొట్టమొదటి సౌండింగ్ రాకెట్ 'నైక్-అపాచీ' ఎక్కడి నుండి ప్రయోగించబడింది?", qe:"From which launch site was India's first sounding rocket (Nike-Apache) launched in November 1963?",
+   ot:["తుంబా ఈక్వటోరియల్ రాకెట్ లాంచింగ్ స్టేషన్ (TERLS), తిరువనంతపురం","శ్రీహరికోట","చాందీపూర్","బాలాసోర్"],
+   oe:["Thumba Equatorial Rocket Launching Station (TERLS), Thiruvananthapuram","Sriharikota","Chandipur","Balasore"], a:0,
+   et:"భూ అయస్కాంత భూమధ్యరేఖకు సమీపంలో ఉండటం వల్ల కేరళలోని తుంబా నుండి 1963లో తొలి రాకెట్ ప్రయోగించారు.",
+   ee:"TERLS at Thumba was chosen for its proximity to the geomagnetic equator to study the equatorial electrojet."},
+  {c:4, qt:"1983లో డాక్టర్ ఏ.పి.జె. అబ్దుల్ కలాం ప్రాజెక్ట్ డైరెక్టర్‌గా ప్రారంభమైన సమీకృత క్షిపణి అభివృద్ధి కార్యక్రమం (IGMDP) లో అభివృద్ధి చేసిన 5 క్షిపణులు ఏవి?", qe:"Which five missile systems were developed under the Integrated Guided Missile Development Programme (IGMDP) led by Dr. A.P.J. Abdul Kalam?",
+   ot:["పృథ్వీ, అగ్ని, త్రిశూల్, ఆకాశ్, నాగ్","బ్రహ్మోస్, నిర్భయ్, ప్రహార్, అస్త్ర, శౌర్య","అగ్ని-1 నుండి అగ్ని-5 వరకు","పృథ్వీ, ధనుష్, సాగరిక, కే-15, కే-4"],
+   oe:["Prithvi, Agni, Trishul, Akash, and Nag","BrahMos, Nirbhay, Prahaar, Astra, Shaurya","Agni-1 to Agni-5","Prithvi, Dhanush, Sagarika, K-15, K-4"], a:0,
+   et:"IGMDP కింద పృథ్వీ, అగ్ని, త్రిశూల్, ఆకాశ్ మరియు నాగ్ (PATNA) క్షిపణులను స్వదేశీయంగా అభివృద్ధి చేశారు.",
+   ee:"IGMDP encompassed Prithvi, Agni, Trishul, Akash, and Nag."},
+  {c:4, qt:"1998 మే నెలలో జరిగిన 'పోఖ్రాన్-II (ఆపరేషన్ శక్తి)' అణు పరీక్షలను డాక్టర్ కలాంతో పాటు సమన్వయం చేసిన శాస్త్రవేత్త ఎవరు?", qe:"Who served alongside Dr. A.P.J. Abdul Kalam as a key scientific leader during the May 1998 Pokhran-II nuclear tests?",
+   ot:["ఆర్. చిదంబరం","రాజా రామన్న","విక్రమ్ సారాభాయ్","సతీష్ ధావన్"],
+   oe:["R. Chidambaram","Raja Ramanna","Vikram Sarabhai","Satish Dhawan"], a:0,
+   et:"1998 పోఖ్రాన్-II పరీక్షలలో ప్రభుత్వ ప్రధాన శాస్త్రీయ సలహాదారు ఏ.పి.జె. అబ్దుల్ కలాం మరియు DAE ఛైర్మన్ ఆర్. చిదంబరం కీలక పాత్ర పోషించారు.",
+   ee:"Dr. A.P.J. Abdul Kalam and DAE Chairman Dr. R. Chidambaram played central roles in coordinating Pokhran-II in May 1998."},
+  {c:4, qt:"నక్షత్రాల ఉష్ణోగ్రత మరియు వర్ణపటాలను విశ్లేషించడానికి ఉపయోగించే 'థర్మల్ అయనీకరణ సమీకరణం' రూపొందించిన శాస్త్రవేత్త ఎవరు?", qe:"Which astrophysicist formulated the thermal ionisation equation used to interpret stellar spectra and temperatures?",
+   ot:["మేఘనాద్ సాహా","సత్యేంద్రనాథ్ బోస్","జగదీష్ చంద్రబోస్","సి.వి. రామన్"],
+   oe:["Meghnad Saha","Satyendra Nath Bose","Jagadish Chandra Bose","C.V. Raman"], a:0,
+   et:"1920లో మేఘనాద్ సాహా రూపొందించిన 'సాహా అయనైజేషన్ ఈక్వేషన్' ఖగోళ భౌతిక శాస్త్రానికి పునాది వేసింది; భారత జాతీయ క్యాలెండర్ (శక) కమిటీకి కూడా ఆయన నేతృత్వం వహించారు.",
+   ee:"Meghnad Saha formulated the Saha ionisation equation (1920) and chaired the Calendar Reform Committee."},
+  {c:4, qt:"మొక్కల పెరుగుదలను అత్యంత సూక్ష్మ స్థాయిలో (కోటి రెట్లు పెద్దది చేసి) కొలవడానికి 'క్రెస్కోగ్రాఫ్ (Crescograph)' ను కనుగొన్న శాస్త్రవేత్త ఎవరు?", qe:"Who invented the crescograph to measure plant growth and physiological responses on a minute scale?",
+   ot:["జగదీష్ చంద్రబోస్","బీర్బల్ సాహ్ని","ఎం.ఎస్. స్వామినాథన్","హరగోవింద్ ఖురానా"],
+   oe:["Jagadish Chandra Bose","Birbal Sahni","M.S. Swaminathan","Har Gobind Khorana"], a:0,
+   et:"1895లో మార్కోనీ కంటే ముందే మిల్లీమీటర్ రేడియో తరంగాలను ప్రదర్శించిన జె.సి. బోస్, మొక్కల స్పందనలను కొలవడానికి క్రెస్కోగ్రాఫ్ కనుగొన్నారు.",
+   ee:"J.C. Bose invented the crescograph to study plant responses and also demonstrated early millimetre-wave radio experiments."},
+  {c:4, qt:"గణిత శాస్త్రంలో '1729' సంఖ్యకు గల ప్రత్యేకత ఏమిటి?", qe:"Why is the number '1729' famous in mathematics in connection with Srinivasa Ramanujan?",
+   ot:["ఇది రెండు భిన్న విధాలుగా రెండు ఘనాల మొత్తంగా (1³+12³ = 9³+10³) రాయగల అతిచిన్న సంఖ్య","ఇది అతిపెద్ద ప్రధాన సంఖ్య","ఇది పై (π) యొక్క ఖచ్చితమైన విలువ","ఇది మొదటి పరిపూర్ణ సంఖ్య"],
+   oe:["Smallest positive integer expressible as the sum of two cubes in two distinct ways (1³+12³ = 9³+10³)","Largest known prime","Exact value of pi","First perfect number"], a:0,
+   et:"1729 ని 'హార్డీ-రామానుజన్ సంఖ్య' అంటారు; రామానుజన్ పుట్టినరోజు డిసెంబర్ 22 ను జాతీయ గణిత దినోత్సవంగా జరుపుకుంటారు.",
+   ee:"1729 is the Hardy–Ramanujan number; December 22 (Ramanujan's birth anniversary) is celebrated as National Mathematics Day."},
+  {c:4, qt:"1975లో సోవియట్ యూనియన్ కాస్మోస్ రాకెట్ ద్వారా ప్రయోగించబడిన భారతదేశపు మొట్టమొదటి ఉపగ్రహం ఏది?", qe:"What was the name of India's first satellite, launched in April 1975 aboard a Soviet Kosmos-3M rocket?",
+   ot:["ఆర్యభట్ట","భాస్కర-1","రోహిణి","ఇన్‌శాట్-1A"],
+   oe:["Aryabhata","Bhaskara-1","Rohini","INSAT-1A"], a:0,
+   et:"ISRO నిర్మించిన భారత తొలి ఉపగ్రహం 'ఆర్యభట్ట' 19 ఏప్రిల్ 1975న ప్రయోగించబడింది.",
+   ee:"Aryabhata, India's first satellite, was launched on 19 April 1975."},
+  {c:4, qt:"ఒకే ప్రయోగంలో 104 ఉపగ్రహాలను కక్ష్యలోకి ప్రవేశపెట్టి ప్రపంచ రికార్డు సృష్టించిన ఇస్రో రాకెట్ ఏది?", qe:"With which launch vehicle mission did ISRO deploy 104 satellites in a single launch in February 2017?",
+   ot:["PSLV-C37 (2017)","PSLV-C11 (2008)","LVM3-M4 (2023)","GSLV-Mk II"],
+   oe:["PSLV-C37 (February 2017)","PSLV-C11 (October 2008)","LVM3-M4 (July 2023)","GSLV Mk-II"], a:0,
+   et:"ఫిబ్రవరి 2017లో PSLV-C37 ద్వారా ఒకేసారి 104 ఉపగ్రహాలను ప్రయోగించి ఇస్రో ప్రపంచ రికార్డు నెలకొల్పింది.",
+   ee:"PSLV-C37 placed 104 satellites into orbit in a single mission in February 2017."},
+  {c:4, qt:"చంద్రునిపై నీటి అణువుల ఉనికిని కనుగొన్న భారతదేశపు తొలి చంద్ర యాత్ర ఏది?", qe:"Which Indian lunar mission detected signatures of water/hydroxyl molecules on the Moon?",
+   ot:["చంద్రయాన్-1 (2008)","చంద్రయాన్-2 (2019)","చంద్రయాన్-3 (2023)","ఆదిత్య-L1"],
+   oe:["Chandrayaan-1 (2008)","Chandrayaan-2 (2019)","Chandrayaan-3 (2023)","Aditya-L1"], a:0,
+   et:"2008లో PSLV-C11 ద్వారా ప్రయోగించిన చంద్రయాన్-1 (మూన్ ఇంపాక్ట్ ప్రోబ్) చంద్రునిపై నీటి అణువులను గుర్తించింది.",
+   ee:"Chandrayaan-1 (2008) provided key evidence of water/hydroxyl molecules on the lunar surface."},
+  {c:4, qt:"తొలి ప్రయత్నంలోనే అంగారక గ్రహ కక్ష్యలోకి ప్రవేశించిన ప్రపంచంలోనే మొట్టమొదటి దేశంగా భారత్ ఏ మిషన్ ద్వారా నిలిచింది?", qe:"Through which mission did India become the first nation to enter Mars orbit on its maiden attempt (September 2014)?",
+   ot:["మంగళయాన్ / మార్స్ ఆర్బిటర్ మిషన్ (2014)","గగన్‌యాన్","శుక్రయాన్","ఆదిత్య-L1"],
+   oe:["Mangalyaan / Mars Orbiter Mission (MOM, 2014)","Gaganyaan","Shukrayaan","Aditya-L1"], a:0,
+   et:"నవంబర్ 2013లో ప్రయోగించి సెప్టెంబర్ 2014లో అంగారక కక్ష్యలోకి చేరిన మంగళయాన్ ద్వారా భారత్ ఆసియాలో తొలి దేశంగా రికార్డు సృష్టించింది.",
+   ee:"Mars Orbiter Mission (Mangalyaan) entered Martian orbit in September 2014 on its first attempt."},
+  {c:4, qt:"చంద్రయాన్-3 ల్యాండర్ (విక్రమ్) మరియు రోవర్ (ప్రజ్ఞాన్) చంద్రుని దక్షిణ ధ్రువ ప్రాంతంలో ఎప్పుడు విజయవంతంగా దిగాయి?", qe:"On which date did Chandrayaan-3's Vikram lander achieve a soft landing near the Moon's south pole?",
+   ot:["23 ఆగస్టు 2023 (జాతీయ అంతరిక్ష దినోత్సవం)","15 ఆగస్టు 2023","26 జనవరి 2024","2 అక్టోబర్ 2023"],
+   oe:["23 August 2023 (National Space Day)","15 August 2023","26 January 2024","2 October 2023"], a:0,
+   et:"23 ఆగస్టు 2023న చంద్రుని దక్షిణ ధ్రువం వద్ద సాఫ్ట్ ల్యాండింగ్ చేసిన తొలి దేశంగా భారత్ నిలిచింది; ఈ రోజును 'జాతీయ అంతరిక్ష దినోత్సవం'గా ప్రకటించారు.",
+   ee:"Chandrayaan-3 soft-landed near the lunar south pole on 23 August 2023."},
+  {c:4, qt:"భారతదేశపు తొలి సౌర పరిశోధనా మిషన్ 'ఆదిత్య-L1' భూమి నుండి ఎంత దూరంలో ఉన్న లాగ్రాంజ్ పాయింట్ 1 (L1) వద్దకు చేరుకుంది?", qe:"Approximately how far from Earth is Lagrange Point 1 (L1), where India's Aditya-L1 solar mission operates in a halo orbit?",
+   ot:["1.5 మిలియన్ కిలోమీటర్లు (15 లక్షల కి.మీ.)","3.84 లక్షల కిలోమీటర్లు","10 మిలియన్ కిలోమీటర్లు","50,000 కిలోమీటర్లు"],
+   oe:["~1.5 million km","~384,000 km","10 million km","50,000 km"], a:0,
+   et:"సెప్టెంబర్ 2023లో ప్రయోగించబడిన ఆదిత్య-L1, జనవరి 2024లో భూమికి 15 లక్షల కి.మీ. దూరంలోని L1 కక్ష్యలోకి చేరుకుంది.",
+   ee:"Aditya-L1 was inserted into a halo orbit around Sun–Earth L1, ~1.5 million km from Earth, in January 2024."},
+  {c:4, qt:"INCOSPAR (1962) ఏ సంవత్సరంలో ఇండియన్ స్పేస్ రీసెర్చ్ ఆర్గనైజేషన్ (ISRO) గా పునర్వ్యవస్థీకరించబడింది?", qe:"In which year did ISRO supersede INCOSPAR (formed in 1962)?",
+   ot:["1965","1969 (15 ఆగస్టు)","1972","1975"],
+   oe:["1965","1969 (15 August 1969)","1972","1975"], a:1,
+   et:"1962లో ఏర్పాటైన INCOSPAR స్థానంలో 15 ఆగస్టు 1969న ISRO ఏర్పాటైంది; విక్రమ్ సారాభాయ్ తొలి ఛైర్మన్.",
+   ee:"ISRO was formed on 15 August 1969, replacing INCOSPAR, with Vikram Sarabhai as its first chair."},
+  {c:4, qt:"1948లో బెంగళూరులో 'రామన్ రీసెర్చ్ ఇన్‌స్టిట్యూట్' ను స్థాపించిన నోబెల్ గ్రహీత ఎవరు?", qe:"Which Nobel laureate founded the Raman Research Institute in Bengaluru in 1948?",
+   ot:["సి.వి. రామన్","ఎస్. చంద్రశేఖర్","మేఘనాద్ సాహా","జె.సి. బోస్"],
+   oe:["C.V. Raman","S. Chandrasekhar","Meghnad Saha","J.C. Bose"], a:0,
+   et:"IISc డైరెక్టర్ పదవి తర్వాత సి.వి. రామన్ 1948లో బెంగళూరులో రామన్ రీసెర్చ్ ఇన్‌స్టిట్యూట్ స్థాపించారు.",
+   ee:"C.V. Raman established the Raman Research Institute in Bengaluru in 1948."},
+  {c:4, qt:"భౌతిక శాస్త్రంలో ఎలక్ట్రాన్ మరియు పాజిట్రాన్ మధ్య జరిగే స్థితిస్థాపక పరిక్షేపణాన్ని (Elastic Scattering) ఏ పేరుతో పిలుస్తారు?", qe:"Electron–positron elastic scattering is named after which Indian theoretical physicist?",
+   ot:["భాభా స్కాటరింగ్ (Bhabha Scattering)","రామన్ స్కాటరింగ్","కాంప్టన్ స్కాటరింగ్","రేలీ స్కాటరింగ్"],
+   oe:["Bhabha scattering","Raman scattering","Compton scattering","Rayleigh scattering"], a:0,
+   et:"సైద్ధాంతిక భౌతిక శాస్త్రంలో హోమీ భాభా చేసిన కీలక పరిశోధనకు గుర్తుగా దీనిని 'భాభా స్కాటరింగ్' అంటారు.",
+   ee:"Bhabha scattering describes electron–positron elastic scattering in quantum electrodynamics, named for Homi J. Bhabha."},
+  {c:4, qt:"డిసెంబర్ 22వ తేదీని భారతదేశంలో ఏ దినోత్సవంగా జరుపుకుంటారు?", qe:"December 22 is celebrated in India as National Mathematics Day to mark the birth anniversary of:",
+   ot:["శ్రీనివాస రామానుజన్","సి.వి. రామన్","విక్రమ్ సారాభాయ్","హోమీ భాభా"],
+   oe:["Srinivasa Ramanujan","C.V. Raman","Vikram Sarabhai","Homi Bhabha"], a:0,
+   et:"గొప్ప గణిత మేధావి శ్రీనివాస రామానుజన్ జన్మదినమైన డిసెంబర్ 22ను జాతీయ గణిత దినోత్సవంగా జరుపుకుంటారు.",
+   ee:"National Mathematics Day is observed on December 22 in honour of mathematician Srinivasa Ramanujan."},
+  {c:4, qt:"1917లో కోల్‌కతాలో భారతదేశపు మొట్టమొదటి బహుళ-విభాగ (Multidisciplinary) సైన్స్ పరిశోధనా సంస్థను స్థాపించింది ఎవరు?", qe:"Who founded the Bose Institute in Kolkata in 1917 as a centre for scientific research?",
+   ot:["జగదీష్ చంద్రబోస్ (బోస్ ఇన్‌స్టిట్యూట్)","మేఘనాద్ సాహా","సి.వి. రామన్","హోమీ భాభా"],
+   oe:["Jagadish Chandra Bose","Meghnad Saha","C.V. Raman","Homi Bhabha"], a:0,
+   et:"1917లో జె.సి. బోస్ కోల్‌కతాలో బోస్ ఇన్‌స్టిట్యూట్‌ను స్థాపించారు.",
+   ee:"Jagadish Chandra Bose founded the Bose Institute in Kolkata in 1917."},
+  {c:4, qt:"డాక్టర్ ఏ.పి.జె. అబ్దుల్ కలాం భారతదేశపు ఎన్నవ రాష్ట్రపతిగా పనిచేశారు మరియు ఏ సంవత్సరంలో భారతరత్న పొందారు?", qe:"Dr. A.P.J. Abdul Kalam served as which President of India and received the Bharat Ratna in which year?",
+   ot:["11వ రాష్ట్రపతి (2002–2007); 1997లో భారతరత్న","10వ రాష్ట్రపతి; 1998లో భారతరత్న","12వ రాష్ట్రపతి; 2000లో భారతరత్న","9వ రాష్ట్రపతి; 1995లో భారతరత్న"],
+   oe:["11th President of India (2002–2007); awarded Bharat Ratna in 1997","10th President; Bharat Ratna in 1998","12th President; Bharat Ratna in 2000","9th President; Bharat Ratna in 1995"], a:0,
+   et:"డాక్టర్ కలాం 2002–2007 మధ్య భారత 11వ రాష్ట్రపతిగా సేవలందించారు; 1997లో అత్యున్నత పౌర పురస్కారం భారతరత్న అందుకున్నారు.",
+   ee:"Dr. A.P.J. Abdul Kalam served as India's 11th President (2002–2007) and was awarded the Bharat Ratna in 1997."}
+];
+
+let selectedMode = '0';
+let questions = [];
+let userAnswers = [];
+let statusList = [];
+let currentIndex = 0;
+let timerInterval = null;
+let secondsLeft = 30 * 60;
+let useNegative = true;
+
+function selectMode(mode, el) {
+  selectedMode = mode;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function startTest() {
+  useNegative = document.getElementById('neg-marking-toggle').checked;
+  document.getElementById('neg-label').textContent = useNegative ? '-0.66' : '0.00';
+
+  if (selectedMode === 'all') {
+    questions = RAW_DATA.map((item, idx) => ({ ...item, id: idx + 1 }));
+    secondsLeft = 150 * 60;
+  } else {
+    const chapIdx = parseInt(selectedMode, 10);
+    questions = RAW_DATA.filter(item => item.c === chapIdx).map((item, idx) => ({ ...item, id: idx + 1 }));
+    secondsLeft = 30 * 60;
+  }
+
+  userAnswers = new Array(questions.length).fill(null);
+  statusList = new Array(questions.length).fill(0);
+  currentIndex = 0;
+
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('cbt-screen').style.display = 'block';
+  document.getElementById('exam-header-controls').style.display = 'flex';
+
+  buildChapterTabs();
+  buildPalette();
+  loadQuestion(0);
+  startTimer();
+}
+
+function buildChapterTabs() {
+  const tabsDiv = document.getElementById('chapter-tabs');
+  tabsDiv.innerHTML = '';
+  if (selectedMode !== 'all') {
+    const btn = document.createElement('button');
+    btn.className = 'chap-tab active';
+    btn.textContent = CHAPTERS[parseInt(selectedMode, 10)];
+    tabsDiv.appendChild(btn);
+    return;
+  }
+  CHAPTERS.forEach((title, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'chap-tab';
+    btn.id = 'tab-' + idx;
+    btn.textContent = title;
+    btn.onclick = () => {
+      const firstQ = questions.findIndex(q => q.c === idx);
+      if (firstQ !== -1) loadQuestion(firstQ);
+    };
+    tabsDiv.appendChild(btn);
+  });
+}
+
+function buildPalette() {
+  const grid = document.getElementById('palette-grid');
+  grid.innerHTML = '';
+  questions.forEach((q, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'pal-btn st-not-visited';
+    btn.id = 'pal-' + idx;
+    btn.textContent = idx + 1;
+    btn.onclick = () => loadQuestion(idx);
+    grid.appendChild(btn);
+  });
+  updatePaletteUI();
+}
+
+function loadQuestion(idx) {
+  currentIndex = idx;
+  if (statusList[idx] === 0) statusList[idx] = 1;
+
+  const q = questions[idx];
+  document.getElementById('q-chapter-label').textContent = `${CHAPTERS[q.c]} • Q ${idx + 1} / ${questions.length}`;
+  const teQ = q.qt || q.q || '';
+  const enQ = q.qe || '';
+  document.getElementById('q-text-te').textContent = `${idx + 1}. ${teQ}`;
+  document.getElementById('q-text-en').textContent = `${idx + 1}. ${enQ}`;
+
+  if (selectedMode === 'all') {
+    document.querySelectorAll('.chap-tab').forEach(t => t.classList.remove('active'));
+    const activeTab = document.getElementById('tab-' + q.c);
+    if (activeTab) activeTab.classList.add('active');
+  }
+
+  const optDiv = document.getElementById('options-list');
+  optDiv.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.ot.forEach((optTe, oIdx) => {
+    const optEn = q.oe[oIdx];
+    const item = document.createElement('div');
+    item.className = 'option-item' + (userAnswers[idx] === oIdx ? ' selected' : '');
+    item.onclick = () => selectOption(oIdx);
+    item.innerHTML = `
+      <span class="option-letter">${letters[oIdx]}</span>
+      <div class="opt-content">
+        <span class="opt-te">${optTe}</span>
+        <span class="opt-en">${optEn}</span>
+      </div>
+    `;
+    optDiv.appendChild(item);
+  });
+
+  updatePaletteUI();
+}
+
+function selectOption(oIdx) {
+  userAnswers[currentIndex] = oIdx;
+  if (statusList[currentIndex] === 3 || statusList[currentIndex] === 4) {
+    statusList[currentIndex] = 4;
+  } else {
+    statusList[currentIndex] = 2;
+  }
+  loadQuestion(currentIndex);
+}
+
+function clearResponse() {
+  userAnswers[currentIndex] = null;
+  statusList[currentIndex] = 1;
+  loadQuestion(currentIndex);
+}
+
+function saveAndNext() {
+  if (userAnswers[currentIndex] !== null) {
+    statusList[currentIndex] = 2;
+  } else {
+    statusList[currentIndex] = 1;
+  }
+  if (currentIndex < questions.length - 1) {
+    loadQuestion(currentIndex + 1);
+  } else {
+    updatePaletteUI();
+  }
+}
+
+function markForReviewAndNext() {
+  statusList[currentIndex] = userAnswers[currentIndex] !== null ? 4 : 3;
+  if (currentIndex < questions.length - 1) {
+    loadQuestion(currentIndex + 1);
+  } else {
+    updatePaletteUI();
+  }
+}
+
+function prevQuestion() {
+  if (currentIndex > 0) loadQuestion(currentIndex - 1);
+}
+
+function updatePaletteUI() {
+  let cAns = 0, cNotAns = 0, cNotVis = 0, cRev = 0;
+  questions.forEach((_, idx) => {
+    const btn = document.getElementById('pal-' + idx);
+    btn.className = 'pal-btn';
+    if (idx === currentIndex) btn.classList.add('current');
+
+    const st = statusList[idx];
+    if (st === 0) { btn.classList.add('st-not-visited'); cNotVis++; }
+    else if (st === 1) { btn.classList.add('st-not-answered'); cNotAns++; }
+    else if (st === 2) { btn.classList.add('st-answered'); cAns++; }
+    else if (st === 3) { btn.classList.add('st-review'); cRev++; }
+    else if (st === 4) { btn.classList.add('st-ans-review'); cRev++; }
+  });
+  document.getElementById('cnt-ans').textContent = cAns;
+  document.getElementById('cnt-not-ans').textContent = cNotAns;
+  document.getElementById('cnt-not-vis').textContent = cNotVis;
+  document.getElementById('cnt-rev').textContent = cRev;
+}
+
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    updateTimerDisplay();
+    if (secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      submitExam();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(secondsLeft / 60);
+  const secs = secondsLeft % 60;
+  document.getElementById('timer-display').textContent =
+    String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+}
+
+function confirmSubmit() {
+  const answered = userAnswers.filter(a => a !== null).length;
+  if (confirm(`మీరు ${questions.length} ప్రశ్నలలో ${answered} ప్రశ్నలకు సమాధానం ఇచ్చారు. పరీక్షను ఖచ్చితంగా సమర్పించాలనుకుంటున్నారా? (Are you sure you want to submit?)`)) {
+    submitExam();
+  }
+}
+
+function submitExam() {
+  clearInterval(timerInterval);
+  document.getElementById('cbt-screen').style.display = 'none';
+  document.getElementById('exam-header-controls').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  let correct = 0, wrong = 0, unattempted = 0;
+  const chapStats = {};
+
+  questions.forEach((q, idx) => {
+    if (!chapStats[q.c]) chapStats[q.c] = { total: 0, correct: 0, wrong: 0, unattempted: 0 };
+    chapStats[q.c].total++;
+
+    const ans = userAnswers[idx];
+    if (ans === null) {
+      unattempted++;
+      chapStats[q.c].unattempted++;
+    } else if (ans === q.a) {
+      correct++;
+      chapStats[q.c].correct++;
+    } else {
+      wrong++;
+      chapStats[q.c].wrong++;
+    }
+  });
+
+  const negPenalty = useNegative ? (wrong * (2 / 3)) : 0;
+  const netScore = Math.max(0, (correct * 2) - negPenalty).toFixed(2);
+  const maxMarks = questions.length * 2;
+  const accuracy = (correct + wrong) > 0 ? ((correct / (correct + wrong)) * 100).toFixed(1) : '0.0';
+
+  document.getElementById('stats-cards').innerHTML = `
+    <div class="stat-card"><div class="val" style="color:var(--accent);">${netScore} / ${maxMarks}</div><div class="lbl">మొత్తం స్కోరు (Net Marks)</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--success);">${correct}</div><div class="lbl">సరైనవి / Correct (+${correct * 2})</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--danger);">${wrong}</div><div class="lbl">తప్పులు / Wrong (-${negPenalty.toFixed(2)})</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--muted);">${unattempted}</div><div class="lbl">వదిలేసినవి / Skipped</div></div>
+    <div class="stat-card"><div class="val">${accuracy}%</div><div class="lbl">ఖచ్చితత్వం / Accuracy</div></div>
+  `;
+
+  const tbody = document.querySelector('#chap-breakdown tbody');
+  tbody.innerHTML = '';
+  Object.keys(chapStats).forEach(cKey => {
+    const st = chapStats[cKey];
+    const cScore = ((st.correct * 2) - (useNegative ? st.wrong * (2 / 3) : 0)).toFixed(2);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${CHAPTERS[cKey]}</strong></td>
+      <td>${st.total}</td>
+      <td style="color:var(--success); font-weight:700;">${st.correct}</td>
+      <td style="color:var(--danger); font-weight:700;">${st.wrong}</td>
+      <td>${st.unattempted}</td>
+      <td><strong>${cScore} / ${st.total * 2}</strong></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  renderReviewList('all');
+}
+
+function filterReview(type) {
+  renderReviewList(type);
+}
+
+function renderReviewList(filterType) {
+  const container = document.getElementById('review-container');
+  container.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+
+  questions.forEach((q, idx) => {
+    const ans = userAnswers[idx];
+    let status = 'unattempted';
+    if (ans !== null) status = (ans === q.a) ? 'correct' : 'wrong';
+
+    if (filterType !== 'all' && filterType !== status) return;
+
+    const card = document.createElement('div');
+    card.className = `review-card ${status}`;
+    const userChoiceTe = ans !== null ? `${letters[ans]}) ${q.ot[ans]}` : 'సమాధానం ఇవ్వలేదు';
+    const userChoiceEn = ans !== null ? `${letters[ans]}) ${q.oe[ans]}` : 'Not Attempted';
+    const correctChoiceTe = `${letters[q.a]}) ${q.ot[q.a]}`;
+    const correctChoiceEn = `${letters[q.a]}) ${q.oe[q.a]}`;
+    const ansColor = status === 'correct' ? 'var(--success)' : (status === 'wrong' ? 'var(--danger)' : 'var(--muted)');
+
+    card.innerHTML = `
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:6px;">
+        <strong>${CHAPTERS[q.c]}</strong> • Q #${idx + 1}
+      </div>
+      <div style="font-weight:700; font-size:1.02rem; margin-bottom:4px;">${idx + 1}. ${q.qt}</div>
+      <div style="font-weight:500; font-size:0.94rem; color:#334155; margin-bottom:12px;">${idx + 1}. ${q.qe}</div>
+      <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px 14px; margin-bottom:10px; font-size:0.92rem;">
+        <div style="margin-bottom:4px;">
+          <strong>మీ సమాధానం (Telugu):</strong> <span style="font-weight:700; color:${ansColor};">${userChoiceTe}</span>
+        </div>
+        <div>
+          <strong>Your Answer (English):</strong> <span style="font-weight:600; color:${ansColor};">${userChoiceEn}</span>
+        </div>
+      </div>
+      <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; padding:10px 14px; font-size:0.92rem;">
+        <div style="margin-bottom:4px;">
+          <strong>సరైన సమాధానం (Telugu):</strong> <span style="font-weight:700; color:var(--success);">${correctChoiceTe}</span>
+        </div>
+        <div>
+          <strong>Correct Answer (English):</strong> <span style="font-weight:600; color:var(--success);">${correctChoiceEn}</span>
+        </div>
+      </div>
+      <div class="exp-box">
+        <div style="margin-bottom:6px;"><strong>వివరణ (Telugu):</strong> ${q.et}</div>
+        <div><strong>Explanation (English):</strong> ${q.ee}</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
